@@ -3,854 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Posta | </title>
+    <title>SABORES RÁPIDOS | Menú Oficial</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <script>
-        // CONFIGURACIÓN DE COLORES PERSONALIZADA (Triángulo del Hambre)
-        // Basado en la paleta: Rojo Apetito, Amarillo Felicidad, Naranja Energía, Negro Carbón, Verde Frescura.
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'rojo-apetito': '#E70B34', // Urgencia y CTA
-                        'amarillo-felicidad': '#FFC72C', // Logo y Highlights
-                        'naranja-energia': '#FF6B00', // Acento principal, precios, títulos
-                        'verde-frescura': '#38A169', // Confirmación/Éxito/Higiene
-                        'negro-carbon': '#202020', // Texto principal
+                        'tri-rojo': '#D32F2F',    
+                        'tri-amarillo': '#FFD700', 
+                        'tri-naranja': '#FF8C00',  
+                        'tri-fondo': '#FDFCF0',    
+                        'tri-texto': '#2D3436',
+                        'tri-verde': '#25D366',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8; /* Fondo blanco roto */
-            transition: all 0.3s ease-in-out;
-        }
-        /* Estilo para el contenedor del cuerpo cuando el modal está abierto */
-        body.overflow-hidden {
-            overflow: hidden;
-            padding-right: 15px;
-        }
-        .product-card {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        /* Estilo para el modal con transición y blur */
-        .modal {
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            transition: opacity 0.3s ease;
-        }
-        /* Aplicamos el Naranja Energía y Gris Carbon para el acento de pestaña */
-        .tab-active {
-            border-bottom: 3px solid #FF6B00; 
-            color: #FF6B00; 
-        }
-        /* Permite scroll horizontal en pestañas para móvil */
-        #category-tabs-wrapper {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        #category-tabs-wrapper::-webkit-scrollbar {
-            display: none;
-        }
-        /* Estilo para el carrusel */
-        .carousel-slide {
-            background-size: cover;
-            background-position: center;
-        }
-        /* Input focus color */
-        input:focus, select:focus, textarea:focus {
-            border-color: #FF6B00 !important;
-            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.4) !important;
-        }
-        /* Estilo para los botones de cantidad */
-        .quantity-btn {
-            @apply p-1 rounded-full transition duration-150 flex-shrink-0 border;
-        }
+        body { font-family: 'Outfit', sans-serif; background-color: #FDFCF0; color: #2D3436; scroll-behavior: smooth; }
+        .swiper { width: 100%; height: 50vh; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 10%, transparent 70%); z-index: 10; }
+        .food-card { background: white; border-radius: 25px; transition: all 0.3s ease; border: 1px solid #eee; }
+        .food-card:hover { transform: translateY(-8px); border-color: #D32F2F; box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+        .btn-pedido { background: #D32F2F; color: white; transition: 0.3s; cursor: pointer; }
+        .btn-pedido:hover { background: #FF8C00; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
-    <script>
-        // --- Constantes y Estado Global ---
-        
-        // 📞 1. NÚMERO DE WHATSAPP DEL RESTAURANTE (¡REEMPLAZAR!)
-        // Formato: código de país + área + número. Ej: 5493541214553 (sin el +)
-        const RESTAURANT_PHONE = "5493541214553"; 
-
-        // 💳 2. ENLACE DE PAGO DE MERCADO PAGO / TRANSFERENCIA (¡REEMPLAZAR!)
-        const MERCADO_PAGO_LINK = "https://link.mercadopago.com.ar/ejemplopagoqr"; 
-        
-        window.cart = {};
-        
-        // --- Productos de COMIDA RÁPIDA ---
-        const products = [
-          
-        
-        // --- PIZZAS ---
-{ id: 601, name: 'Pizza Muzzarella', price: 13500, category: 'Pizzas', img: 'https://i.pinimg.com/736x/f1/32/60/f132606f9ac790b9333d699d00516829.jpg' },
-{ id: 602, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/e3/dd/15/e3dd15552ebb7cf5754f6f2a7897554a.jpg' },
-{ id: 603, name: 'Pizza Fugazzeta', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/1200x/7b/a2/86/7ba286ba74638e22c503f0e7888a1de3.jpg' },
-
-   
-    // --- LOMOS ---
-{ id: 401, name: 'Lomo XXL Completo', price: 23500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' },
-{ id: 402, name: 'Lomo con Huevo', price: 20500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000' },
-{ id: 403, name: 'Lomo Especial con Jamón y Queso', price: 18500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698451041074.png?size=800x800' },
-
-// --- EMPANADAS ---
-{ id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: ' https://img-global.cpcdn.com/recipes/f8d724c25de6517c/680x781f0.5_0.553045_1.0q80/empanadas-arabes-foto-principal.jpg' },
-{ id: 302, name: 'Empanada Carne Dulce', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
-{ id: 303, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
-{ id: 304, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://cdn0.recetasgratis.net/es/posts/0/4/2/empanadas_de_jamon_queso_y_cebolla_76240_orig.jpg' },
-{ id: 305, name: 'Empanada de Pollo', price: 2500, category: 'Empanadas', img: ' https://www.superpollo.cl/img/recetas/empanadas-de-pollo.jpg' },
-
-// --- HAMBURGUESAS ---
-{ id: 501, name: 'Hamburguesa Clásica', price: 16500, category: 'Hamburguesas', img: 'https://i.pinimg.com/736x/6e/9f/06/6e9f069d9a368bc8d5412838d6ebe894.jpg' },
-{ id: 502, name: 'Hamburguesa con Cheddar y Bacon ', price: 18500, category: 'Hamburguesas', img: 'https://i.pinimg.com/1200x/c6/c2/ef/c6c2ef1e207ac95ec825893a72c4f408.jpg' },
-
-
-
-
-
-];
-        
-        let activeCategory = 'Todos';
-
-        // --- Funciones de Utilidad ---
-
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('es-AR', {
-                style: 'currency',
-                currency: 'ARS',
-                minimumFractionDigits: 0
-            }).format(amount);
-        };
-
-        const getProductById = (id) => products.find(p => p.id === id);
-        
-        // --- Funciones del Carrito ---
-
-        window.addToCart = (productId) => {
-            const id = productId.toString();
-            window.cart[id] = (window.cart[id] || 0) + 1;
-            
-            window.renderCart(); 
-            showNotification(`${getProductById(productId).name} agregado al carrito.`, 'success');
-        };
-
-        window.updateQuantity = (productId, operation) => {
-            const id = productId.toString();
-            
-            if (operation === 'add') {
-                window.cart[id] = (window.cart[id] || 0) + 1;
-            } else if (operation === 'subtract') {
-                if (window.cart[id] > 1) {
-                    window.cart[id] -= 1;
-                } else if (window.cart[id] === 1) {
-                    delete window.cart[id]; // Eliminar si la cantidad llega a 0
-                }
-            }
-
-            window.renderCart();
-            // No mostramos notificación para cambios de cantidad en el carrito, es visual.
-        };
-        
-        window.clearCart = () => {
-            window.cart = {}; 
-            window.renderCart();
-            showNotification("Pedido vaciado.", 'info');
-        };
-        
-        // --- Funciones de Renderizado ---
-        
-        window.calculateTotal = () => {
-            let total = 0;
-            for (const id in window.cart) {
-                const product = getProductById(parseInt(id));
-                const quantity = window.cart[id];
-                if (product) {
-                    total += product.price * quantity;
-                }
-            }
-            return total;
-        };
-        
-        window.renderCart = () => {
-            const cartList = document.getElementById('cart-list');
-            const cartTotal = document.getElementById('cart-total');
-            const total = window.calculateTotal();
-            const cartEmpty = document.getElementById('cart-empty-message');
-            const checkoutButton = document.getElementById('checkout-button');
-            
-            cartList.innerHTML = '';
-            
-            const itemIds = Object.keys(window.cart).filter(id => window.cart[id] > 0);
-            
-            if (itemIds.length === 0) {
-                cartEmpty.classList.remove('hidden');
-                checkoutButton.disabled = true;
-                checkoutButton.classList.add('opacity-50', 'cursor-not-allowed', 'shadow-none');
-            } else {
-                cartEmpty.classList.add('hidden');
-                checkoutButton.disabled = false;
-                checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed', 'shadow-none');
-
-                itemIds.forEach(id => {
-                    const product = getProductById(parseInt(id));
-                    const quantity = window.cart[id];
-                    const subtotal = product.price * quantity;
-                    
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'flex flex-col py-3 border-b border-gray-100 last:border-b-0';
-                    itemElement.innerHTML = `
-                        <div class="flex items-start justify-between">
-                            <div class="flex-grow pr-2">
-                                <p class="text-sm font-semibold text-gray-800">${product.name}</p>
-                                <p class="text-xs text-gray-500">${formatCurrency(product.price)} c/u</p>
-                            </div>
-                            <span class="text-sm font-bold text-gray-700 whitespace-nowrap">${formatCurrency(subtotal)}</span>
-                        </div>
-                        <div class="flex items-center justify-end mt-2 space-x-2">
-                            <button onclick="updateQuantity(${product.id}, 'subtract')" class="quantity-btn text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 border-red-300" title="Restar 1 unidad">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                                </svg>
-                            </button>
-                            <!-- Color modificado: Naranja Energía -->
-                            <span class="text-lg font-extrabold text-naranja-energia w-6 text-center">${quantity}</span> 
-                            <button onclick="updateQuantity(${product.id}, 'add')" class="quantity-btn text-green-600 hover:text-green-800 bg-green-100 hover:bg-green-200 border-green-300" title="Añadir 1 unidad">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
-                        </div>
-                    `;
-                    cartList.appendChild(itemElement);
-                });
-            }
-            
-            cartTotal.textContent = formatCurrency(total);
-        };
-
-        // --- Lógica de Categorías ---
-
-        window.renderProducts = () => {
-            const productGrid = document.getElementById('product-grid');
-            productGrid.innerHTML = ''; 
-            
-            const filteredProducts = activeCategory === 'Todos' 
-                ? products 
-                : products.filter(p => p.category === activeCategory);
-            
-            document.getElementById('product-grid-title').textContent = activeCategory === 'Todos' 
-                ? '🔥 Menú ' 
-                : `Menú de: ${activeCategory}`;
-
-            if (filteredProducts.length === 0) {
-                productGrid.innerHTML = '<p class="text-center text-gray-500 py-12 col-span-full">No hay ítems en esta categoría por el momento.</p>';
-                return;
-            }
-
-            filteredProducts.forEach(product => {
-                const card = document.createElement('div');
-                card.className = 'product-card bg-white rounded-xl shadow-xl overflow-hidden flex flex-col justify-between';
-                
-                card.innerHTML = `
-                    <div>
-                        <div class="overflow-hidden relative group">
-                            <img 
-                                onclick="openImageModal('${product.img}')" 
-                                src="${product.img}" 
-                                onerror="this.onerror=null; this.src='https://placehold.co/400x500/F97316/FFFFFF?text=${product.name.replace(/[^a-zA-Z0-9]/g, '+')}'" 
-                                alt="${product.name}" 
-                                class="w-full h-72 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                                title="Click para ampliar"
-                            >
-                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 pointer-events-none"></div>
-                        </div>
-                        <div class="p-4">
-                            <!-- Color de etiqueta modificado: Amarillo Felicidad (fondo) y Negro Carbón (texto) -->
-                            <span class="inline-block bg-amarillo-felicidad text-negro-carbon text-xs font-semibold px-3 py-1 rounded-full mb-2">${product.category}</span>
-                            <h3 class="text-xl font-bold text-gray-900">${product.name}</h3>
-                            <!-- Color de Precio modificado: Naranja Energía -->
-                            <p class="text-3xl font-extrabold text-naranja-energia mt-2">${formatCurrency(product.price)}</p>
-                        </div>
-                    </div>
-                    <div class="p-4 pt-0">
-                        <!-- Color de botón modificado: Rojo Apetito (Urgencia) -->
-                        <button onclick="addToCart(${product.id})" class="w-full bg-rojo-apetito hover:bg-rojo-apetito/90 text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-[1.01]">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            <span>Añadir al Carrito</span> 
-                        </button>
-                    </div>
-                `;
-                productGrid.appendChild(card);
-            });
-            updateCategoryTabs();
-        };
-
-        window.changeCategory = (categoryName) => {
-            activeCategory = categoryName;
-            window.renderProducts();
-        };
-
-        const updateCategoryTabs = () => {
-            const tabsContainer = document.getElementById('category-tabs');
-            // Obtener categorías únicas y añadir 'Todos'
-            const categories = ['Todos', ...new Set(products.map(p => p.category))].sort(); 
-            
-            tabsContainer.innerHTML = '';
-            
-            categories.forEach(category => {
-                const button = document.createElement('button');
-                button.textContent = category;
-                // Color modificado: Naranja Energía
-                button.className = `flex-shrink-0 px-4 py-2 text-base font-semibold transition duration-200 ease-in-out whitespace-nowrap ${category === activeCategory ? 'tab-active text-naranja-energia' : 'text-gray-600 hover:text-naranja-energia'}`;
-                button.onclick = () => window.changeCategory(category);
-                tabsContainer.appendChild(button);
-            });
-        };
-
-
-        // --- Lógica del Checkout y WhatsApp ---
-
-        window.openCheckoutModal = () => {
-            const modal = document.getElementById('checkout-modal');
-            modal.classList.remove('hidden');
-            document.getElementById('checkout-total').textContent = formatCurrency(window.calculateTotal());
-            document.getElementById('payment-cash-details').classList.add('hidden');
-            document.getElementById('confirmation-modal').classList.add('hidden'); 
-            document.body.classList.add('overflow-hidden');
-        };
-
-        window.closeCheckoutModal = () => {
-            document.getElementById('checkout-modal').classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        };
-        
-        window.closeConfirmationModal = () => {
-            document.getElementById('confirmation-modal').classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        };
-
-
-        window.handlePaymentChange = () => {
-            const paymentMethod = document.getElementById('payment-method').value;
-            const cashDetails = document.getElementById('payment-cash-details');
-            
-            if (paymentMethod === 'Efectivo') {
-                cashDetails.classList.remove('hidden');
-                document.getElementById('pays-with').setAttribute('required', 'required');
-            } else {
-                cashDetails.classList.add('hidden');
-                document.getElementById('pays-with').removeAttribute('required');
-            }
-        };
-
-        const generateWhatsAppMessage = (formData, total, paymentMethod) => {
-            const items = Object.keys(window.cart).filter(id => window.cart[id] > 0).map(id => {
-                const product = getProductById(parseInt(id));
-                const quantity = window.cart[id];
-                const subtotal = product.price * quantity;
-                // Formato simple para WhatsApp
-                return `(${quantity}x) ${product.name} -> ${formatCurrency(subtotal).replace(/,/g, '')}`; 
-            }).join('\n- ');
-            
-            let message = `*🍔 NUEVO PEDIDO *\n\n`; // Título actualizado
-            
-            // 1. Datos del Cliente
-            message += `*DATOS DEL CLIENTE:*\n`;
-            message += `👤 Nombre: ${formData.name}\n`;
-            message += `📞 Teléfono: ${formData.phone}\n`;
-            message += `📍 Dirección: ${formData.address}\n\n`;
-            
-            // 2. Detalle del Pedido
-            message += `*DETALLE DEL PEDIDO:*\n`;
-            message += `- ${items}\n\n`;
-            
-            // 3. Resumen y Método de Pago
-            message += `💵 Total a Pagar: ${formatCurrency(total).replace(/,/g, '')}\n`;
-            message += `💳 Método Elegido: *${paymentMethod}*\n\n`;
-
-            if (paymentMethod === 'Efectivo') {
-                const paysWith = parseInt(formData.paysWith || 0);
-                const change = paysWith - total;
-                
-                if (paysWith > 0) {
-                     message += `*Cálculo de Vuelto:*\n`;
-                     message += `💸 Cliente Paga con: ${formatCurrency(paysWith).replace(/,/g, '')}\n`;
-                     message += `🔄 Vuelto a Entregar: ${formatCurrency(change).replace(/,/g, '')}\n`;
-                }
-                
-            } else if (paymentMethod === 'Online') {
-                message += `*ESTADO: PAGO POR TRANSFERENCIA/MP (COMPROBANTE PENDIENTE)*\n`;
-                message += `✅ Ya he realizado el pago a través del link de Mercado Pago. Adjuntaré la captura de mi comprobante en este chat.\n`;
-            }
-            
-            return encodeURIComponent(message);
-        };
-
-        // --- FUNCIÓN processCheckout (Misma que antes) ---
-        window.processCheckout = async () => {
-            const form = document.getElementById('checkout-form');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
-
-            const total = window.calculateTotal();
-            const formData = {
-                name: document.getElementById('customer-name').value,
-                address: document.getElementById('customer-address').value,
-                phone: document.getElementById('customer-phone').value,
-                paymentMethod: document.getElementById('payment-method').value,
-                paysWith: document.getElementById('pays-with').value,
-            };
-            
-            // Validación de monto en efectivo
-            if (formData.paymentMethod === 'Efectivo' && parseInt(formData.paysWith || 0) < total) {
-                 showNotification("El monto de pago en efectivo debe ser igual o superior al total.", 'error', 4000);
-                 return;
-            }
-
-            const message = generateWhatsAppMessage(formData, total, formData.paymentMethod);
-            const whatsappUrl = `https://wa.me/${RESTAURANT_PHONE}?text=${message}`;
-
-            window.closeCheckoutModal();
-            
-            // Limpiar el carrito después de generar el pedido
-            window.clearCart(); 
-
-            if (formData.paymentMethod === 'Online') {
-                
-                // 1. Notificar y redirigir al pago de Mercado Pago
-                showNotification("¡Serás redirigido a Mercado Pago para pagar! Luego, haz clic en el botón verde para enviar el pedido con el comprobante.", 'info', 6000);
-                window.open(MERCADO_PAGO_LINK, '_blank'); 
-
-                // 2. Configurar y mostrar el modal de confirmación para el comprobante
-                document.getElementById('confirmation-payment-method').textContent = "ONLINE (PENDIENTE DE COMPROBANTE)";
-                
-                setTimeout(() => {
-                    document.getElementById('confirmation-whatsapp-link').href = whatsappUrl;
-                    document.getElementById('confirmation-modal').classList.remove('hidden');
-                    document.body.classList.add('overflow-hidden');
-                }, 1000); 
-                
-            } else {
-                // Pago en Efectivo: Redirección directa
-                window.open(whatsappUrl, '_blank');
-                showNotification("¡Pedido en Efectivo Enviado! Abrir WhatsApp para confirmar.", 'success');
-            }
-        };
-
-        // --- Lógica del Carrusel (Actualizada con tema de comida) ---
-        let currentSlide = 0;
-        let slideInterval;
-        let totalSlides = 0;
-        
-        const goToSlide = (index) => {
-            const track = document.getElementById('carousel-track');
-            if (!track) return;
-            
-            const slides = track.querySelectorAll('.carousel-slide');
-            totalSlides = slides.length;
-            
-            if (index >= totalSlides) {
-                currentSlide = 0;
-            } else if (index < 0) {
-                currentSlide = totalSlides - 1;
-            } else {
-                currentSlide = index;
-            }
-            
-            const offset = -currentSlide * 100;
-            track.style.transform = `translateX(${offset}%)`;
-            
-            updateDots();
-        };
-        
-        const nextSlide = () => goToSlide(currentSlide + 1);
-        const prevSlide = () => goToSlide(currentSlide - 1);
-        
-        const startAutoSlide = () => {
-            clearInterval(slideInterval);
-            slideInterval = setInterval(nextSlide, 5000); 
-        };
-
-        const updateDots = () => {
-            const dotsContainer = document.getElementById('carousel-dots');
-            if (!dotsContainer) return;
-
-            dotsContainer.innerHTML = ''; 
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('button');
-                dot.className = `w-3 h-3 rounded-full transition-all duration-300 ease-in-out ${i === currentSlide ? 'bg-white shadow-lg w-6' : 'bg-gray-400'}`;
-                dot.onclick = () => {
-                    goToSlide(i);
-                    startAutoSlide(); 
-                };
-                dotsContainer.appendChild(dot);
-            }
-        };
-
-        // --- Sistema de Notificación (Mismo que antes) ---
-        window.notificationCounter = 0;
-        window.showNotification = (message, type = 'success', duration = 2500) => {
-            const container = document.getElementById('notification-container');
-            const id = `notif-${window.notificationCounter++}`;
-            
-            let bgColor = 'bg-verde-frescura'; // Éxito: Verde Frescura
-            let icon = 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'; 
-
-            if (type === 'error') {
-                bgColor = 'bg-rojo-apetito'; // Error: Rojo Apetito
-                icon = 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'; 
-            } else if (type === 'info') {
-                bgColor = 'bg-naranja-energia'; // Info: Naranja Energía
-                icon = 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'; 
-            }
-
-            const element = document.createElement('div');
-            element.id = id;
-            element.className = `flex items-center ${bgColor} text-white text-sm font-bold px-4 py-3 rounded-xl shadow-lg mb-2 transition-all duration-300 transform opacity-0 translate-y-2 pointer-events-auto`;
-            element.innerHTML = `
-                <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${icon}" />
-                </svg>
-                <p>${message}</p>
-            `;
-            
-            container.appendChild(element);
-
-            setTimeout(() => {
-                element.classList.remove('opacity-0', 'translate-y-2');
-            }, 10);
-
-            setTimeout(() => {
-                element.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => {
-                    element.remove();
-                }, 300);
-            }, duration);
-        };
-
-
-        // --- Inicialización (Misma que antes) ---
-        window.onload = () => {
-            window.renderCart();
-
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            if (prevBtn && nextBtn) {
-                prevBtn.onclick = () => { prevSlide(); startAutoSlide(); };
-                nextBtn.onclick = () => { nextSlide(); startAutoSlide(); };
-            }
-            goToSlide(0); 
-            startAutoSlide();
-            
-            window.renderProducts();
-        };
-
-        // --- Modal de Imagen (Misma que antes) ---
-        window.openImageModal = (imgSrc) => {
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("modalImage");
-            
-            modalImg.src = imgSrc;
-            modal.classList.remove("hidden");
-            document.body.classList.add('overflow-hidden');
-        }
-
-        window.closeImageModal = () => {
-            const modal = document.getElementById("imageModal");
-            modal.classList.add("hidden");
-            document.body.classList.remove('overflow-hidden');
-        }
-
-    </script>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <!-- Modal de Ampliación de Imagen -->
-    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[100]" onclick="closeImageModal()">
-        
-        <!-- Color modificado: Naranja Energía -->
-        <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-naranja-energia transition" onclick="closeImageModal()">&times;</span>
-        
-        <img id="modalImage" class="max-w-[95%] max-h-[90vh] rounded-lg shadow-2xl object-contain" onclick="event.stopPropagation()" />
-    
-    </div>
-
-    <!-- Contenedor de Notificaciones Toast -->
-    <div id="notification-container" class="fixed top-4 right-4 z-50 w-full max-w-xs pointer-events-none">
-    </div>
-
-    <!-- Header Principal -->
-    <header class="bg-white shadow-lg sticky top-0 z-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            
-            <!-- Logo y Título -->
-            <h1 class="text-3xl font-extrabold text-naranja-energia flex items-center">
-                <!-- Se reemplazó el SVG por la etiqueta <img> usando la URL del usuario -->
-                <img 
-                    src="https://i.ibb.co/ynBfR6T6/logo.png" 
-                    alt="Logo de La Posta" 
-                    class="h-8 w-8 inline-block mr-2 rounded-full object-cover"
-                    onerror="this.onerror=null; this.src='https://placehold.co/32x32/FFC300/FFFFFF?text=LP'" 
-                />
-                <span class="text-xl sm:text-3xl">La Posta</span>
-            </h1>
-            
-            <!-- Botón de Carrito (Visible en Móvil) -->
-            <button onclick="openCheckoutModal()" class="block relative p-3 bg-naranja-energia/10 hover:bg-naranja-energia/20 text-naranja-energia rounded-full transition duration-300 shadow-md transform hover:scale-105">
-                <!-- Icono de Carrito de Compras (mantenido como SVG) -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-            </button>
-        </div>
+    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-6 py-4 shadow-sm flex justify-between items-center">
+        <h1 class="text-xl font-black italic">
+            <span class="text-tri-rojo text-2xl">▲</span> SABORES <span class="text-tri-naranja">RÁPIDOS</span>
+        </h1>
+        <button onclick="openCheckoutModal()" class="relative bg-tri-texto text-white p-3 rounded-full hover:bg-tri-rojo transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white hidden">0</span>
+        </button>
     </header>
-    <!-- Sección Carrusel/Novedades -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
-        <!-- Color modificado: Negro Carbón -->
-        <h2 class="text-3xl font-extrabold text-negro-carbon mb-4">⭐ Promociones de la Semana</h2>
-        <div id="magazine-carousel" class="relative overflow-hidden rounded-2xl shadow-2xl bg-white h-[350px] md:h-[450px] lg:h-[550px]">
-            <div id="carousel-track" class="h-full flex transition-transform duration-500 ease-in-out">
-                <!-- Slide 1 (Tema Comida) -->
-                <div class="carousel-slide flex-shrink-0 w-full h-full bg-cover bg-center flex items-center p-8 md:p-16 text-white" style="background-image: url('https://scontent.fcor2-1.fna.fbcdn.net/v/t39.30808-6/491532709_1084965903672770_7425794740549870655_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=sVOma5saGBAQ7kNvwHODrDM&_nc_oc=Adk5KOxm1NtuSFQfc6QEEp9EbISr6IcUD3-3E8cUkqyKYhIU_nCMRqj3vJ_PI59cgiM&_nc_zt=23&_nc_ht=scontent.fcor2-1.fna&_nc_gid=i0XPvCw2aOC9J4fe_u_IfA&oh=00_Aflzgg3RVG6_PNFhfD2Y2BIHHuyGOsbiQ1VVRxJPkrSYOQ&oe=693BFF8B');">
-                    <div class="bg-negro-carbon/50 p-6 rounded-xl max-w-lg">
-                        <p class="text-sm font-light uppercase tracking-widest text-amarillo-felicidad">COMBO FAMILIAR</p>
-                        <h3 class="text-3xl md:text-5xl font-extrabold mt-2 leading-tight">Pack 2 Hamburguesas + 2 Papas .</h3>
-                        <p class="mt-4 text-base md:text-lg">La mejor opción para la noche de sábado. ¡Ahorra con el combo!</p>
-                        <!-- Color modificado: Rojo Apetito -->
-                        <a href="#product-grid-anchor" class="mt-6 inline-block bg-rojo-apetito hover:bg-rojo-apetito/90 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-sm uppercase tracking-wider shadow-lg">Pedir Ahora</a>
+
+    <section class="pt-20">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide relative">
+                    <div class="slide-overlay flex items-end p-8 text-white">
+                        <div><h2 class="text-4xl font-black uppercase">Lomos XXL</h2><p class="text-tri-amarillo font-bold">El mejor sabor de la zona.</p></div>
                     </div>
-                </div>
-                <!-- Slide 2 (Tema Comida) -->
-                <div class="carousel-slide flex-shrink-0 w-full h-full bg-cover bg-center flex items-center justify-end p-8 md:p-16 text-white" style="background-image: url('https://cdn.tictuk.com/9322c1e0-0a6a-d053-9746-9466a5c465a5/banner_mobile_bef3b522-b80b-04aa-0a61-8e75eea446db.jpeg?a=f28cb5a9-a36a-4e53-c060-4cb4494cfe21');">
-                    <div class="bg-negro-carbon/50 p-6 rounded-xl max-w-lg text-right">
-                        <p class="text-sm font-light uppercase tracking-widest text-amarillo-felicidad">OFERTA DE PIZZAS</p>
-                        <h3 class="text-3xl md:text-5xl font-extrabold mt-2 leading-tight">2x1 en Pizzas Muzzarella todos los Miércoles.</h3>
-                        <p class="mt-4 text-base md:text-lg">Solo por tiempo limitado. ¡Aprovecha y duplica el sabor!</p>
-                        <!-- Color modificado: Verde Frescura (Para destacar frescura/calidad del ingrediente) -->
-                        <a href="#product-grid-anchor" class="mt-6 inline-block bg-verde-frescura hover:bg-verde-frescura/90 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-sm uppercase tracking-wider shadow-lg">Ver Promos</a>
-                    </div>
-                </div>
-                <!-- Slide 3 (Tema Comida) -->
-                <div class="carousel-slide flex-shrink-0 w-full h-full bg-cover bg-center flex items-center p-8 md:p-16 text-white" style="background-image: url('https://scontent.fcor2-1.fna.fbcdn.net/v/t1.6435-9/174437925_849642192255364_8794973753938276613_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=vQ7XwiypuXQQ7kNvwGJGlRp&_nc_oc=AdmHoFq9xdkwKI2vxlqqPz5_9GauSijJXQjbDvr_1lwjftABatbKY9eq-kZiYnUHE0Y&_nc_zt=23&_nc_ht=scontent.fcor2-1.fna&_nc_gid=DSVNc1OJoKOLQw-dDvtecQ&oh=00_AfnplyFKGwOG2N-ZT2OLPMY_-KwWJB3SLS-Q5AtPAg9MqA&oe=695D8AB1');">
-                    <div class="bg-negro-carbon/50 p-6 rounded-xl max-w-lg">
-                        <p class="text-sm font-light uppercase tracking-widest text-amarillo-felicidad">EL FAVORITO</p>
-                        <h3 class="text-3xl md:text-5xl font-extrabold mt-2 leading-tight">Prueba la Salchipapa Extrema con 4 Salsas.</h3>
-                        <p class="mt-4 text-base md:text-lg">Una explosión de sabor que no te puedes perder.</p>
-                        <!-- Color modificado: Rojo Apetito -->
-                        <a href="#product-grid-anchor" class="mt-6 inline-block bg-rojo-apetito hover:bg-rojo-apetito/90 text-white font-bold py-3 px-8 rounded-full transition duration-300 text-sm uppercase tracking-wider shadow-lg">Explorar Menú</a>
-                    </div>
+                    <img src="https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000" class="w-full h-full object-cover">
                 </div>
             </div>
-            <!-- Botones de Navegación del Carrusel -->
-            <button id="prev-btn" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/40 hover:bg-white/70 text-negro-carbon p-3 rounded-full transition duration-300 hidden md:block z-10 shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-            </button>
-            <button id="next-btn" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/40 hover:bg-white/70 text-negro-carbon p-3 rounded-full transition duration-300 hidden md:block z-10 shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            </button>
-            <!-- Puntos de Navegación del Carrusel -->
-            <div id="carousel-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10 p-2 rounded-full bg-black/20">
-            </div>
+            <div class="swiper-pagination"></div>
         </div>
     </section>
 
-    <!-- Contenido Principal: Productos y Carrito -->
-    <main id="product-grid-anchor" class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pt-0 grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        <!-- Columna de Productos (3/4 de ancho) -->
-        <div class="lg:col-span-3">
-            <!-- Color modificado: Negro Carbón -->
-            <h2 id="product-grid-title" class="text-2xl font-bold text-negro-carbon mb-4 border-b border-gray-200 pb-2"></h2>
-            
-            <!-- Pestañas de Categorías -->
-            <div id="category-tabs-wrapper" class="overflow-x-auto mb-6 bg-white p-2 rounded-xl shadow-lg">
-                <div id="category-tabs" class="flex flex-nowrap space-x-2">
-                </div>
-            </div>
-            
-            <!-- Grid de Productos -->
-            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <!-- Los productos se renderizan aquí por JS -->
-            </div>
-        </div>
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <section id="combos" class="mb-12">
+            <h3 class="text-2xl font-black uppercase text-tri-rojo italic mb-6">Combos del Día</h3>
+            <div id="combos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
 
-        <!-- Columna del Carrito (1/4 de ancho) -->
-        <div class="lg:col-span-1">
-            <div class="bg-white p-6 rounded-xl shadow-2xl border border-gray-100 sticky top-20">
-                <!-- Color modificado: Negro Carbón -->
-                <h2 class="text-xl font-bold text-negro-carbon mb-4 flex items-center justify-between border-b pb-3">
-                    <span>🛒 Tu Pedido</span>
-                    <button onclick="clearCart()" class="text-sm text-rojo-apetito hover:text-rojo-apetito/80 font-medium transition duration-200">Vaciar</button>
-                </h2>
-                
-                <div id="cart-list" class="divide-y divide-gray-200 min-h-[100px]">
-                    <!-- Ítems del carrito se renderizan aquí -->
-                </div>
-                
-                <p id="cart-empty-message" class="text-center text-gray-500 py-6 text-sm">
-                    El carrito está vacío. ¡Añade algo!
-                </p>
-
-                <div class="mt-4 pt-4 border-t border-gray-200">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-lg font-semibold text-gray-800">TOTAL:</span>
-                        <!-- Color modificado: Naranja Energía -->
-                        <span id="cart-total" class="text-3xl font-extrabold text-naranja-energia">
-                            $0
-                        </span>
-                    </div>
-                    
-                    <!-- Botón de Checkout (Color de Éxito: Verde Frescura) -->
-                    <button id="checkout-button" onclick="openCheckoutModal()" disabled class="w-full bg-verde-frescura hover:bg-verde-frescura/90 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span>Confirmar Pedido</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
+        <section id="menu-section">
+            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-4 sticky top-[72px] bg-tri-fondo/95 z-40"></div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 min-h-[400px]"></div>
+        </section>
     </main>
 
-    <!-- MODALES DE CHECKOUT -->
-
-    <!-- Modal 1: Formulario de Datos y Pago -->
-    <div id="checkout-modal" class="modal hidden fixed inset-0 z-40 overflow-y-auto" onclick="closeCheckoutModal()">
-        <div class="flex items-start justify-center min-h-screen pt-12 pb-20 px-4 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div class="bg-white w-full max-w-xl rounded-t-3xl md:rounded-3xl overflow-hidden shadow-2xl">
+            <div class="p-6 bg-tri-fondo flex justify-between items-center border-b">
+                <h4 class="text-xl font-black uppercase tracking-tight">Tu Pedido</h4>
+                <button onclick="closeCheckoutModal()" class="text-gray-400 text-2xl">✕</button>
             </div>
-
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             
-            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline" onclick="event.stopPropagation()">
-                
-                <!-- Color modificado: Naranja Energía -->
-                <div class="bg-naranja-energia px-4 py-3 sm:px-6 flex justify-between items-center rounded-t-xl">
-                    <h3 class="text-xl font-extrabold leading-6 text-white" id="modal-headline">
-                        Confirmar Pedido y Envío
-                    </h3>
-                    <button onclick="closeCheckoutModal()" class="text-white hover:text-naranja-energia/80 transition">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+            <div id="cart-list" class="p-6 space-y-4 max-h-[40vh] overflow-y-auto"></div>
+
+            <div class="p-6 border-t bg-gray-50">
+                <div class="flex justify-between text-2xl font-black mb-6">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-tri-rojo">$0</span>
                 </div>
 
-                <form id="checkout-form" onsubmit="event.preventDefault(); processCheckout();" class="p-6">
-                    <div class="mb-4">
-                        <p class="text-gray-700 text-lg font-semibold">Total a Pagar:</p>
-                        <!-- Color modificado: Naranja Energía -->
-                        <p id="checkout-total" class="text-4xl font-extrabold text-naranja-energia">$0</p>
-                    </div>
+                <div class="space-y-3 mb-6">
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 bg-white rounded-xl outline-none border border-gray-200 focus:ring-2 ring-tri-rojo">
+                    <input type="text" id="cust-addr" placeholder="Dirección de Envío" class="w-full p-4 bg-white rounded-xl outline-none border border-gray-200 focus:ring-2 ring-tri-rojo">
+                </div>
 
-                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Datos de Envío/Contacto</h4>
-                    
-                    <div class="space-y-4">
-                        <!-- Inputs con focus en Naranja Energía -->
-                        <input type="text" id="customer-name" placeholder="Nombre y Apellido" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-naranja-energia focus:border-naranja-energia transition">
-                        <input type="tel" id="customer-phone" placeholder="Teléfono/WhatsApp (Ej: 3541...)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-naranja-energia focus:border-naranja-energia transition">
-                        <input type="text" id="customer-address" placeholder="Dirección de Envío (Calle, Número, Localidad)" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-naranja-energia focus:border-naranja-energia transition">
-                    </div>
-
-                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mt-6 mb-4">Método de Pago</h4>
-
-                    <!-- Select con focus en Naranja Energía -->
-                    <select id="payment-method" onchange="handlePaymentChange()" required class="w-full p-3 border border-gray-300 bg-white rounded-lg focus:ring-naranja-energia focus:border-naranja-energia transition">
-                        <option value="" disabled selected>Selecciona una opción de pago</option>
-                        <option value="Efectivo">💵 Efectivo al Recibir</option>
-                        <option value="Online">💳 Mercado Pago / Transferencia (Online)</option>
-                    </select>
-
-                    <div id="payment-cash-details" class="mt-4 p-4 bg-amarillo-felicidad/20 rounded-lg border border-amarillo-felicidad/50 hidden">
-                        <!-- Color modificado: Amarillo Felicidad / Naranja Energía -->
-                        <label for="pays-with" class="block text-sm font-medium text-negro-carbon mb-2">¿Con cuánto paga el cliente? (Para el vuelto)</label>
-                        <input type="number" id="pays-with" placeholder="Monto exacto o superior al total" min="0" class="w-full p-3 border border-amarillo-felicidad rounded-lg focus:ring-naranja-energia focus:border-naranja-energia transition">
-                    </div>
-
-                    <div class="mt-8">
-                        <!-- Color modificado: Verde Frescura (Confirmación de envío) -->
-                        <button type="submit" class="w-full bg-verde-frescura hover:bg-verde-frescura/90 text-white font-bold py-4 px-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex items-center justify-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19.05 4.95A10 10 0 0012 2C6.477 2 2 6.477 2 12c0 1.942.54 3.754 1.5 5.303L2 22l4.697-1.5c1.55.96 3.361 1.5 5.303 1.5 5.523 0 10-4.477 10-10 .001-2.652-1.05-5.197-2.933-7.081zM16 15.5c-.328.163-.984.484-1.638.583-.655.099-1.298-.184-1.625-.509-.164-.163-.448-.198-.776-.198-.328 0-.612.035-.776.198-.327.325-.97.608-1.625.509-.654-.099-1.31-.42-1.638-.583-.327-.163-.518-.363-.787-.604-.269-.241-.423-.497-.363-.603.061-.106.191-.191.327-.291.136-.099.273-.241.363-.335.09-.094.135-.198.182-.291.047-.093.023-.178-.046-.248-.069-.07-.16-.14-.296-.275-.136-.135-.272-.32-.296-.445-.024-.125.109-.23.199-.405.09-.175.241-.362.363-.497.122-.135.257-.184.383-.184.126 0 .225.035.352.069.127.035.241.047.382.047.141 0 .276-.012.383-.047.107-.035.206-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .252-.012.363-.047.111-.035.21-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .252-.012.363-.047.111-.035.21-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .225-.012.352-.047s.241-.069.341-.069c.107 0 .225.035.327.069s.19.08.316.205c.126.125.216.279.24.405.024.125-.109.23-.199.405s-.241.362-.363.497c-.122.135-.257.184-.383.184-.126 0-.225-.035-.352-.069s-.241-.047-.382-.047c-.141 0-.276.012-.383.047-.107.035-.206.069-.327.069s-.215.034-.341.069c.126-.035-.225-.047-.352-.047-.127 0-.252.012-.363.047s-.21.069-.327.069c.111.035.225.047.341.047z"/>
-                            </svg>
-                            <span>Enviar Pedido por WhatsApp</span>
-                        </button>
-                    </div>
-                </form>
-
+                <button onclick="finalAction()" class="w-full bg-tri-rojo text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-tri-naranja transition uppercase tracking-widest">
+                    Pagar y Enviar Pedido
+                </button>
+                <p class="text-[10px] text-center text-gray-400 mt-4 font-bold uppercase tracking-widest italic">Se abrirá el pago y luego WhatsApp automáticamente</p>
             </div>
         </div>
     </div>
-    
-    <!-- Modal 2: Confirmación de Pago Online/MP -->
-    <div id="confirmation-modal" class="modal hidden fixed inset-0 z-40 overflow-y-auto" onclick="closeConfirmationModal()">
-        <div class="flex items-start justify-center min-h-screen pt-12 pb-20 px-4 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
 
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+        // CONFIGURACIÓN (COLOCA TUS LINKS AQUÍ)
+        const MI_WHATSAPP = "5493541214553"; 
+        const MI_LINK_PAGO = "https://link.mercadopago.com.ar/TU_LINK"; 
+
+        const products = [
+            { id: 601, name: 'Pizza Muzzarella', price: 13500, category: 'Pizzas', img: 'https://i.pinimg.com/736x/f1/32/60/f132606f9ac790b9333d699d00516829.jpg' },
+            { id: 602, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/e3/dd/15/e3dd15552ebb7cf5754f6f2a7897554a.jpg' },
+            { id: 603, name: 'Pizza Fugazzeta', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/1200x/7b/a2/86/7ba286ba74638e22c503f0e7888a1de3.jpg' },
+            { id: 401, name: 'Lomo XXL Completo', price: 23500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' },
+            { id: 402, name: 'Lomo con Huevo', price: 20500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000' },
+            { id: 403, name: 'Lomo Especial J&Q', price: 18500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698451041074.png?size=800x800' },
+            { id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://img-global.cpcdn.com/recipes/f8d724c25de6517c/680x781f0.5_0.553045_1.0q80/empanadas-arabes-foto-principal.jpg' },
+            { id: 302, name: 'Empanada Carne Dulce', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+            { id: 303, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+            { id: 304, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://cdn0.recetasgratis.net/es/posts/0/4/2/empanadas_de_jamon_queso_y_cebolla_76240_orig.jpg' },
+            { id: 305, name: 'Empanada de Pollo', price: 2500, category: 'Empanadas', img: 'https://www.superpollo.cl/img/recetas/empanadas-de-pollo.jpg' },
+            { id: 501, name: 'Hamburguesa Clásica', price: 16500, category: 'Hamburguesas', img: 'https://i.pinimg.com/736x/6e/9f/06/6e9f069d9a368bc8d5412838d6ebe894.jpg' },
+            { id: 502, name: 'Cheddar & Bacon', price: 18500, category: 'Hamburguesas', img: 'https://i.pinimg.com/1200x/c6/c2/ef/c6c2ef1e207ac95ec825893a72c4f408.jpg' },
+        ];
+
+        const combos = [
+            { id: 901, name: 'PROMO 12 EMPANADAS', detail: 'Docena a elección', price: 26000, img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+            { id: 902, name: 'COMBO 2 LOMOS', detail: '2 Lomo XXL Completos', price: 44000, img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' }
+        ];
+
+        let cart = {};
+        let activeCategory = 'Todos';
+
+        function render() {
+            document.getElementById('combos-grid').innerHTML = combos.map(c => `
+                <div class="food-card p-4 flex items-center space-x-4">
+                    <img src="${c.img}" class="w-20 h-20 object-cover rounded-xl shadow-sm">
+                    <div class="flex-1">
+                        <h4 class="font-black text-lg uppercase mb-1 leading-tight">${c.name}</h4>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xl font-black text-tri-rojo">$${c.price.toLocaleString()}</span>
+                            <button onclick="addToCart(event, ${c.id})" class="bg-tri-texto text-white px-3 py-1 rounded-lg">＋</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            const cats = ['Todos', 'Pizzas', 'Lomos', 'Empanadas', 'Hamburguesas'];
+            document.getElementById('category-tabs').innerHTML = cats.map(c => `
+                <button onclick="filterCategory('${c}')" class="px-6 py-2 rounded-full font-black text-xs uppercase transition-all ${activeCategory === c ? 'bg-tri-rojo text-white' : 'bg-white text-gray-400'}">
+                    ${c}
+                </button>`).join('');
+
+            const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
+            document.getElementById('product-grid').innerHTML = filtered.map(p => `
+                <div class="food-card overflow-hidden" data-aos="fade-up">
+                    <div class="h-44 overflow-hidden"><img src="${p.img}" class="w-full h-full object-cover"></div>
+                    <div class="p-5">
+                        <h3 class="font-black text-gray-800 truncate mb-4">${p.name}</h3>
+                        <div class="flex justify-between items-center">
+                            <p class="text-tri-rojo font-black text-xl">$${p.price.toLocaleString()}</p>
+                            <button onclick="addToCart(event, ${p.id})" class="btn-pedido px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+
+        window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); };
+        window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
+
+        function updateUI() {
+            const count = Object.values(cart).reduce((a, b) => a + b, 0);
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-count').classList.toggle('hidden', count === 0);
+            let total = 0;
+            const allItems = [...products, ...combos];
+            document.getElementById('cart-list').innerHTML = Object.entries(cart).map(([id, q]) => {
+                const item = allItems.find(x => x.id == id);
+                total += item.price * q;
+                return `<div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
+                    <div><p class="font-black text-sm uppercase">${item.name}</p><p class="text-tri-rojo font-bold">$${item.price.toLocaleString()}</p></div>
+                    <div class="flex items-center space-x-3 font-black">
+                        <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-white rounded-full border">-</button>
+                        <span>${q}</span>
+                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-white rounded-full border">+</button>
+                    </div>
+                </div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = `$${total.toLocaleString()}`;
+        }
+
+        window.changeQty = (id, n) => { cart[id] += n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
+        window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+        window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
+
+        // ACCIÓN UNIFICADA: PAGO + WHATSAPP
+        window.finalAction = () => {
+            const name = document.getElementById('cust-name').value;
+            const addr = document.getElementById('cust-addr').value;
+            if(!name || !addr || Object.keys(cart).length === 0) return alert("Completa tus datos para continuar.");
             
-            <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
-                
-                <!-- Color modificado: Amarillo Felicidad -->
-                <div class="bg-amarillo-felicidad px-4 py-3 sm:px-6 flex justify-between items-center rounded-t-xl">
-                    <h3 class="text-xl font-extrabold leading-6 text-negro-carbon">
-                        ⚠️ Paso Final: Confirma tu Pago
-                    </h3>
-                    <button onclick="closeConfirmationModal()" class="text-negro-carbon hover:text-negro-carbon/80 transition">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                </div>
+            // 1. Abrir link de pago en pestaña nueva
+            window.open(MI_LINK_PAGO, '_blank');
 
-                <div class="p-6 text-center">
-                    <!-- Color modificado: Naranja Energía -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-naranja-energia" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+            // 2. Generar mensaje de WhatsApp
+            let text = `*▲ NUEVO PEDIDO - SABORES RÁPIDOS*\n\n*Cliente:* ${name}\n*Dirección:* ${addr}\n\n*DETALLE:*\n`;
+            Object.entries(cart).forEach(([id, q]) => {
+                const item = [...products, ...combos].find(x => x.id == id);
+                text += `- ${q}x ${item.name}\n`;
+            });
+            text += `\n*TOTAL:* ${document.getElementById('cart-total').innerText}\n\n_Ya abrí el link para realizar el pago._`;
+            
+            // 3. Abrir WhatsApp en la misma ventana (o pestaña nueva si prefieres)
+            setTimeout(() => {
+                window.location.href = `https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(text)}`;
+            }, 1000);
+        };
 
-                    <h4 class="mt-4 text-2xl font-bold text-gray-900">¡Ya casi está listo!</h4>
-                    <p class="mt-2 text-sm text-gray-500">
-                        Has elegido el método de pago <span id="confirmation-payment-method" class="font-semibold text-gray-700">ONLINE</span>.
-                    </p>
-                    <p class="mt-4 text-base font-medium text-gray-700">
-                        Por favor, **adjunta la captura de tu comprobante** y luego haz clic en el botón para enviar el pedido a nuestro WhatsApp.
-                    </p>
-                </div>
-
-                <div class="p-4 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <!-- Color modificado: Verde Frescura (Confirmación de envío) -->
-                    <a id="confirmation-whatsapp-link" target="_blank" onclick="closeConfirmationModal()" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-3 bg-verde-frescura text-base font-medium text-white hover:bg-verde-frescura/90 focus:outline-none transition sm:ml-3 sm:w-auto sm:text-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19.05 4.95A10 10 0 0012 2C6.477 2 2 6.477 2 12c0 1.942.54 3.754 1.5 5.303L2 22l4.697-1.5c1.55.96 3.361 1.5 5.303 1.5 5.523 0 10-4.477 10-10 .001-2.652-1.05-5.197-2.933-7.081zM16 15.5c-.328.163-.984.484-1.638.583-.655.099-1.298-.184-1.625-.509-.164-.163-.448-.198-.776-.198-.328 0-.612.035-.776.198-.327.325-.97.608-1.625.509-.654-.099-1.31-.42-1.638-.583-.327-.163-.518-.363-.787-.604-.269-.241-.423-.497-.363-.603.061-.106.191-.191.327-.291.136-.099.273-.241.363-.335.09-.094.135-.198.182-.291.047-.093.023-.178-.046-.248-.069-.07-.16-.14-.296-.275-.136-.135-.272-.32-.296-.445-.024-.125.109-.23.199-.405.09-.175.241-.362.363-.497.122-.135.257-.184.383-.184.126 0 .225.035.352.069.127.035.241.047.382.047.141 0 .276-.012.383-.047.107-.035.206-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .252-.012.363-.047.111-.035.21-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .252-.012.363-.047.111-.035.21-.069.327-.069s.215.034.341.069c.126.035.225.047.352.047.127 0 .225-.012.352-.047s.241-.069.341-.069c.107 0 .225.035.327.069s.19.08.316.205c.126.125.216.279.24.405.024.125-.109.23-.199.405s-.241.362-.363.497c-.122.135-.257.184-.383.184-.126 0-.225-.035-.352-.069s-.241-.047-.382-.047c-.141 0-.276.012-.383.047-.107.035-.206.069-.327.069s-.215.034-.341.069c.126-.035-.225-.047-.352-.047-.127 0-.252.012-.363.047s-.21.069-.327.069c.111.035.225.047.341.047z"/>
-                        </svg>
-                        <span>Confirmar y Enviar Comprobante</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Footer -->
-    <footer class="bg-negro-carbon mt-12 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-            <p>&copy; 2025 SABORES RÁPIDOS | Pide tu comida en segundos.</p>
-            <p class="mt-2 text-sm">Desarrollado con 🍔 y Tailwind CSS.</p>
-        </div>
-    </footer>
-
+        window.onload = () => { AOS.init(); render(); };
+    </script>
 </body>
 </html>
