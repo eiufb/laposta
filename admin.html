@@ -72,9 +72,10 @@
         .stock-item { 
             display: flex; 
             justify-content: space-between; 
-            padding: 12px 5px; 
+            padding: 12px 8px; 
             border-bottom: 1px solid #333; 
-            font-size: 15px; 
+            font-size: 15px;
+            align-items: center;
         }
 
         .stat-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 10px; }
@@ -92,7 +93,7 @@
         <div id="lista-gastos"></div>
         <button class="btn-add" onclick="agregarGasto()">+ Añadir Gasto</button>
         <div style="background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333;">
-            <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block; text-align: center;">Meta de Ventas</span>
+            <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block; text-align: center;">Venta necesaria para cubrir gastos</span>
             <span id="venta-equilibrio" class="eq-money">$0</span>
             <select id="margen-global" onchange="calcularTodo()" style="background: #111; margin-top: 10px;">
                 <option value="0.5">Margen 50%</option>
@@ -118,8 +119,8 @@
     </div>
 
     <div class="card">
-        <h4 style="margin:0 0 10px 0; color:#FFB703; text-transform: uppercase; font-size: 12px;">📦 Stock Actual</h4>
-        <div id="lista">Cargando...</div>
+        <h4 style="margin:0 0 10px 0; color:#FFB703; text-transform: uppercase; font-size: 12px;">📦 Estado del Stock</h4>
+        <div id="lista">Sincronizando...</div>
     </div>
 
     <script>
@@ -134,11 +135,13 @@
 
         function agregarGasto() { misGastos.push({nombre: '', monto: 0}); dibujarGastos(); }
         function eliminarGasto(index) { misGastos.splice(index, 1); dibujarGastos(); }
+        
         function actualizarGasto(i, campo, val) {
             misGastos[i][campo] = campo === 'monto' ? parseFloat(val) || 0 : val;
             localStorage.setItem('misGastos', JSON.stringify(misGastos));
             calcularTodo();
         }
+
         function dibujarGastos() {
             document.getElementById('lista-gastos').innerHTML = misGastos.map((g, i) => `
                 <div class="gasto-row">
@@ -148,44 +151,85 @@
                 </div>`).join('');
             calcularTodo();
         }
+
         function updateSabores() {
             const cat = document.getElementById('prod').value;
             document.getElementById('sabor').innerHTML = sabores[cat].map(s => `<option value="${s}">${s}</option>`).join('');
         }
+
         async function refresh() {
             try {
                 const res = await fetch(URL_API);
                 datosLocales = await res.json();
-                document.getElementById('lista').innerHTML = datosLocales.map(i => `
-                    <div class="stock-item">
-                        <span>${i.sabor}</span>
-                        <span style="color:#FFB703; font-weight:bold">${i.stock} un.</span>
-                    </div>`).join('');
+                
+                const stockCritico = 12; // Límite para alerta
+
+                document.getElementById('lista').innerHTML = datosLocales.map(i => {
+                    const cant = parseInt(i.stock) || 0;
+                    let colorStatus = "#2A9D8F"; // Verde (OK)
+                    let etiqueta = "";
+
+                    if (cant <= 0) {
+                        colorStatus = "#E63946"; // Rojo (Agotado)
+                        etiqueta = " <small style='color:#E63946'>[AGOTADO]</small>";
+                    } else if (cant <= stockCritico) {
+                        colorStatus = "#F4A261"; // Naranja (Poco)
+                        etiqueta = " <small style='color:#F4A261'>[BAJO]</small>";
+                    }
+
+                    return `
+                        <div class="stock-item" style="border-left: 4px solid ${colorStatus}">
+                            <span style="font-weight:${cant <= stockCritico ? 'bold' : 'normal'}">${i.sabor}${etiqueta}</span>
+                            <span style="color:${colorStatus}; font-weight:900">${cant} un.</span>
+                        </div>`;
+                }).join('');
+                
                 calcularTodo();
-            } catch(e) { document.getElementById('lista').innerText = "Error al cargar stock"; }
+            } catch(e) { 
+                document.getElementById('lista').innerText = "Error de conexión"; 
+            }
         }
+
         function calcularTodo() {
             const totalG = misGastos.reduce((acc, g) => acc + g.monto, 0);
             const mrg = parseFloat(document.getElementById('margen-global').value);
             document.getElementById('venta-equilibrio').innerText = "$" + Math.round(totalG / mrg).toLocaleString();
+            
             let inv = datosLocales.reduce((acc, curr) => acc + (parseFloat(curr.monto) || 0), 0);
             document.getElementById('inv-actual').innerText = "$" + Math.round(inv).toLocaleString();
             document.getElementById('ganancia-stock').innerText = "$" + Math.round((inv/(1-mrg))-inv).toLocaleString();
         }
+
         async function send() {
             const btn = document.querySelector('.btn');
+            const originalText = btn.innerText;
             btn.innerText = "ENVIANDO...";
+            btn.disabled = true;
+
             const data = {
                 tipo: 'COMPRA',
                 producto: document.getElementById('prod').value,
                 sabor: document.getElementById('sabor').value,
-                cantidad: parseInt(document.getElementById('cant').value),
+                cantidad: parseInt(document.getElementById('cant').value) || 0,
                 monto: parseFloat(document.getElementById('costo').value) || 0
             };
-            await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-            btn.innerText = "¡LISTO!";
-            setTimeout(() => { btn.innerText = "GUARDAR INGRESO"; refresh(); }, 1500);
+
+            try {
+                await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+                btn.innerText = "¡GUARDADO!";
+                document.getElementById('cant').value = "";
+                document.getElementById('costo').value = "";
+            } catch (e) {
+                btn.innerText = "ERROR";
+            }
+
+            setTimeout(() => { 
+                btn.innerText = originalText; 
+                btn.disabled = false;
+                refresh(); 
+            }, 1500);
         }
+
         window.onload = () => { dibujarGastos(); updateSabores(); refresh(); };
     </script>
 </body>
