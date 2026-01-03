@@ -1,234 +1,451 @@
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SABORES RÁPIDOS | Menú Oficial</title>
+
     
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+
+
     <script>
+
         tailwind.config = {
+
             theme: {
+
                 extend: {
+
                     colors: {
+
                         'tri-rojo': '#D32F2F',    
+
                         'tri-amarillo': '#FFD700', 
+
                         'tri-naranja': '#FF8C00',  
+
                         'tri-fondo': '#FDFCF0',    
+
                         'tri-texto': '#2D3436',
+
                         'tri-verde': '#25D366',
+
                     }
+
                 }
+
             }
+
         }
+
     </script>
+
+
 
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #FDFCF0; color: #2D3436; scroll-behavior: smooth; overflow-x: hidden; }
-        /* Ajuste de altura del Swiper para móvil */
-        .swiper { width: 100%; height: 40vh; }
-        @media (min-width: 768px) { .swiper { height: 60vh; } }
-        
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 5%, transparent 60%); z-index: 10; }
-        .food-card { background: white; border-radius: 20px; transition: all 0.3s ease; border: 1px solid #eee; height: 100%; display: flex; flex-direction: column; }
-        .food-card:hover { transform: translateY(-5px); border-color: #D32F2F; }
+
+        body { font-family: 'Outfit', sans-serif; background-color: #FDFCF0; color: #2D3436; scroll-behavior: smooth; }
+
+        .swiper { width: 100%; height: 50vh; }
+
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 10%, transparent 70%); z-index: 10; }
+
+        .food-card { background: white; border-radius: 25px; transition: all 0.3s ease; border: 1px solid #eee; }
+
+        .food-card:hover { transform: translateY(-8px); border-color: #D32F2F; box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+
         .btn-pedido { background: #D32F2F; color: white; transition: 0.3s; cursor: pointer; }
+
+        .btn-pedido:hover { background: #FF8C00; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Ajuste para que el modal sea scrollable en pantallas pequeñas */
-        #checkout-modal { padding-top: 20px; }
-        .modal-content { max-height: 90vh; display: flex; flex-direction: column; }
+
     </style>
+
 </head>
+
 <body>
 
-    <header class="fixed top-0 left-0 w-full z-[100] bg-white/95 backdrop-blur-md px-4 md:px-6 py-3 shadow-sm flex justify-between items-center">
-        <h1 class="text-lg md:text-xl font-black italic">
-            <span class="text-tri-rojo text-xl md:text-2xl">▲</span> SABORES <span class="text-tri-naranja">RÁPIDOS</span>
+
+
+    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-6 py-4 shadow-sm flex justify-between items-center">
+
+        <h1 class="text-xl font-black italic">
+
+            <span class="text-tri-rojo text-2xl">▲</span> SABORES <span class="text-tri-naranja">RÁPIDOS</span>
+
         </h1>
-        <button onclick="openCheckoutModal()" class="relative bg-tri-texto text-white p-2.5 rounded-full hover:bg-tri-rojo transition">
-            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white hidden">0</span>
+
+        <button onclick="openCheckoutModal()" class="relative bg-tri-texto text-white p-3 rounded-full hover:bg-tri-rojo transition">
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white hidden">0</span>
+
         </button>
+
     </header>
 
-    <section class="pt-16">
+
+
+    <section class="pt-20">
+
         <div class="swiper mySwiper">
+
             <div class="swiper-wrapper">
+
                 <div class="swiper-slide relative">
-                    <div class="slide-overlay flex items-end p-6 md:p-12 text-white">
-                        <div>
-                            <h2 class="text-3xl md:text-5xl font-black uppercase leading-none">Lomos XXL</h2>
-                            <p class="text-tri-amarillo font-bold text-sm md:text-lg">El mejor sabor de la zona.</p>
-                        </div>
+
+                    <div class="slide-overlay flex items-end p-8 text-white">
+
+                        <div><h2 class="text-4xl font-black uppercase">Lomos XXL</h2><p class="text-tri-amarillo font-bold">El mejor sabor de la zona.</p></div>
+
                     </div>
+
                     <img src="https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000" class="w-full h-full object-cover">
+
                 </div>
+
             </div>
+
             <div class="swiper-pagination"></div>
+
         </div>
+
     </section>
 
-    <main class="max-w-7xl mx-auto px-4 md:px-6 py-8">
-        <section id="combos" class="mb-10">
-            <h3 class="text-xl md:text-2xl font-black uppercase text-tri-rojo italic mb-4">Combos del Día</h3>
-            <div id="combos-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+
+
+    <main class="max-w-7xl mx-auto px-6 py-12">
+
+        <section id="combos" class="mb-12">
+
+            <h3 class="text-2xl font-black uppercase text-tri-rojo italic mb-6">Combos del Día</h3>
+
+            <div id="combos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
         </section>
+
+
 
         <section id="menu-section">
-            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-4 sticky top-[60px] md:top-[72px] bg-tri-fondo/95 z-40"></div>
-            <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-4 min-h-[300px]"></div>
+
+            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-4 sticky top-[72px] bg-tri-fondo/95 z-40"></div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 min-h-[400px]"></div>
+
         </section>
+
     </main>
 
-    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4">
-        <div class="modal-content bg-white w-full max-w-xl rounded-t-3xl md:rounded-3xl overflow-hidden shadow-2xl">
-            <div class="p-5 bg-tri-fondo flex justify-between items-center border-b">
-                <h4 class="text-lg font-black uppercase">Tu Pedido</h4>
-                <button onclick="closeCheckoutModal()" class="text-gray-400 text-2xl px-2">✕</button>
+
+
+    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center">
+
+        <div class="bg-white w-full max-w-xl rounded-t-3xl md:rounded-3xl overflow-hidden shadow-2xl">
+
+            <div class="p-6 bg-tri-fondo flex justify-between items-center border-b">
+
+                <h4 class="text-xl font-black uppercase tracking-tight">Tu Pedido</h4>
+
+                <button onclick="closeCheckoutModal()" class="text-gray-400 text-2xl">✕</button>
+
             </div>
+
             
-            <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow" style="max-height: 50vh;"></div>
 
-            <div class="p-5 border-t bg-gray-50">
-                <div class="flex justify-between text-xl font-black mb-4">
+            <div id="cart-list" class="p-6 space-y-4 max-h-[40vh] overflow-y-auto"></div>
+
+
+
+            <div class="p-6 border-t bg-gray-50">
+
+                <div class="flex justify-between text-2xl font-black mb-6">
+
                     <span>Total:</span>
+
                     <span id="cart-total" class="text-tri-rojo">$0</span>
+
                 </div>
 
-                <div class="space-y-2 mb-4">
-                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-3 bg-white rounded-xl border border-gray-200 focus:ring-2 ring-tri-rojo outline-none">
-                    <input type="text" id="cust-addr" placeholder="Dirección de Envío" class="w-full p-3 bg-white rounded-xl border border-gray-200 focus:ring-2 ring-tri-rojo outline-none">
+
+
+                <div class="space-y-3 mb-6">
+
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 bg-white rounded-xl outline-none border border-gray-200 focus:ring-2 ring-tri-rojo">
+
+                    <input type="text" id="cust-addr" placeholder="Dirección de Envío" class="w-full p-4 bg-white rounded-xl outline-none border border-gray-200 focus:ring-2 ring-tri-rojo">
+
                 </div>
 
-                <button onclick="finalAction()" class="w-full bg-tri-rojo text-white py-4 rounded-xl font-black text-base shadow-lg hover:bg-tri-naranja transition uppercase">
-                    Enviar Pedido
+
+
+                <button onclick="finalAction()" class="w-full bg-tri-rojo text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-tri-naranja transition uppercase tracking-widest">
+
+                    Pagar y Enviar Pedido
+
                 </button>
+
+                <p class="text-[10px] text-center text-gray-400 mt-4 font-bold uppercase tracking-widest italic">Se abrirá el pago y luego WhatsApp automáticamente</p>
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     
+
     <script>
+
+        // CONFIGURACIÓN (COLOCA TUS LINKS AQUÍ)
+
         const MI_WHATSAPP = "5493541214553"; 
+
         const MI_LINK_PAGO = "https://link.mercadopago.com.ar/TU_LINK"; 
 
+
+
         const products = [
+
             { id: 601, name: 'Pizza Muzzarella', price: 13500, category: 'Pizzas', img: 'https://i.pinimg.com/736x/f1/32/60/f132606f9ac790b9333d699d00516829.jpg' },
+
             { id: 602, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/e3/dd/15/e3dd15552ebb7cf5754f6f2a7897554a.jpg' },
+
+            { id: 603, name: 'Pizza Fugazzeta', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/1200x/7b/a2/86/7ba286ba74638e22c503f0e7888a1de3.jpg' },
+
             { id: 401, name: 'Lomo XXL Completo', price: 23500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' },
+
+            { id: 402, name: 'Lomo con Huevo', price: 20500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000' },
+
+            { id: 403, name: 'Lomo Especial J&Q', price: 18500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698451041074.png?size=800x800' },
+
             { id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://img-global.cpcdn.com/recipes/f8d724c25de6517c/680x781f0.5_0.553045_1.0q80/empanadas-arabes-foto-principal.jpg' },
+
+            { id: 302, name: 'Empanada Carne Dulce', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+
+            { id: 303, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+
+            { id: 304, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://cdn0.recetasgratis.net/es/posts/0/4/2/empanadas_de_jamon_queso_y_cebolla_76240_orig.jpg' },
+
+            { id: 305, name: 'Empanada de Pollo', price: 2500, category: 'Empanadas', img: 'https://www.superpollo.cl/img/recetas/empanadas-de-pollo.jpg' },
+
             { id: 501, name: 'Hamburguesa Clásica', price: 16500, category: 'Hamburguesas', img: 'https://i.pinimg.com/736x/6e/9f/06/6e9f069d9a368bc8d5412838d6ebe894.jpg' },
+
+            { id: 502, name: 'Cheddar & Bacon', price: 18500, category: 'Hamburguesas', img: 'https://i.pinimg.com/1200x/c6/c2/ef/c6c2ef1e207ac95ec825893a72c4f408.jpg' },
+
         ];
+
+
 
         const combos = [
-            { id: 901, name: 'PROMO 12 EMPANADAS', price: 26000, img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
-            { id: 902, name: 'COMBO 2 LOMOS', price: 44000, img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' }
+
+            { id: 901, name: 'PROMO 12 EMPANADAS', detail: 'Docena a elección', price: 26000, img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
+
+            { id: 902, name: 'COMBO 2 LOMOS', detail: '2 Lomo XXL Completos', price: 44000, img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' }
+
         ];
 
+
+
         let cart = {};
+
         let activeCategory = 'Todos';
 
+
+
         function render() {
-            // Combos responsivos
+
             document.getElementById('combos-grid').innerHTML = combos.map(c => `
-                <div class="food-card p-3 flex items-center space-x-3">
-                    <img src="${c.img}" class="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl shadow-sm">
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-black text-sm md:text-base uppercase truncate">${c.name}</h4>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="text-lg font-black text-tri-rojo">$${c.price.toLocaleString()}</span>
-                            <button onclick="addToCart(event, ${c.id})" class="bg-tri-texto text-white w-8 h-8 rounded-lg flex items-center justify-center">＋</button>
+
+                <div class="food-card p-4 flex items-center space-x-4">
+
+                    <img src="${c.img}" class="w-20 h-20 object-cover rounded-xl shadow-sm">
+
+                    <div class="flex-1">
+
+                        <h4 class="font-black text-lg uppercase mb-1 leading-tight">${c.name}</h4>
+
+                        <div class="flex justify-between items-center mt-2">
+
+                            <span class="text-xl font-black text-tri-rojo">$${c.price.toLocaleString()}</span>
+
+                            <button onclick="addToCart(event, ${c.id})" class="bg-tri-texto text-white px-3 py-1 rounded-lg">＋</button>
+
                         </div>
+
                     </div>
+
                 </div>`).join('');
+
+
 
             const cats = ['Todos', 'Pizzas', 'Lomos', 'Empanadas', 'Hamburguesas'];
+
             document.getElementById('category-tabs').innerHTML = cats.map(c => `
-                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-5 py-2 rounded-full font-black text-[10px] md:text-xs uppercase transition-all ${activeCategory === c ? 'bg-tri-rojo text-white' : 'bg-white text-gray-400 border border-gray-100'}">
+
+                <button onclick="filterCategory('${c}')" class="px-6 py-2 rounded-full font-black text-xs uppercase transition-all ${activeCategory === c ? 'bg-tri-rojo text-white' : 'bg-white text-gray-400'}">
+
                     ${c}
+
                 </button>`).join('');
 
+
+
             const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
-            // Grilla de 2 columnas en móvil
+
             document.getElementById('product-grid').innerHTML = filtered.map(p => `
+
                 <div class="food-card overflow-hidden" data-aos="fade-up">
-                    <div class="h-32 md:h-44 overflow-hidden"><img src="${p.img}" class="w-full h-full object-cover"></div>
-                    <div class="p-3 md:p-5 flex flex-col flex-grow">
-                        <h3 class="font-black text-gray-800 text-xs md:text-base mb-2 md:mb-4 line-clamp-2">${p.name}</h3>
-                        <div class="mt-auto flex flex-col gap-2">
-                            <p class="text-tri-rojo font-black text-base md:text-xl">$${p.price.toLocaleString()}</p>
-                            <button onclick="addToCart(event, ${p.id})" class="btn-pedido w-full py-2 rounded-lg font-black text-[10px] uppercase">Añadir</button>
+
+                    <div class="h-44 overflow-hidden"><img src="${p.img}" class="w-full h-full object-cover"></div>
+
+                    <div class="p-5">
+
+                        <h3 class="font-black text-gray-800 truncate mb-4">${p.name}</h3>
+
+                        <div class="flex justify-between items-center">
+
+                            <p class="text-tri-rojo font-black text-xl">$${p.price.toLocaleString()}</p>
+
+                            <button onclick="addToCart(event, ${p.id})" class="btn-pedido px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
+
                         </div>
+
                     </div>
+
                 </div>`).join('');
+
         }
+
+
 
         window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); };
+
         window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
 
+
+
         function updateUI() {
+
             const count = Object.values(cart).reduce((a, b) => a + b, 0);
-            const cartCountEl = document.getElementById('cart-count');
-            cartCountEl.innerText = count;
-            cartCountEl.classList.toggle('hidden', count === 0);
-            
+
+            document.getElementById('cart-count').innerText = count;
+
+            document.getElementById('cart-count').classList.toggle('hidden', count === 0);
+
             let total = 0;
+
             const allItems = [...products, ...combos];
+
             document.getElementById('cart-list').innerHTML = Object.entries(cart).map(([id, q]) => {
+
                 const item = allItems.find(x => x.id == id);
+
                 total += item.price * q;
-                return `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
-                    <div class="min-w-0 pr-2"><p class="font-black text-[11px] md:text-sm uppercase truncate">${item.name}</p><p class="text-tri-rojo font-bold text-xs">$${item.price.toLocaleString()}</p></div>
-                    <div class="flex items-center space-x-2 font-black shrink-0">
-                        <button onclick="changeQty(${id}, -1)" class="w-7 h-7 bg-white rounded-full border border-gray-200 shadow-sm">-</button>
-                        <span class="text-sm">${q}</span>
-                        <button onclick="changeQty(${id}, 1)" class="w-7 h-7 bg-white rounded-full border border-gray-200 shadow-sm">+</button>
+
+                return `<div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
+
+                    <div><p class="font-black text-sm uppercase">${item.name}</p><p class="text-tri-rojo font-bold">$${item.price.toLocaleString()}</p></div>
+
+                    <div class="flex items-center space-x-3 font-black">
+
+                        <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-white rounded-full border">-</button>
+
+                        <span>${q}</span>
+
+                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-white rounded-full border">+</button>
+
                     </div>
+
                 </div>`;
+
             }).join('');
+
             document.getElementById('cart-total').innerText = `$${total.toLocaleString()}`;
+
         }
 
+
+
         window.changeQty = (id, n) => { cart[id] += n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
-        window.openCheckoutModal = () => {
-            document.getElementById('checkout-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        };
-        window.closeCheckoutModal = () => {
-            document.getElementById('checkout-modal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        };
+
+        window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+
+        window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
+
+
+
+        // ACCIÓN UNIFICADA: PAGO + WHATSAPP
 
         window.finalAction = () => {
+
             const name = document.getElementById('cust-name').value;
+
             const addr = document.getElementById('cust-addr').value;
+
             if(!name || !addr || Object.keys(cart).length === 0) return alert("Completa tus datos para continuar.");
+
             
+
+            // 1. Abrir link de pago en pestaña nueva
+
             window.open(MI_LINK_PAGO, '_blank');
+
+
+
+            // 2. Generar mensaje de WhatsApp
+
             let text = `*▲ NUEVO PEDIDO - SABORES RÁPIDOS*\n\n*Cliente:* ${name}\n*Dirección:* ${addr}\n\n*DETALLE:*\n`;
+
             Object.entries(cart).forEach(([id, q]) => {
+
                 const item = [...products, ...combos].find(x => x.id == id);
+
                 text += `- ${q}x ${item.name}\n`;
+
             });
-            text += `\n*TOTAL:* ${document.getElementById('cart-total').innerText}`;
+
+            text += `\n*TOTAL:* ${document.getElementById('cart-total').innerText}\n\n_Ya abrí el link para realizar el pago._`;
+
             
+
+            // 3. Abrir WhatsApp en la misma ventana (o pestaña nueva si prefieres)
+
             setTimeout(() => {
+
                 window.location.href = `https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(text)}`;
-            }, 800);
+
+            }, 1000);
+
         };
 
-        window.onload = () => { 
-            AOS.init({ once: true, duration: 600 }); 
-            render(); 
-            new Swiper(".mySwiper", { pagination: { el: ".swiper-pagination", clickable: true }, autoplay: { delay: 4000 } });
-        };
+
+
+        window.onload = () => { AOS.init(); render(); };
+
     </script>
+
 </body>
+
 </html>
