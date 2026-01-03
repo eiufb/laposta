@@ -2,78 +2,204 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SABORES RÁPIDOS | Admin Stock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SABORES RÁPIDOS | Mobile Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Outfit', sans-serif; background: #0a0a0a; color: white; padding: 20px; }
-        .card { background: #1a1a1a; padding: 20px; border-radius: 20px; border-left: 6px solid #E63946; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; background: #222; color: white; border: 1px solid #333; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; background: #E63946; color: white; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; }
-        .stock-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; }
-        .stock-val { color: #FFB703; font-weight: bold; }
+        /* Optimización para Móvil */
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: #0a0a0a; 
+            color: white; 
+            padding: 15px; 
+            margin: 0; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .card { 
+            background: #1a1a1a; 
+            padding: 15px; 
+            border-radius: 15px; 
+            border-left: 5px solid #E63946; 
+            margin-bottom: 15px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+        }
+        
+        .card-green { border-left-color: #2A9D8F; }
+        .card-blue { border-left-color: #457B9D; }
+        
+        /* Inputs táctiles grandes */
+        input, select { 
+            width: 100%; 
+            height: 48px; /* Altura ideal para dedos */
+            margin: 5px 0; 
+            border-radius: 10px; 
+            background: #222; 
+            color: white; 
+            border: 1px solid #333; 
+            padding: 0 10px;
+            font-size: 16px; /* Evita zoom automático en iPhone */
+        }
+
+        .btn { 
+            width: 100%; 
+            height: 55px; 
+            background: #E63946; 
+            color: white; 
+            font-weight: 900; 
+            border-radius: 12px; 
+            border: none; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 16px;
+            box-shadow: 0 4px 0 #9d1e28;
+            transition: all 0.1s;
+        }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+
+        .gasto-row { display: grid; grid-template-cols: 1fr 90px 45px; gap: 5px; margin-bottom: 8px; }
+        
+        .btn-add { background: #2A9D8F; color: white; border: none; border-radius: 8px; padding: 10px; width: 100%; font-weight: bold; margin-bottom: 15px; }
+        .btn-del { background: #E63946; border: none; color: white; border-radius: 8px; font-size: 20px; }
+
+        .eq-money { font-size: 34px; font-weight: 900; color: #fff; display: block; text-align: center; }
+        
+        .stock-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 12px 5px; 
+            border-bottom: 1px solid #333; 
+            font-size: 15px; 
+        }
+
+        /* Dashboard compacto para móvil */
+        .stat-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 10px; }
+        .stat-box { background: #000; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #222; }
+        .stat-label { font-size: 9px; color: #888; display: block; text-transform: uppercase; }
+        .stat-value { font-size: 15px; font-weight: 900; color: #FFB703; }
     </style>
 </head>
 <body>
-    <h3 style="color: #FFB703;">▲ CARGA DE MERCADERÍA</h3>
-    <div class="card">
-        <label>Categoría</label>
-        <select id="prod" onchange="updateSabores()">
-            <option value="Empanadas">Empanadas</option>
-            <option value="Pizzas">Pizzas</option>
-        </select>
-        <label>Sabor</label>
-        <select id="sabor"></select>
-        <input type="number" id="cant" placeholder="Cantidad (unidades)">
-        <input type="number" id="costo" placeholder="Costo total de compra $">
-        <button class="btn" onclick="send()">📥 REGISTRAR INGRESO</button>
+
+    <h3 style="color: #FFB703; text-align: center; font-weight: 900; margin: 10px 0 20px 0;">SABORES RÁPIDOS APP</h3>
+
+    <div class="card card-green">
+        <h4 style="margin:0 0 12px 0; color:#2A9D8F; text-transform: uppercase; font-size: 12px;">💸 Gastos y Punto de Equilibrio</h4>
+        
+        <div id="lista-gastos"></div>
+        <button class="btn-add" onclick="agregarGasto()">+ Añadir Gasto</button>
+
+        <div style="background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333;">
+            <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block; text-align: center;">Meta de Ventas</span>
+            <span id="venta-equilibrio" class="eq-money">$0</span>
+            <select id="margen-global" onchange="calcularTodo()" style="background: #111; margin-top: 10px;">
+                <option value="0.5">Margen 50%</option>
+                <option value="0.6" selected>Margen 60%</option>
+                <option value="0.7">Margen 70%</option>
+            </select>
+        </div>
     </div>
 
-    <div class="card" style="border-color: #FFB703;">
-        <h4>STOCK ACTUAL</h4>
-        <div id="lista">Cargando datos de Sheets...</div>
+    <div class="card card-blue">
+        <h4 style="margin:0 0 12px 0; text-transform: uppercase; font-size: 12px;">📥 Cargar Stock</h4>
+        <select id="prod" onchange="updateSabores()"><option value="Empanadas">Empanadas</option><option value="Pizzas">Pizzas</option></select>
+        <select id="sabor"></select>
+        <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 10px;">
+            <input type="number" id="cant" placeholder="Unid." inputmode="numeric">
+            <input type="number" id="costo" placeholder="Costo $" inputmode="numeric">
+        </div>
+        <button class="btn" onclick="send()">Guardar Ingreso</button>
+        
+        <div class="stat-grid" style="margin-top: 15px;">
+            <div class="stat-box"><span class="stat-label">Invertido</span><span id="inv-actual" class="stat-value">$0</span></div>
+            <div class="stat-box"><span class="stat-label">Ganancia Est.</span><span id="ganancia-stock" class="stat-value">$0</span></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h4 style="margin:0 0 10px 0; color:#FFB703; text-transform: uppercase; font-size: 12px;">📦 Stock</h4>
+        <div id="lista">Cargando...</div>
     </div>
 
     <script>
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
+        let datosLocales = [];
+        let misGastos = JSON.parse(localStorage.getItem('misGastos')) || [{nombre: 'Fijos', monto: 150000}];
 
         const sabores = {
-            'Empanadas': ['Empanada de Carne', 'Empanada de Pollo', 'Empanada Jamón y Queso', 'Empanada Marcela', 'Empanada Osobuco al Disco'],
-            'Pizzas': ['Pizza Jamón con Cuero', 'Pizza Sálame', 'Pizza Doble Muzza', 'Pizza con Huevo', 'Pizza Roquefort', 'Pizza Napolitana', 'Pizza Fugazzeta']
+            'Empanadas': ['Carne', 'Pollo', 'J y Q', 'Osobuco'],
+            'Pizzas': ['Muzza', 'Especial', 'Napolitana', 'Fugazzeta']
         };
+
+        function agregarGasto() {
+            misGastos.push({nombre: '', monto: 0});
+            dibujarGastos();
+        }
+
+        function eliminarGasto(index) {
+            misGastos.splice(index, 1);
+            dibujarGastos();
+        }
+
+        function actualizarGasto(i, campo, val) {
+            misGastos[i][campo] = campo === 'monto' ? parseFloat(val) || 0 : val;
+            localStorage.setItem('misGastos', JSON.stringify(misGastos));
+            calcularTodo();
+        }
+
+        function dibujarGastos() {
+            document.getElementById('lista-gastos').innerHTML = misGastos.map((g, i) => `
+                <div class="gasto-row">
+                    <input type="text" placeholder="Gasto" value="${g.nombre}" oninput="actualizarGasto(${i}, 'nombre', this.value)">
+                    <input type="number" placeholder="$" value="${g.monto}" oninput="actualizarGasto(${i}, 'monto', this.value)" inputmode="numeric">
+                    <button class="btn-del" onclick="eliminarGasto(${i})">×</button>
+                </div>`).join('');
+            calcularTodo();
+        }
 
         function updateSabores() {
             const cat = document.getElementById('prod').value;
             document.getElementById('sabor').innerHTML = sabores[cat].map(s => `<option value="${s}">${s}</option>`).join('');
         }
 
+        async function refresh() {
+            const res = await fetch(URL_API);
+            datosLocales = await res.json();
+            document.getElementById('lista').innerHTML = datosLocales.map(i => `
+                <div class="stock-item">
+                    <span>${i.sabor}</span>
+                    <span style="color:#FFB703; font-weight:bold">${i.stock} un.</span>
+                </div>`).join('');
+            calcularTodo();
+        }
+
+        function calcularTodo() {
+            const totalG = misGastos.reduce((acc, g) => acc + g.monto, 0);
+            const mrg = parseFloat(document.getElementById('margen-global').value);
+            const eq = totalG / mrg;
+            document.getElementById('venta-equilibrio').innerText = "$" + Math.round(eq).toLocaleString();
+            
+            let inv = datosLocales.reduce((acc, curr) => acc + (parseFloat(curr.monto) || 0), 0);
+            document.getElementById('inv-actual').innerText = "$" + Math.round(inv).toLocaleString();
+            document.getElementById('ganancia-stock').innerText = "$" + Math.round((inv/(1-mrg))-inv).toLocaleString();
+        }
+
         async function send() {
             const btn = document.querySelector('.btn');
-            btn.innerText = "PROCESANDO...";
+            btn.innerText = "ENVIANDO...";
             const data = {
                 tipo: 'COMPRA',
-                fecha: new Date().toLocaleString(),
                 producto: document.getElementById('prod').value,
                 sabor: document.getElementById('sabor').value,
                 cantidad: parseInt(document.getElementById('cant').value),
                 monto: parseFloat(document.getElementById('costo').value) || 0
             };
             await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-            btn.innerText = "¡CARGADO!";
-            setTimeout(() => { btn.innerText = "📥 REGISTRAR INGRESO"; refresh(); }, 1500);
+            btn.innerText = "¡LISTO!";
+            setTimeout(() => { btn.innerText = "GUARDAR INGRESO"; refresh(); }, 1500);
         }
 
-        async function refresh() {
-            const res = await fetch(URL_API);
-            const data = await res.json();
-            document.getElementById('lista').innerHTML = data.map(i => `
-                <div class="stock-item">
-                    <span>${i.sabor}</span>
-                    <span class="stock-val">${i.stock} un.</span>
-                </div>
-            `).join('');
-        }
-
-        window.onload = () => { updateSabores(); refresh(); };
+        window.onload = () => { dibujarGastos(); updateSabores(); refresh(); };
     </script>
 </body>
 </html>
