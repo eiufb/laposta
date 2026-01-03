@@ -15,9 +15,12 @@
             theme: {
                 extend: {
                     colors: {
-                        'tri-rojo': '#D32F2F', 'tri-naranja': '#FF8C00',
-                        'tri-amarillo': '#FFD700', 'tri-fondo': '#FDFCF0', 
-                        'tri-texto': '#2D3436', 'tri-verde': '#25D366'
+                        'tri-rojo': '#E63946',
+                        'tri-naranja': '#F4A261',
+                        'tri-amarillo': '#FFB703',
+                        'tri-fondo': '#F8F9FA',
+                        'tri-texto': '#1D3557',
+                        'tri-verde': '#2A9D8F'
                     }
                 }
             }
@@ -25,88 +28,82 @@
     </script>
 
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #FDFCF0; color: #2D3436; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .food-card { background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; }
-        .progress-bar-fill { transition: width 1s linear; }
+        /* Fondo con imagen para el funnel de ventas */
+        .hero-bg { background: linear-gradient(rgba(29, 53, 87, 0.7), rgba(29, 53, 87, 0.7)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(29, 53, 87, 0.1); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
         .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.4s ease-out; width: 100%; max-width: 600px; margin: 0 auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .btn-fast { background: #E63946; color: white; transition: all 0.3s; }
+        .btn-fast:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="bg-tri-fondo">
 
     <div id="tracking-screen" class="hidden fixed inset-0 z-[300] bg-white flex flex-col p-4 md:p-8 overflow-y-auto">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full">
-            <div class="mt-6 text-center">
-                <div class="inline-block p-4 bg-tri-rojo/10 rounded-full mb-4">
-                    <svg class="w-10 h-10 text-tri-rojo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="max-w-md mx-auto w-full flex flex-col h-full text-center">
+            <div class="mt-6">
+                <div class="inline-block p-4 bg-tri-amarillo/20 rounded-full mb-4">
+                    <svg class="w-10 h-10 text-tri-amarillo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
-                <h2 class="text-xl md:text-3xl font-black uppercase italic leading-tight">¡Pago Confirmado!</h2>
-                <p class="text-gray-400 text-xs font-bold uppercase tracking-widest mt-2">Llegaremos en aproximadamente:</p>
-                <div id="countdown" class="text-6xl md:text-7xl font-black text-tri-rojo my-4 tracking-tighter">25:00</div>
-                <p id="tracking-status" class="text-tri-texto font-bold uppercase text-[10px] tracking-widest">Iniciando preparación...</p>
+                <h2 class="text-3xl font-black uppercase italic text-tri-rojo">¡Pedido en Marcha!</h2>
+                <div id="countdown" class="text-7xl font-black text-tri-texto my-4">25:00</div>
             </div>
-
-            <div class="mt-8 space-y-6 w-full px-4">
+            <div class="mt-8 space-y-6 text-left px-4">
                 <div id="step-1" class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-tri-rojo text-white flex items-center justify-center shrink-0 font-bold">✓</div>
-                    <div><p class="font-black text-sm uppercase leading-none">Pago Recibido</p><p class="text-xs text-gray-400">Orden enviada a cocina</p></div>
+                    <div class="w-10 h-10 rounded-full bg-tri-verde text-white flex items-center justify-center shrink-0 font-bold">✓</div>
+                    <div><p class="font-black text-sm uppercase">Pago Confirmado</p></div>
                 </div>
-                <div id="step-2" class="flex items-center gap-4 opacity-40 transition-opacity">
+                <div id="step-2" class="flex items-center gap-4 opacity-40">
                     <div id="step-2-icon" class="w-10 h-10 rounded-full bg-gray-200 text-white flex items-center justify-center shrink-0 font-bold">2</div>
-                    <div><p class="font-black text-sm uppercase leading-none">En el Horno</p><p class="text-xs text-gray-400">Cocción y empaque (15 min)</p></div>
+                    <div><p class="font-black text-sm uppercase">En Cocina</p></div>
                 </div>
-                <div id="step-3" class="flex items-center gap-4 opacity-40 transition-opacity">
+                <div id="step-3" class="flex items-center gap-4 opacity-40">
                     <div id="step-3-icon" class="w-10 h-10 rounded-full bg-gray-200 text-white flex items-center justify-center shrink-0 font-bold">3</div>
-                    <div><p class="font-black text-sm uppercase leading-none">En camino</p><p class="text-xs text-gray-400">El repartidor va a tu ubicación</p></div>
+                    <div><p class="font-black text-sm uppercase">Repartidor en camino</p></div>
                 </div>
             </div>
-
-            <div class="mt-auto pb-8 w-full px-4">
-                <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden">
-                    <div id="progress-line" class="bg-tri-rojo h-full w-[0%] progress-bar-fill"></div>
-                </div>
-                <button onclick="location.href='index.html'" class="w-full mt-6 py-4 bg-tri-texto text-white rounded-2xl font-black text-xs uppercase tracking-widest">Volver al inicio</button>
-            </div>
+            <button onclick="location.href='index.html'" class="w-full mt-auto py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Cerrar</button>
         </div>
     </div>
 
-    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-sm">
+    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <h1 class="text-lg font-black italic tracking-tighter">
-                <span class="text-tri-rojo">▲</span> SABORES <span class="text-tri-naranja">RÁPIDOS</span>
+            <h1 class="text-xl font-black italic tracking-tighter">
+                <span class="text-tri-rojo">▲</span> SABORES <span class="text-tri-amarillo">RÁPIDOS</span>
             </h1>
-            <button onclick="openCheckoutModal()" class="relative bg-tri-texto text-white p-2.5 rounded-2xl">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
+            <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
             </button>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 pt-20 pb-24">
+    <main class="max-w-5xl mx-auto px-4 pt-24 pb-24">
         <section class="mt-4">
-            <h3 class="text-xl font-black uppercase text-tri-rojo italic mb-4">Combos del Día</h3>
+            <h3 class="text-xl font-black uppercase text-tri-rojo italic mb-4">Combos Destacados</h3>
             <div id="combos-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
         </section>
 
         <section class="mt-8">
-            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[56px] bg-tri-fondo/95 z-40"></div>
-            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4"></div>
+            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[68px] bg-tri-fondo/95 z-40"></div>
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
         </section>
     </main>
 
-    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-black/70 flex items-end justify-center">
+    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
         <div class="modal-content bg-white flex flex-col h-[85vh] md:h-auto md:max-h-[80vh]">
-            <div class="p-5 flex justify-between items-center border-b">
-                <h4 class="font-black italic">FINALIZAR COMPRA</h4>
+            <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
+                <h4 class="font-black italic text-tri-rojo">MI PEDIDO</h4>
                 <button onclick="closeCheckoutModal()" class="text-2xl p-2">✕</button>
             </div>
-            <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow"></div>
-            <div class="p-6 bg-gray-50 border-t space-y-3">
+            <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow bg-gray-50"></div>
+            <div class="p-6 bg-white border-t space-y-3">
                 <div class="flex justify-between text-2xl font-black mb-2"><span>Total</span><span id="cart-total" class="text-tri-rojo">$0</span></div>
-                <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl border border-gray-200 outline-none focus:ring-2 ring-tri-rojo">
-                <input type="text" id="cust-addr" placeholder="Dirección de Entrega" class="w-full p-4 rounded-xl border border-gray-200 outline-none focus:ring-2 ring-tri-rojo">
-                <button onclick="finalAction()" class="w-full bg-tri-rojo text-white py-4 rounded-2xl font-black text-lg shadow-xl uppercase">Confirmar y Pagar</button>
+                <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 border-none font-bold">
+                <input type="text" id="cust-addr" placeholder="Dirección de Entrega" class="w-full p-4 rounded-xl bg-gray-100 border-none font-bold">
+                <button onclick="finalAction()" class="btn-fast w-full py-5 rounded-2xl font-black text-xl shadow-xl uppercase">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -117,6 +114,7 @@
         const MI_WHATSAPP = "5493541214553";
         const MI_LINK_PAGO = "https://link.mercadopago.com.ar/TU_LINK";
 
+        // RESTAURADOS TODOS LOS PRODUCTOS
         const products = [
             { id: 601, name: 'Pizza Muzzarella', price: 13500, category: 'Pizzas', img: 'https://i.pinimg.com/736x/f1/32/60/f132606f9ac790b9333d699d00516829.jpg' },
             { id: 602, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/e3/dd/15/e3dd15552ebb7cf5754f6f2a7897554a.jpg' },
@@ -125,42 +123,47 @@
             { id: 402, name: 'Lomo con Huevo', price: 20500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=2000x2000' },
             { id: 403, name: 'Lomo Especial J&Q', price: 18500, category: 'Lomos', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698451041074.png?size=800x800' },
             { id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://img-global.cpcdn.com/recipes/f8d724c25de6517c/680x781f0.5_0.553045_1.0q80/empanadas-arabes-foto-principal.jpg' },
+            { id: 302, name: 'Empanada de Carne', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
             { id: 501, name: 'Hamburguesa Clásica', price: 16500, category: 'Hamburguesas', img: 'https://i.pinimg.com/736x/6e/9f/06/6e9f069d9a368bc8d5412838d6ebe894.jpg' },
+            { id: 502, name: 'Hamburguesa Doble Cheddar', price: 19500, category: 'Hamburguesas', img: 'https://cache-backend-mcd.mcdonalds.com.ar/media/1/menu/items/doble-cuarto-de-libra-con-queso.png' }
         ];
 
         const combos = [
             { id: 901, name: 'PROMO 12 EMPANADAS', price: 26000, img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
-            { id: 902, name: 'COMBO 2 LOMOS', price: 44000, img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' }
+            { id: 902, name: 'COMBO 2 LOMOS XXL', price: 44000, img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' }
         ];
 
         let cart = {};
         let activeCategory = 'Todos';
 
         function render() {
+            // Render de Combos
             document.getElementById('combos-grid').innerHTML = combos.map(c => `
-                <div class="food-card p-3 flex items-center gap-4">
-                    <img src="${c.img}" class="w-16 h-16 object-cover rounded-xl shrink-0">
+                <div class="food-card p-3 flex items-center gap-4 border-l-4 border-tri-rojo">
+                    <img src="${c.img}" class="w-20 h-20 object-cover rounded-xl shrink-0">
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-black text-xs uppercase leading-tight truncate">${c.name}</h4>
-                        <p class="text-tri-rojo font-black text-lg">$${c.price.toLocaleString()}</p>
+                        <h4 class="font-black text-sm uppercase truncate">${c.name}</h4>
+                        <p class="text-tri-rojo font-black text-xl">$${c.price.toLocaleString()}</p>
                     </div>
-                    <button onclick="addToCart(event, ${c.id})" class="bg-tri-texto text-white w-10 h-10 rounded-xl flex items-center justify-center">＋</button>
+                    <button onclick="addToCart(event, ${c.id})" class="bg-tri-rojo text-white w-12 h-12 rounded-xl flex items-center justify-center font-bold">＋</button>
                 </div>`).join('');
 
+            // Pestañas de Categoría
             const cats = ['Todos', 'Pizzas', 'Lomos', 'Empanadas', 'Hamburguesas'];
             document.getElementById('category-tabs').innerHTML = cats.map(c => `
-                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-bold text-xs uppercase ${activeCategory === c ? 'bg-tri-rojo text-white' : 'bg-white text-gray-400'}">
+                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
                     ${c}
                 </button>`).join('');
 
+            // Cuadrícula de Productos
             const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
             document.getElementById('product-grid').innerHTML = filtered.map(p => `
                 <div class="food-card" data-aos="fade-up">
-                    <img src="${p.img}" class="h-28 w-full object-cover">
+                    <img src="${p.img}" class="h-32 w-full object-cover">
                     <div class="p-3 flex flex-col flex-grow">
-                        <h3 class="font-bold text-xs h-8 overflow-hidden uppercase">${p.name}</h3>
-                        <p class="text-tri-rojo font-black text-base mt-2">$${p.price.toLocaleString()}</p>
-                        <button onclick="addToCart(event, ${p.id})" class="mt-3 bg-gray-100 py-2 rounded-xl text-[10px] font-black uppercase">Añadir</button>
+                        <h3 class="font-black text-[11px] h-8 overflow-hidden uppercase">${p.name}</h3>
+                        <p class="text-tri-rojo font-black text-lg mt-2">$${p.price.toLocaleString()}</p>
+                        <button onclick="addToCart(event, ${p.id})" class="mt-3 bg-tri-amarillo/10 border-2 border-tri-amarillo py-2 rounded-xl text-[10px] font-black uppercase text-tri-texto">Añadir</button>
                     </div>
                 </div>`).join('');
         }
@@ -175,12 +178,12 @@
             document.getElementById('cart-list').innerHTML = Object.entries(cart).map(([id, q]) => {
                 const item = allItems.find(x => x.id == id);
                 total += item.price * q;
-                return `<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100">
-                    <div class="min-w-0 pr-2"><p class="font-bold text-xs truncate uppercase">${item.name}</p><p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p></div>
+                return `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
+                    <div class="min-w-0 pr-2"><p class="font-black text-xs truncate uppercase">${item.name}</p><p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p></div>
                     <div class="flex items-center gap-2">
-                        <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg">-</button>
-                        <span class="font-black text-sm">${q}</span>
-                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-texto text-white rounded-lg">+</button>
+                        <button onclick="changeQty(${id}, -1)" class="w-10 h-10 bg-gray-100 rounded-xl font-black">-</button>
+                        <span class="font-black text-base w-6 text-center">${q}</span>
+                        <button onclick="changeQty(${id}, 1)" class="w-10 h-10 bg-tri-rojo text-white rounded-xl font-black shadow-md">+</button>
                     </div>
                 </div>`;
             }).join('');
@@ -193,37 +196,11 @@
         window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
 
-        // LÓGICA DE POST-PAGO Y CRONÓMETRO
-        function startTracking() {
-            document.getElementById('tracking-screen').classList.remove('hidden');
-            let totalSeconds = 25 * 60;
-            const timer = setInterval(() => {
-                totalSeconds--;
-                let m = Math.floor(totalSeconds / 60);
-                let s = totalSeconds % 60;
-                document.getElementById('countdown').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                document.getElementById('progress-line').style.width = `${((1500 - totalSeconds) / 1500) * 100}%`;
-                if (totalSeconds <= 1320 && totalSeconds > 420) {
-                    document.getElementById('step-2').style.opacity = "1";
-                    document.getElementById('step-2-icon').classList.replace('bg-gray-200', 'bg-tri-naranja');
-                    document.getElementById('step-2-icon').innerText = '🔥';
-                }
-                if (totalSeconds <= 420) {
-                    document.getElementById('step-3').style.opacity = "1";
-                    document.getElementById('step-3-icon').classList.replace('bg-gray-200', 'bg-tri-verde');
-                    document.getElementById('step-3-icon').innerText = '🛵';
-                }
-                if (totalSeconds <= 0) clearInterval(timer);
-            }, 1000);
-        }
-
-        // 1. EL CLIENTE PAGA PRIMERO
         window.finalAction = () => {
             const name = document.getElementById('cust-name').value;
             const addr = document.getElementById('cust-addr').value;
             if(!name || !addr || Object.keys(cart).length === 0) return alert("Completa tus datos.");
             
-            // Guardamos el pedido temporalmente para el regreso
             const pedido = {
                 n: name, a: addr, t: document.getElementById('cart-total').innerText,
                 items: Object.entries(cart).map(([id, q]) => {
@@ -232,23 +209,18 @@
                 }).join('\n')
             };
             localStorage.setItem('pending_order', JSON.stringify(pedido));
-
-            // REDIRIGIR AL PAGO (Asegúrate que tu MP redirija de vuelta a tu URL + ?status=success)
             window.location.href = MI_LINK_PAGO;
         };
 
-        // 2. DETECTAR SI EL CLIENTE VOLVIÓ DEL PAGO
         window.onload = () => {
             AOS.init(); render();
             const urlParams = new URLSearchParams(window.location.search);
-            // Mercado Pago suele enviar 'collection_status' o 'status' al volver
             if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
                 const data = JSON.parse(localStorage.getItem('pending_order'));
                 if(data) {
                     const msg = `*▲ NUEVO PEDIDO CONFIRMADO*\n*Cliente:* ${data.n}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.items}\n\n*TOTAL:* ${data.t}`;
-                    // Abrir WhatsApp y mostrar cronómetro
                     window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                    startTracking();
+                    document.getElementById('tracking-screen').classList.remove('hidden');
                     localStorage.removeItem('pending_order');
                 }
             }
