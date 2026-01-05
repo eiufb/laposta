@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Info & Startup | FAST FOOD POSTA</title>
+    <meta name="description" content="Conocé la primera Startup de Cocinas Ocultas en Carlos Paz. Tecnología aplicada a la gastronomía.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tri-rojo': '#E63946',
+                        'tri-amarillo': '#FFB703',
+                        'tri-fondo': '#F8F9FA',
+                        'tri-texto': '#1D3557',
+                        'tri-verde': '#2A9D8F'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; }
+        .hero-tech { 
+            background: linear-gradient(135deg, #1D3557 0%, #E63946 100%);
+            border-radius: 0 0 40px 40px;
+        }
+        .glass-card { 
+            background: white; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 25px rgba(29, 53, 87, 0.08); 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #2A9D8F;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(42, 157, 143, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(42, 157, 143, 0); }
+        }
+    </style>
+</head>
+<body class="bg-tri-fondo">
+
+    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-black italic tracking-tighter">
+                <span class="text-tri-rojo">▲</span> FAST FOOD <span class="text-tri-amarillo">POSTA</span>
+            </a>
+            <a href="index.html" class="bg-tri-texto text-white px-4 py-2 rounded-xl text-xs font-black uppercase italic transition-transform active:scale-90">
+                Volver
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 pt-24 pb-12">
+        
+        <section class="hero-tech p-8 text-center mb-8" data-aos="zoom-in">
+            <div class="inline-block px-3 py-1 bg-tri-amarillo rounded-full text-[10px] font-black uppercase mb-4">
+                Tech Startup & Dark Kitchen
+            </div>
+            <h1 class="text-white text-4xl font-black italic uppercase leading-none tracking-tighter">
+                Liderando la <br><span class="text-tri-amarillo">Revolución Gastronómica</span>
+            </h1>
+            <p class="text-white/70 text-sm mt-4 font-medium">Optimizamos sabor y velocidad mediante tecnología de cocinas ocultas en Carlos Paz.</p>
+        </section>
+
+        <section class="glass-card p-6 mb-6" data-aos="fade-up">
+            <h2 class="text-tri-rojo font-black italic uppercase text-xl mb-3 leading-none italic">Nuestra Identidad</h2>
+            <p class="text-sm leading-relaxed font-medium text-tri-texto/80">
+                Somos una **Startup de base tecnológica** aplicada al sector gastronómico. Operamos bajo el modelo de **Dark Kitchen** (Cocinas Ocultas), lo que nos permite centrar el 100% de nuestros recursos en la calidad del producto y la eficiencia logística.
+            </p>
+            <div class="mt-4 flex items-center gap-2">
+                <span class="status-dot"></span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-tri-verde">Sistema Escalable 2026</span>
+            </div>
+        </section>
+
+        <section class="bg-tri-texto rounded-[24px] p-6 text-white mb-6 shadow-xl relative overflow-hidden" data-aos="fade-up">
+            <div class="relative z-10">
+                <h2 class="text-tri-amarillo font-black italic uppercase text-xl mb-1">Horarios Verano</h2>
+                <p class="text-[10px] uppercase font-bold text-white/50 mb-4 tracking-widest text-center sm:text-left">Villa Carlos Paz - Temporada Alta</p>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <span class="font-bold text-sm">Lunes a Domingos</span>
+                        <span class="bg-tri-rojo px-3 py-1 rounded-lg text-[11px] font-black italic shadow-lg">09:00 AM - 02:00 AM</span>
+                    </div>
+                </div>
+                <p class="text-[10px] mt-4 italic text-white/60 text-center">* Operativa de despacho continuo por plataforma.</p>
+            </div>
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-tri-amarillo/10 rounded-full"></div>
+        </section>
+
+        <section class="glass-card p-2 mb-8" data-aos="fade-up">
+            <div class="p-4">
+                <h2 class="text-tri-texto font-black italic uppercase text-lg leading-none">Punto de Despacho</h2>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Base Operativa V.C.P</p>
+            </div>
+            <div class="h-48 rounded-[20px] overflow-hidden bg-gray-100 border-2 border-white grayscale">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13620.448530402124!2d-64.4984!3d-31.4162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942d6640d6ca8e93%3A0x6aa53880492e70e3!2sVilla%20Carlos%20Paz%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1700000000000!5m2!1ses-419!2sar" 
+                    class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </section>
+
+        <footer class="text-center space-y-6">
+            <a href="index.html" class="inline-flex items-center gap-2 bg-tri-amarillo text-tri-texto px-10 py-4 rounded-2xl font-black uppercase italic text-sm shadow-xl active:scale-95 transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Volver a la App
+            </a>
+            
+            <div class="pt-8 opacity-40">
+                <p class="text-[9px] font-black uppercase tracking-[0.3em]">Powered by Fast Food Posta Engine v2.6</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out-back'
+        });
+    </script>
+</body>
+</html>
