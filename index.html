@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SABORES RÁPIDOS | App Oficial</title>
     
+    <title>FAST FOOD POSTA | Pizzas y Empanadas | App Oficial</title>
+    <meta name="description" content="Pedí online en Fast Food Posta. Las mejores Pizzas, Empanadas de Osobuco y sabores únicos con entrega rápida. ¡Tu pedido caliente en minutos!">
+    <link rel="canonical" href="https://fastfoodposta.com/" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
@@ -16,7 +19,6 @@
                 extend: {
                     colors: {
                         'tri-rojo': '#E63946',
-                        'tri-naranja': '#F4A261',
                         'tri-amarillo': '#FFB703',
                         'tri-fondo': '#F8F9FA',
                         'tri-texto': '#1D3557',
@@ -28,54 +30,42 @@
     </script>
 
     <style>
-        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body.loading { overflow: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(29, 53, 87, 0.1); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
-        .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.4s ease-out; width: 100%; max-width: 600px; margin: 0 auto; }
+        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(29, 53, 87, 0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
+        .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.3s ease-out; width: 100%; max-width: 600px; margin: 0 auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .btn-fast { background: #E63946; color: white; transition: all 0.3s; }
-        .btn-fast:active { transform: scale(0.95); }
-        .btn-pay { background: #2A9D8F; color: white; transition: all 0.3s; box-shadow: 0 4px 14px 0 rgba(42, 157, 143, 0.39); }
-        
         .swiper { width: 100%; height: 250px; border-radius: 20px; }
-        .swiper-slide { position: relative; overflow: hidden; border-radius: 20px; }
-        .slide-overlay { 
-            position: absolute; inset: 0; 
-            background: linear-gradient(to top, rgba(29, 53, 87, 0.9) 10%, transparent 70%); 
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;
-        }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.9) 10%, transparent 70%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+        #loader.fade-out { opacity: 0; pointer-events: none; }
     </style>
 </head>
-<body class="bg-tri-fondo">
+<body class="bg-tri-fondo loading">
 
-    <div id="tracking-screen" class="hidden fixed inset-0 z-[300] bg-white flex flex-col p-4 md:p-8 overflow-y-auto">
-        <div class="max-w-md mx-auto w-full flex flex-col h-full text-center">
-            <div class="mt-6">
-                <div class="inline-block p-4 bg-tri-amarillo/20 rounded-full mb-4">
-                    <svg class="w-10 h-10 text-tri-amarillo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <h2 class="text-3xl font-black uppercase italic text-tri-rojo">¡Pedido en Marcha!</h2>
-                <div id="countdown" class="text-7xl font-black text-tri-texto my-4">25:00</div>
-            </div>
-            <div class="mt-8 space-y-6 text-left px-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-tri-verde text-white flex items-center justify-center shrink-0 font-bold">✓</div>
-                    <p class="font-black text-sm uppercase">Pago Confirmado y Stock Actualizado</p>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-tri-amarillo text-white flex items-center justify-center shrink-0 font-bold animate-pulse">2</div>
-                    <p class="font-black text-sm uppercase">Cocinando tu pedido...</p>
-                </div>
-            </div>
-            <button onclick="location.href='index.html'" class="w-full mt-auto py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Cerrar</button>
+    <div id="loader" class="fixed inset-0 z-[500] bg-tri-fondo flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative">
+            <div class="w-20 h-20 border-4 border-gray-200 border-t-tri-rojo rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center"><span class="text-2xl animate-pulse">▲</span></div>
         </div>
+        <h2 class="mt-4 font-black italic text-tri-texto tracking-tighter uppercase">Cocinando <span class="text-tri-rojo">Fast Food</span> Posta...</h2>
+    </div>
+
+    <div id="tracking-screen" class="hidden fixed inset-0 z-[300] bg-white flex flex-col p-6 text-center">
+        <div class="mt-12">
+            <div class="inline-block p-4 bg-tri-amarillo/20 rounded-full mb-4">
+                <svg class="w-12 h-12 text-tri-amarillo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h2 class="text-3xl font-black uppercase italic text-tri-rojo">¡Pedido en Marcha!</h2>
+            <div id="countdown" class="text-6xl font-black text-tri-texto my-4">25:00</div>
+            <p class="font-bold text-gray-500">Tu pago fue confirmado y ya estamos cocinando.</p>
+        </div>
+        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Cerrar</button>
     </div>
 
     <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black italic tracking-tighter">
-                <span class="text-tri-rojo">▲</span> SABORES <span class="text-tri-amarillo">RÁPIDOS</span>
-            </h1>
+            <h1 class="text-xl font-black italic tracking-tighter"><span class="text-tri-rojo">▲</span> FAST FOOD <span class="text-tri-amarillo">POSTA</span></h1>
             <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
@@ -84,32 +74,42 @@
     </header>
 
     <main class="max-w-5xl mx-auto px-4 pt-24 pb-24">
-        <section class="mt-4 overflow-hidden" data-aos="zoom-in">
-            <h3 class="text-xl font-black uppercase text-tri-rojo italic mb-4">Recomendados para ti ✨</h3>
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper" id="random-slider-wrapper"></div>
-                <div class="swiper-pagination"></div>
-            </div>
+        <section class="mt-4" data-aos="zoom-in">
+            <div class="swiper mySwiper"><div class="swiper-wrapper" id="random-slider-wrapper"></div><div class="swiper-pagination"></div></div>
         </section>
 
         <section class="mt-8">
             <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[68px] bg-tri-fondo/95 z-40"></div>
-            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
+            <div id="product-grid" class="grid grid-cols-2 gap-3 mt-4"></div>
+        </section>
+
+        <section class="mt-12 mb-8 px-4 border-t border-gray-200 pt-8 text-center">
+            <a href="info.html" class="inline-flex items-center justify-center gap-2 bg-tri-texto text-white px-8 py-3 rounded-2xl font-black uppercase text-sm tracking-wide active:scale-95 transition-all shadow-lg">
+                <svg class="w-5 h-5 text-tri-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Nuestra Historia e Info
+            </a>
+            <p class="text-[10px] text-gray-400 mt-6">© 2026 Fast Food Posta - Todos los derechos reservados</p>
         </section>
     </main>
 
     <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
-        <div class="modal-content bg-white flex flex-col h-[85vh] md:h-auto md:max-h-[80vh]">
+        <div class="modal-content bg-white flex flex-col h-[85vh]">
             <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
-                <h4 class="font-black italic text-tri-rojo uppercase">Mi Pedido</h4>
+                <h4 class="font-black italic text-tri-rojo uppercase">Resumen de Pedido</h4>
                 <button onclick="closeCheckoutModal()" class="text-2xl p-2">✕</button>
             </div>
             <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow bg-gray-50"></div>
-            <div class="p-6 bg-white border-t space-y-3">
+            
+            <div class="p-6 bg-white border-t space-y-3 shadow-2xl">
                 <div class="flex justify-between text-2xl font-black mb-2"><span>Total</span><span id="cart-total" class="text-tri-rojo">$0</span></div>
-                <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 border-none font-bold">
-                <input type="text" id="cust-addr" placeholder="Dirección de Entrega" class="w-full p-4 rounded-xl bg-gray-100 border-none font-bold">
-                <button onclick="finalAction()" class="btn-pay w-full py-5 rounded-2xl font-black text-xl shadow-xl uppercase italic tracking-wider">Confirmar y Pagar</button>
+                
+                <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
+                
+                <input type="tel" id="cust-phone" placeholder="Tu WhatsApp (ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
+                
+                <input type="text" id="cust-addr" placeholder="Dirección Exacta" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
+                
+                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform">Confirmar y Pagar</button>
             </div>
         </div>
     </div>
@@ -175,20 +175,20 @@
             const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
             document.getElementById('product-grid').innerHTML = filtered.map(p => {
                 const s = currentStock.find(stock => stock.sabor === p.name);
-                const disponible = s ? s.stock : 0;
+                const disponible = s ? s.stock : 99;
                 const agotado = disponible <= 0;
 
                 return `
                 <div class="food-card ${agotado ? 'opacity-60' : ''}" data-aos="fade-up">
-                    <div class="relative">
-                        <img src="${p.img}" class="h-32 w-full object-cover ${agotado ? 'grayscale' : ''}">
+                    <div class="relative aspect-square">
+                        <img src="${p.img}" class="h-full w-full object-cover ${agotado ? 'grayscale' : ''}">
                         ${agotado ? '<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-black text-xs uppercase italic">Agotado</span>' : ''}
                     </div>
                     <div class="p-3 flex flex-col flex-grow text-center">
                         <h3 class="font-black text-[11px] h-8 overflow-hidden uppercase leading-tight">${p.name}</h3>
                         <p class="text-tri-rojo font-black text-lg mt-1">$${p.price.toLocaleString()}</p>
                         <button onclick="${agotado ? '' : `addToCart(event, ${p.id})`}" 
-                            class="mt-2 py-2 rounded-xl text-[10px] font-black uppercase ${agotado ? 'bg-gray-300 text-gray-500' : 'bg-tri-amarillo/10 border-2 border-tri-amarillo text-tri-texto'}">
+                            class="mt-2 py-3 rounded-xl text-[10px] font-black uppercase ${agotado ? 'bg-gray-300 text-gray-500' : 'bg-tri-amarillo text-tri-texto'}">
                             ${agotado ? 'Sin Stock' : 'Añadir'}
                         </button>
                     </div>
@@ -203,14 +203,16 @@
             let total = 0;
             document.getElementById('cart-list').innerHTML = Object.entries(cart).map(([id, q]) => {
                 const item = products.find(x => x.id == id);
-                if(!item) return '';
                 total += item.price * q;
                 return `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
-                    <div class="min-w-0 pr-2"><p class="font-black text-xs truncate uppercase">${item.name}</p><p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p></div>
+                    <div class="min-w-0 pr-2">
+                        <p class="font-black text-xs truncate uppercase">${item.name}</p>
+                        <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
+                    </div>
                     <div class="flex items-center gap-2">
                         <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg font-black">-</button>
                         <span class="font-black text-base w-4 text-center">${q}</span>
-                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black shadow-md">+</button>
+                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button>
                     </div>
                 </div>`;
             }).join('');
@@ -222,7 +224,7 @@
         window.addToCart = (e, id) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
-            const max = s ? s.stock : 0;
+            const max = s ? s.stock : 99;
             if ((cart[id] || 0) < max) { cart[id] = (cart[id] || 0) + 1; updateUI(); }
             else { alert("Sin stock disponible."); }
         };
@@ -230,7 +232,7 @@
         window.changeQty = (id, n) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
-            const max = s ? s.stock : 0;
+            const max = s ? s.stock : 99;
             if (n > 0 && cart[id] >= max) return alert("Máximo disponible");
             cart[id] += n; 
             if(cart[id] <= 0) delete cart[id]; 
@@ -240,13 +242,16 @@
         window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
 
+        // LÓGICA DE FINALIZACIÓN CON TELÉFONO
         window.finalAction = () => {
             const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
             const addr = document.getElementById('cust-addr').value;
             const totalStr = document.getElementById('cart-total').innerText;
-            const totalNum = totalStr.replace(/[^0-9]/g, '');
 
-            if(!name || !addr || Object.keys(cart).length === 0) return alert("Completa tus datos.");
+            if(!name || !phone || !addr || Object.keys(cart).length === 0) {
+                return alert("Por favor completa tu Nombre, Teléfono y Dirección.");
+            }
             
             const itemsDetalle = Object.entries(cart).map(([id, q]) => {
                 const item = products.find(x => x.id == id);
@@ -254,44 +259,46 @@
             });
 
             const pedido = {
-                n: name, a: addr, t: totalStr,
+                n: name, 
+                p: phone, // Guardamos el teléfono
+                a: addr, 
+                t: totalStr,
                 carrito: itemsDetalle,
                 itemsTexto: itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n')
             };
             
             localStorage.setItem('pending_order', JSON.stringify(pedido));
-            // Redirige al link de Mercado Pago con el monto inyectado
-            window.location.href = `${MI_LINK_PAGO_BASE}/${totalNum}`;
+            window.location.href = MI_LINK_PAGO_BASE;
         };
 
         window.onload = async () => {
-            AOS.init(); 
-            renderSlider();
-            await fetchStock();
-            
-            // Simulación de vuelta de pago para pruebas o integración real
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
-                const data = JSON.parse(localStorage.getItem('pending_order'));
-                if(data) {
-                    for (const item of data.carrito) {
-                        const mov = {
-                            tipo: 'VENTA',
-                            producto: item.cat,
-                            sabor: item.name,
-                            cantidad: item.qty,
-                            monto: item.price * item.qty
-                        };
-                        try {
-                            await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
-                        } catch(e) { console.log(e); }
-                    }
+            try {
+                renderSlider();
+                await fetchStock();
+                AOS.init(); 
 
-                    const msg = `*▲ NUEVO PEDIDO CONFIRMADO*\n*Cliente:* ${data.n}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n\n*TOTAL:* ${data.t}\n*ESTADO: PAGO POR MERCADO PAGO*`;
-                    window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                    document.getElementById('tracking-screen').classList.remove('hidden');
-                    localStorage.removeItem('pending_order');
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
+                    const data = JSON.parse(localStorage.getItem('pending_order'));
+                    if(data) {
+                        for (const item of data.carrito) {
+                            const mov = { tipo: 'VENTA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
+                            fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(e => console.log(e));
+                        }
+                        // Mensaje de WhatsApp mejorado con teléfono
+                        const msg = `*▲ NUEVO PEDIDO CONFIRMADO*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO POR MP*`;
+                        window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                        document.getElementById('tracking-screen').classList.remove('hidden');
+                        localStorage.removeItem('pending_order');
+                    }
                 }
+            } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('loader').classList.add('fade-out');
+                    document.body.classList.remove('loading');
+                }, 600);
             }
         };
     </script>
