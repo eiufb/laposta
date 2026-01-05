@@ -23,6 +23,9 @@
                         'tri-fondo': '#F8F9FA',
                         'tri-texto': '#1D3557',
                         'tri-verde': '#2A9D8F'
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -58,9 +61,9 @@
             </div>
             <h2 class="text-3xl font-black uppercase italic text-tri-rojo">¡Pedido en Marcha!</h2>
             <div id="countdown" class="text-6xl font-black text-tri-texto my-4">25:00</div>
-            <p class="font-bold text-gray-500">Tu pago fue confirmado y ya estamos cocinando.</p>
+            <p id="tracking-msg" class="font-bold text-gray-500 px-4">Estamos preparando tu pedido con la mejor onda.</p>
         </div>
-        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Cerrar</button>
+        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Pedir más</button>
     </div>
 
     <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
@@ -82,34 +85,46 @@
             <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[68px] bg-tri-fondo/95 z-40"></div>
             <div id="product-grid" class="grid grid-cols-2 gap-3 mt-4"></div>
         </section>
-
-        <section class="mt-12 mb-8 px-4 border-t border-gray-200 pt-8 text-center">
-            <a href="info.html" class="inline-flex items-center justify-center gap-2 bg-tri-texto text-white px-8 py-3 rounded-2xl font-black uppercase text-sm tracking-wide active:scale-95 transition-all shadow-lg">
-                <svg class="w-5 h-5 text-tri-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                Nuestra Historia e Info
-            </a>
-            <p class="text-[10px] text-gray-400 mt-6">© 2026 Fast Food Posta - Todos los derechos reservados</p>
-        </section>
     </main>
 
     <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
-        <div class="modal-content bg-white flex flex-col h-[85vh]">
+        <div class="modal-content bg-white flex flex-col h-[90vh]">
             <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
-                <h4 class="font-black italic text-tri-rojo uppercase">Resumen de Pedido</h4>
-                <button onclick="closeCheckoutModal()" class="text-2xl p-2">✕</button>
+                <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido</h4>
+                <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
             </div>
+            
             <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow bg-gray-50"></div>
             
-            <div class="p-6 bg-white border-t space-y-3 shadow-2xl">
-                <div class="flex justify-between text-2xl font-black mb-2"><span>Total</span><span id="cart-total" class="text-tri-rojo">$0</span></div>
+            <div class="p-6 bg-white border-t space-y-4 shadow-2xl">
+                <div class="flex justify-between text-2xl font-black mb-1"><span>Total</span><span id="cart-total" class="text-tri-rojo">$0</span></div>
                 
-                <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
+                <div class="space-y-2">
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
+                    <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
+                    <input type="text" id="cust-addr" placeholder="Dirección de entrega" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Método de Pago</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">Mercado Pago</button>
+                        <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">Transferencia</button>
+                    </div>
+
+                    <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl space-y-2 mt-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias para transferir:</span>
+                            <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden tracking-tighter">¡Copiado al portapapeles!</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center outline-none text-lg tracking-widest">
+                            <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-xs uppercase italic active:scale-90 transition-transform">Copiar</button>
+                        </div>
+                    </div>
+                </div>
                 
-                <input type="tel" id="cust-phone" placeholder="Tu WhatsApp (ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
-                
-                <input type="text" id="cust-addr" placeholder="Dirección Exacta" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none focus:ring-2 focus:ring-tri-amarillo">
-                
-                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform">Confirmar y Pagar</button>
+                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg">Confirmar Pedido</button>
             </div>
         </div>
     </div>
@@ -121,6 +136,8 @@
         const MI_WHATSAPP = "5493541214553";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
+        const MI_ALIAS = "fastfoodposta";
+        let selectedPayment = 'MP';
 
         const products = [
             { id: 301, name: 'Empanada de Carne', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
@@ -140,6 +157,19 @@
         let cart = {};
         let activeCategory = 'Todos';
         let currentStock = [];
+
+        // CRONÓMETRO
+        function startTimer(durationInMinutes, display) {
+            let timer = durationInMinutes * 60, minutes, seconds;
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+                if (--timer < 0) { clearInterval(interval); display.textContent = "00:00"; }
+            }, 1000);
+        }
 
         async function fetchStock() {
             try {
@@ -177,7 +207,6 @@
                 const s = currentStock.find(stock => stock.sabor === p.name);
                 const disponible = s ? s.stock : 99;
                 const agotado = disponible <= 0;
-
                 return `
                 <div class="food-card ${agotado ? 'opacity-60' : ''}" data-aos="fade-up">
                     <div class="relative aspect-square">
@@ -220,7 +249,6 @@
         }
 
         window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); };
-        
         window.addToCart = (e, id) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
@@ -228,7 +256,6 @@
             if ((cart[id] || 0) < max) { cart[id] = (cart[id] || 0) + 1; updateUI(); }
             else { alert("Sin stock disponible."); }
         };
-
         window.changeQty = (id, n) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
@@ -242,7 +269,37 @@
         window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
 
-        // LÓGICA DE FINALIZACIÓN CON TELÉFONO
+        // LÓGICA DE PAGO
+        window.setPayment = (type) => {
+            selectedPayment = type;
+            const info = document.getElementById('transfer-info');
+            const btnMp = document.getElementById('btn-mp');
+            const btnTr = document.getElementById('btn-transf');
+            if(type === 'TRANSF') {
+                info.classList.remove('hidden');
+                btnTr.classList.replace('opacity-60', 'opacity-100');
+                btnTr.classList.replace('text-gray-500', 'text-tri-texto');
+                btnTr.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10');
+                btnMp.classList.add('opacity-60');
+                btnMp.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10');
+            } else {
+                info.classList.add('hidden');
+                btnMp.classList.replace('opacity-60', 'opacity-100');
+                btnMp.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10');
+                btnTr.classList.add('opacity-60');
+                btnTr.classList.replace('text-tri-texto', 'text-gray-500');
+                btnTr.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10');
+            }
+        };
+
+        window.copyAlias = () => {
+            const el = document.getElementById('alias-value');
+            navigator.clipboard.writeText(el.value);
+            const status = document.getElementById('copy-status');
+            status.classList.remove('hidden');
+            setTimeout(() => status.classList.add('hidden'), 2000);
+        };
+
         window.finalAction = () => {
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
@@ -250,56 +307,59 @@
             const totalStr = document.getElementById('cart-total').innerText;
 
             if(!name || !phone || !addr || Object.keys(cart).length === 0) {
-                return alert("Por favor completa tu Nombre, Teléfono y Dirección.");
+                return alert("Por favor completa Nombre, WhatsApp y Dirección.");
             }
             
             const itemsDetalle = Object.entries(cart).map(([id, q]) => {
                 const item = products.find(x => x.id == id);
                 return { cat: item.category, name: item.name, qty: q, price: item.price };
             });
+            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n');
 
-            const pedido = {
-                n: name, 
-                p: phone, // Guardamos el teléfono
-                a: addr, 
-                t: totalStr,
-                carrito: itemsDetalle,
-                itemsTexto: itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n')
-            };
-            
-            localStorage.setItem('pending_order', JSON.stringify(pedido));
-            window.location.href = MI_LINK_PAGO_BASE;
+            const pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
+
+            if (selectedPayment === 'MP') {
+                localStorage.setItem('pending_order', JSON.stringify(pedido));
+                window.location.href = MI_LINK_PAGO_BASE;
+            } else {
+                // FLUJO TRANSFERENCIA
+                itemsDetalle.forEach(item => {
+                    const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
+                    fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
+                });
+                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE DE PAGO ABAJO:*`;
+                window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                
+                document.getElementById('tracking-msg').innerText = "Enviá el comprobante por WhatsApp para validar tu pedido.";
+                document.getElementById('tracking-screen').classList.remove('hidden');
+                startTimer(25, document.getElementById('countdown'));
+                cart = {}; updateUI(); closeCheckoutModal();
+            }
         };
 
         window.onload = async () => {
-            try {
-                renderSlider();
-                await fetchStock();
-                AOS.init(); 
-
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
-                    const data = JSON.parse(localStorage.getItem('pending_order'));
-                    if(data) {
-                        for (const item of data.carrito) {
-                            const mov = { tipo: 'VENTA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                            fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(e => console.log(e));
-                        }
-                        // Mensaje de WhatsApp mejorado con teléfono
-                        const msg = `*▲ NUEVO PEDIDO CONFIRMADO*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO POR MP*`;
-                        window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                        document.getElementById('tracking-screen').classList.remove('hidden');
-                        localStorage.removeItem('pending_order');
-                    }
+            renderSlider();
+            await fetchStock();
+            AOS.init(); 
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
+                const data = JSON.parse(localStorage.getItem('pending_order'));
+                if(data) {
+                    data.carrito.forEach(item => {
+                        const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
+                        fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
+                    });
+                    const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
+                    window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                    document.getElementById('tracking-screen').classList.remove('hidden');
+                    startTimer(25, document.getElementById('countdown'));
+                    localStorage.removeItem('pending_order');
                 }
-            } catch (error) {
-                console.error("Error:", error);
-            } finally {
-                setTimeout(() => {
-                    document.getElementById('loader').classList.add('fade-out');
-                    document.body.classList.remove('loading');
-                }, 600);
             }
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('fade-out');
+                document.body.classList.remove('loading');
+            }, 600);
         };
     </script>
 </body>
