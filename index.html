@@ -155,26 +155,18 @@
         const MI_ALIAS = "fastfoodposta";
         let selectedPayment = 'MP';
 
-        const products = [
-            // PROMOCIONES (Categoría 'Promos')
-            { id: 901, name: '6 Empanadas Clásicas', price: 14000, category: 'Promos', img: 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=800' },
-            { id: 902, name: '6 Mixtas (1 Osobuco)', price: 15500, category: 'Promos', img: 'https://images.unsplash.com/photo-1628102476621-0466d7907531?auto=format&fit=crop&w=800' },
-            { id: 903, name: '12 Empanadas Clásicas', price: 27000, category: 'Promos', img: 'https://images.unsplash.com/photo-1612195583950-b8fd34c87093?auto=format&fit=crop&w=800' },
-            { id: 904, name: 'Pizza + 2 Emp. Clásicas', price: 18500, category: 'Promos', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800' },
-            
-            // INDIVIDUALES
-            { id: 301, name: 'Empanada de Carne', price: 2500, category: 'Empanadas', img: 'https://imag.bonviveur.com/empanadas-argentinas-de-carne-foto-cerca.webp' },
-            { id: 302, name: 'Empanada de Pollo', price: 2500, category: 'Empanadas', img: 'https://img-global.cpcdn.com/recipes/f8d724c25de6517c/680x781f0.5_0.553045_1.0q80/empanadas-arabes-foto-principal.jpg' },
-            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://as2.ftcdn.net/v2/jpg/02/33/22/10/1000_F_233221021_7L7mFmQZp9k8V7g3UoJ7oB0p0e9b9p0e.jpg' },
-            { id: 304, name: 'Empanada Marcela', price: 2800, category: 'Empanadas', img: 'https://i.pinimg.com/736x/8e/33/cc/8e33cc994348003a7434551d4512499d.jpg' },
-            { id: 305, name: 'Empanada Osobuco al Disco', price: 3200, category: 'Empanadas', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png?size=800x800' },
-            { id: 601, name: 'Pizza Jamón con Cuero', price: 15500, category: 'Pizzas', img: 'https://i.pinimg.com/736x/f1/32/60/f132606f9ac790b9333d699d00516829.jpg' },
-            { id: 602, name: 'Pizza Sálame', price: 14500, category: 'Pizzas', img: 'https://media-cdn.tripadvisor.com/media/photo-s/1c/91/92/75/pizza-de-salame.jpg' },
-            { id: 603, name: 'Pizza Doble Muzza', price: 13500, category: 'Pizzas', img: 'https://i.pinimg.com/1200x/7b/a2/86/7ba286ba74638e22c503f0e7888a1de3.jpg' },
-            { id: 604, name: 'Pizza con Huevo', price: 14000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/6e/9f/06/6e9f069d9a368bc8d5412838d6ebe894.jpg' },
-            { id: 605, name: 'Pizza Roquefort', price: 16000, category: 'Pizzas', img: 'https://i.pinimg.com/originals/96/93/70/9693706079634f19b78750800d072661.jpg' },
-            { id: 606, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://i.pinimg.com/736x/e3/dd/15/e3dd15552ebb7cf5754f6f2a7897554a.jpg' },
-            { id: 607, name: 'Pizza Fugazzeta', price: 15000, category: 'Pizzas', img: 'https://www.infobae.com/new-resizer/y5UuYkP_42P80Uj_hNidQ03yL0M=/arc-anglerfish-arc2-prod-infobae/public/2N7T7S7N7VGHFPR7Q5K7X7H5K4.jpg' }
+         const products = [
+            { id: 901, name: '6 Empanadas Clásicas', price: 14000, category: 'Promos', img: 'https://imgur.com/fCXP55y.jpg' },
+            { id: 902, name: '6 Mixtas (1 Osobuco)', price: 15500, category: 'Promos', img: 'https://imgur.com/ELDnGnx.jpg' },
+            { id: 904, name: 'Pizza + 2 Emp. Clásicas', price: 18500, category: 'Promos', img: 'https://imgur.com/9zMq0Xy.jpg' },
+            { id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://imgur.com/qTtAsTg.jpg' },
+            { id: 302, name: 'Empanada Carne (Sal/Dul)', price: 2500, category: 'Empanadas', img: 'https://imgur.com/vzTA6Go.jpg' },
+            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://imgur.com/nz8EsSA.jpg' },
+            { id: 305, name: 'Empanada Osobuco al Disco', price: 3200, category: 'Empanadas', img: 'https://cdn.pedix.app/sA9cO4Warb5egTj2e9tO/products/1698427247720.png' },
+            { id: 601, name: 'Pizza Mozzarella', price: 13500, category: 'Pizzas', img: 'https://imgur.com/auGCDzA.jpg' },
+            { id: 603, name: 'Pizza Napolitana', price: 15000, category: 'Pizzas', img: 'https://imgur.com/VdrWLyk.jpg' },
+            { id: 604, name: 'Pizza Roquefort', price: 16000, category: 'Pizzas', img: 'https://imgur.com/6LzzFvJ.jpg' },
+            { id: 605, name: 'Pizza Doble Mozzarella', price: 14000, category: 'Pizzas', img: 'https://imgur.com/MccqE2N.jpg' }
         ];
 
         let cart = {};
@@ -392,3 +384,4 @@
     </script>
 </body>
 </html>
+
