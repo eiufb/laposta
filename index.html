@@ -149,32 +149,25 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        const MI_WHATSAPP = "5493541272207;
+        const MI_WHATSAPP = "5493541272207"; // Corregido: comilla cerrada
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
         const MI_ALIAS = "fastfoodposta";
         let selectedPayment = 'MP';
 
-       //https://imgur.com/a/Xj8yRrF caperta de donde salen las fotos 
-         const products = [
-            
-            
-          { id: 901, name: 'Promo 6 Empanadas', price: 13000, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
-{ id: 902, name: 'Promo 2 Pizzas', price: 20000, category: 'Promos', img: 'https://imgur.com/RJZAtWF.jpg' },
-
-{ id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://imgur.com/MZDHaF2.jpg' },
-{ id: 302, name: 'Empanada Carne', price: 2500, category: 'Empanadas', img: 'https://imgur.com/zoLvHw9.jpg' },
-{ id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://imgur.com/nz8EsSA.jpg' },
-
-{ id: 601, name: 'Muzza con Huevo', price: 12500, category: 'Pizzas', img: 'https://imgur.com/HTZ1aBD.jpg' },
-{ id: 603, name: 'Pizza Napolitana', price: 14000, category: 'Pizzas', img: 'https://imgur.com/KfxG1c8.jpg' },
-{ id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://imgur.com/Rn7tq0E.jpg' },
-{ id: 605, name: 'Pizza Mozzarella', price: 12000, category: 'Pizzas', img: 'https://imgur.com/E6jHbM2.jpg' },
-{ id: 606, name: 'Especial (Jamón y Morrón)', price: 12500, category: 'Pizzas', img: 'https://imgur.com/fKtFr3Y.jpg' },
-{ id: 607, name: 'Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://imgur.com/AGGvX3s.jpg' },
-            
+        const products = [
+            { id: 901, name: 'Promo 6 Empanadas', price: 13000, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
+            { id: 902, name: 'Promo 2 Pizzas', price: 20000, category: 'Promos', img: 'https://imgur.com/RJZAtWF.jpg' },
+            { id: 301, name: 'Empanada Árabe', price: 2500, category: 'Empanadas', img: 'https://imgur.com/MZDHaF2.jpg' },
+            { id: 302, name: 'Empanada Carne', price: 2500, category: 'Empanadas', img: 'https://imgur.com/zoLvHw9.jpg' },
+            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://imgur.com/nz8EsSA.jpg' },
+            { id: 601, name: 'Muzza con Huevo', price: 12500, category: 'Pizzas', img: 'https://imgur.com/HTZ1aBD.jpg' },
+            { id: 603, name: 'Pizza Napolitana', price: 14000, category: 'Pizzas', img: 'https://imgur.com/KfxG1c8.jpg' },
+            { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://imgur.com/Rn7tq0E.jpg' },
+            { id: 605, name: 'Pizza Mozzarella', price: 12000, category: 'Pizzas', img: 'https://imgur.com/E6jHbM2.jpg' },
+            { id: 606, name: 'Especial (Jamón y Morrón)', price: 12500, category: 'Pizzas', img: 'https://imgur.com/fKtFr3Y.jpg' },
+            { id: 607, name: 'Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://imgur.com/AGGvX3s.jpg' }
         ];
-
 
         let cart = {};
         let activeCategory = 'Todos';
@@ -291,8 +284,6 @@
                 </div>`;
             }).join('');
             document.getElementById('cart-total').innerText = `$${total.toLocaleString()}`;
-            
-            // Refrescar los botones en el grid principal
             render();
         }
 
@@ -410,11 +401,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
