@@ -8,6 +8,22 @@
     <meta name="description" content="Pedí online en Fast Food Posta. Las mejores Pizzas, Empanadas de Osobuco y sabores únicos con entrega rápida. ¡Tu pedido caliente en minutos!">
     <link rel="canonical" href="https://fastfoodposta.com/" />
 
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1203043811209393');
+    fbq('track', 'PageView');
+    fbq('track', 'ViewContent');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1203043811209393&ev=PageView&noscript=1"
+    /></noscript>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
@@ -90,7 +106,7 @@
         </section>
 
         <section class="mt-12 mb-8 px-4 border-t border-gray-200 pt-8 text-center" data-aos="fade-up">
-            <a href="info.html" class="inline-flex items-center justify-center gap-3 bg-tri-texto text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest active:scale-95 transition-all shadow-xl border-b-4 border-tri-amarillo">
+            <a href="info.html" onclick="fbq('track', 'Contact');" class="inline-flex items-center justify-center gap-3 bg-tri-texto text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest active:scale-95 transition-all shadow-xl border-b-4 border-tri-amarillo">
                 <svg class="w-6 h-6 text-tri-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -149,7 +165,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        const MI_WHATSAPP = "5493541272207"; // Corregido: comilla cerrada
+        const MI_WHATSAPP = "5493541272207";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
         const MI_ALIAS = "fastfoodposta";
@@ -287,7 +303,12 @@
             render();
         }
 
-        window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); };
+        window.filterCategory = (cat) => { 
+            activeCategory = cat; 
+            render(); 
+            AOS.refresh(); 
+            fbq('track', 'Search', {search_string: cat});
+        };
         
         window.addToCart = (e, id) => {
             const item = products.find(p => p.id === id);
@@ -296,6 +317,7 @@
             if ((cart[id] || 0) < max) { 
                 cart[id] = (cart[id] || 0) + 1; 
                 updateUI(); 
+                fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'ARS'});
             } else { 
                 alert("Máximo stock disponible alcanzado."); 
             }
@@ -311,7 +333,10 @@
             updateUI(); 
         };
 
-        window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+        window.openCheckoutModal = () => {
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            fbq('track', 'InitiateCheckout');
+        }
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
 
         window.setPayment = (type) => {
@@ -319,6 +344,9 @@
             const info = document.getElementById('transfer-info');
             const btnMp = document.getElementById('btn-mp');
             const btnTr = document.getElementById('btn-transf');
+            
+            fbq('track', 'AddPaymentInfo');
+
             if(type === 'TRANSF') {
                 info.classList.remove('hidden');
                 btnTr.classList.replace('opacity-60', 'opacity-100');
@@ -346,6 +374,7 @@
             const phone = document.getElementById('cust-phone').value;
             const addr = document.getElementById('cust-addr').value;
             const totalStr = document.getElementById('cart-total').innerText;
+            const totalNum = parseFloat(totalStr.replace('$', '').replace('.', ''));
 
             if(!name || !phone || !addr || Object.keys(cart).length === 0) {
                 return alert("Por favor completa tus datos y añade productos.");
@@ -360,8 +389,11 @@
 
             if (selectedPayment === 'MP') {
                 localStorage.setItem('pending_order', JSON.stringify(pedido));
+                fbq('track', 'Lead', {content_name: name});
                 window.location.href = MI_LINK_PAGO_BASE;
             } else {
+                fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
+                
                 itemsDetalle.forEach(item => {
                     const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                     fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
@@ -382,6 +414,9 @@
             if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
                 const data = JSON.parse(localStorage.getItem('pending_order'));
                 if(data) {
+                    const totalNum = parseFloat(data.t.replace('$', '').replace('.', ''));
+                    fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
+
                     data.carrito.forEach(item => {
                         const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                         fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
