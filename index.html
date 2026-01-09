@@ -169,6 +169,7 @@
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
         const MI_ALIAS = "fastfoodposta";
+        const COSTO_ENVIO = 3000;
         let selectedPayment = 'MP';
 
         const products = [
@@ -283,11 +284,13 @@
             badge.innerText = count;
             badge.classList.toggle('hidden', count === 0);
             
-            let total = 0;
-            document.getElementById('cart-list').innerHTML = Object.entries(cart).map(([id, q]) => {
+            let subtotal = 0;
+            let cartHTML = '';
+
+            Object.entries(cart).forEach(([id, q]) => {
                 const item = products.find(x => x.id == id);
-                total += item.price * q;
-                return `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
+                subtotal += item.price * q;
+                cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
                     <div class="min-w-0 pr-2">
                         <p class="font-black text-xs truncate uppercase">${item.name}</p>
                         <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
@@ -298,8 +301,23 @@
                         <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button>
                     </div>
                 </div>`;
-            }).join('');
-            document.getElementById('cart-total').innerText = `$${total.toLocaleString()}`;
+            });
+
+            // Agregar item de Delivery si el carrito no está vacío
+            if (count > 0) {
+                subtotal += COSTO_ENVIO;
+                cartHTML += `
+                <div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">🛵</span>
+                        <p class="font-black text-xs uppercase">Envío a Domicilio</p>
+                    </div>
+                    <p class="font-black text-tri-texto">$${COSTO_ENVIO.toLocaleString()}</p>
+                </div>`;
+            }
+
+            document.getElementById('cart-list').innerHTML = cartHTML;
+            document.getElementById('cart-total').innerText = `$${subtotal.toLocaleString()}`;
             render();
         }
 
@@ -398,7 +416,10 @@
                     const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                     fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
                 });
-                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
+                
+                // Agregar línea de Delivery al mensaje de WhatsApp
+                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
+                
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                 document.getElementById('tracking-screen').classList.remove('hidden');
                 startTimer(25, document.getElementById('countdown'));
@@ -421,7 +442,7 @@
                         const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                         fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
                     });
-                    const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
+                    const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
                     window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                     document.getElementById('tracking-screen').classList.remove('hidden');
                     startTimer(25, document.getElementById('countdown'));
