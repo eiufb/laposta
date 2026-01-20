@@ -60,24 +60,15 @@
         #loader.fade-out { opacity: 0; pointer-events: none; }
     </style>
 
-<!-- TikTok Pixel Code Start -->
 <script>
 !function (w, d, t) {
   w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
 ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-
-
   ttq.load('D5HA22JC77U2LQ3IN72G');
   ttq.page();
 }(window, document, 'ttq');
 </script>
-<!-- TikTok Pixel Code End -->
-
-
-
-
-    
 </head>
 <body class="bg-tri-fondo loading">
 
@@ -186,28 +177,27 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <script>
         const MI_WHATSAPP = "5493541272207";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
-        const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
+        const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
         const MI_ALIAS = "fastfoodposta";
         const COSTO_ENVIO = 3000;
         let selectedPayment = 'MP';
 
         const products = [
             { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
-{ id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
-{ id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
-{ id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
-
-{ id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
-{ id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
-{ id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
-{ id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
-{ id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
-{ id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
-{ id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
-{ id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
-{ id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
-{ id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
-{ id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
+            { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
+            { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
+            { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
+            { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
+            { id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
+            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
+            { id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
+            { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
+            { id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
+            { id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
+            { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
+            { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
+            { id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
+            { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
         ];
 
         let cart = {};
@@ -327,7 +317,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                 </div>`;
             });
 
-            // Agregar item de Delivery si el carrito no está vacío
             if (count > 0) {
                 subtotal += COSTO_ENVIO;
                 cartHTML += `
@@ -386,9 +375,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             const info = document.getElementById('transfer-info');
             const btnMp = document.getElementById('btn-mp');
             const btnTr = document.getElementById('btn-transf');
-            
             fbq('track', 'AddPaymentInfo');
-
             if(type === 'TRANSF') {
                 info.classList.remove('hidden');
                 btnTr.classList.replace('opacity-60', 'opacity-100');
@@ -411,7 +398,21 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             setTimeout(() => status.classList.add('hidden'), 2000);
         };
 
-        window.finalAction = () => {
+        // INYECCIÓN: FUNCIÓN PARA ENVIAR VENTA AL SHEET Y DESCONTAR STOCK
+        async function finalizarPedido(carrito, total) {
+            await fetch(URL_API, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    action: "PROCESS_SALE",
+                    items: carrito.map(i => `${i.qty}x ${i.name}`).join(", "),
+                    total: total,
+                    cart: carrito 
+                })
+            });
+        }
+
+        window.finalAction = async () => {
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const addr = document.getElementById('cust-addr').value;
@@ -436,14 +437,15 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             } else {
                 fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
                 
+                // INYECCIÓN: Procesar stock para transferencia
+                await finalizarPedido(itemsDetalle, totalNum);
+
                 itemsDetalle.forEach(item => {
                     const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                     fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
                 });
                 
-                // Agregar línea de Delivery al mensaje de WhatsApp
                 const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
-                
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                 document.getElementById('tracking-screen').classList.remove('hidden');
                 startTimer(25, document.getElementById('countdown'));
@@ -461,6 +463,9 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                 if(data) {
                     const totalNum = parseFloat(data.t.replace('$', '').replace('.', ''));
                     fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
+
+                    // INYECCIÓN: Procesar stock para Mercado Pago confirmado
+                    await finalizarPedido(data.carrito, totalNum);
 
                     data.carrito.forEach(item => {
                         const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
@@ -480,7 +485,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         };
     </script>
 
-
 <a href="https://wa.me/3541272207?text=Hola%20Fast%20Food%20Posta!%20Quisiera%20hacer%20un%20pedido%20de%20pizzas%20y%20empanadas." 
    class="whatsapp-btn" 
    target="_blank">
@@ -493,7 +497,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         position: fixed;
         bottom: 20px;
         right: 20px;
-        background-color: #25d366; /* Color oficial WhatsApp */
+        background-color: #25d366; 
         color: white;
         padding: 12px 20px;
         border-radius: 50px;
@@ -507,34 +511,15 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         z-index: 1000;
         transition: transform 0.3s ease;
     }
-
-    .whatsapp-btn img {
-        width: 30px;
-        height: 30px;
-    }
-
-    .whatsapp-btn:hover {
-        transform: scale(1.1);
-        background-color: #128c7e;
-    }
-
-    /* Optimización para móviles: se hace circular si la pantalla es pequeña para no estorbar */
+    .whatsapp-btn img { width: 30px; height: 30px; }
+    .whatsapp-btn:hover { transform: scale(1.1); background-color: #128c7e; }
     @media (max-width: 480px) {
-        .whatsapp-btn span {
-            display: none; /* Esconde el texto en celulares muy chicos */
-        }
-        .whatsapp-btn {
-            padding: 15px;
-            bottom: 15px;
-            right: 15px;
-        }
+        .whatsapp-btn span { display: none; }
+        .whatsapp-btn { padding: 15px; bottom: 15px; right: 15px; }
     }
 </style>
 
-
-    
 </body>
 </html>
-
 
 
