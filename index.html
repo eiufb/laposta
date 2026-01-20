@@ -58,6 +58,15 @@
         .swiper { width: 100%; height: 280px; border-radius: 24px; }
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.95) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
         #loader.fade-out { opacity: 0; pointer-events: none; }
+        
+        /* ESTILO PARA BOTÓN DESHABILITADO */
+        .btn-disabled {
+            background-color: #94A3B8 !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+            pointer-events: none !important;
+            transform: none !important;
+        }
     </style>
 
 <script>
@@ -166,7 +175,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                     </div>
                 </div>
                 
-                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg">Confirmar Pedido</button>
+                <button id="final-order-btn" onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg">Confirmar Pedido</button>
             </div>
         </div>
     </div>
@@ -203,6 +212,26 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         let cart = {};
         let activeCategory = 'Todos';
         let currentStock = [];
+
+        // FUNCIÓN DE CONTROL HORARIO (12 PM A 00 AM)
+        function validarOperativa() {
+            const ahora = new Date();
+            const hora = ahora.getHours();
+            const btn = document.getElementById('final-order-btn');
+            
+            // Abierto de 12:00 (12) a 23:59 (23). A las 00:00 ya es cerrado.
+            const estaAbierto = (hora >= 12 && hora < 24);
+
+            if (btn) {
+                if (!estaAbierto) {
+                    btn.innerText = "CERRADO - VOLVEMOS A LAS 12:00 PM";
+                    btn.classList.add('btn-disabled');
+                } else {
+                    btn.innerText = "CONFIRMAR PEDIDO";
+                    btn.classList.remove('btn-disabled');
+                }
+            }
+        }
 
         function startTimer(durationInMinutes, display) {
             let timer = durationInMinutes * 60, minutes, seconds;
@@ -332,6 +361,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             document.getElementById('cart-list').innerHTML = cartHTML;
             document.getElementById('cart-total').innerText = `$${subtotal.toLocaleString()}`;
             render();
+            // Validar operativa cada vez que cambia el carrito por si cambió la hora
+            validarOperativa();
         }
 
         window.filterCategory = (cat) => { 
@@ -366,6 +397,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
         window.openCheckoutModal = () => {
             document.getElementById('checkout-modal').classList.remove('hidden');
+            validarOperativa(); // Chequear al abrir modal
             fbq('track', 'InitiateCheckout');
         }
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
@@ -398,7 +430,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             setTimeout(() => status.classList.add('hidden'), 2000);
         };
 
-        // INYECCIÓN: FUNCIÓN PARA ENVIAR VENTA AL SHEET Y DESCONTAR STOCK
         async function finalizarPedido(carrito, total) {
             await fetch(URL_API, {
                 method: 'POST',
@@ -437,7 +468,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             } else {
                 fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
                 
-                // INYECCIÓN: Procesar stock para transferencia
                 await finalizarPedido(itemsDetalle, totalNum);
 
                 itemsDetalle.forEach(item => {
@@ -457,6 +487,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             renderSlider();
             await fetchStock();
             AOS.init(); 
+            // Validar operativa inmediatamente al cargar
+            validarOperativa();
+            // Chequeo constante cada 30 segundos por si el usuario deja la app abierta
+            setInterval(validarOperativa, 30000);
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
                 const data = JSON.parse(localStorage.getItem('pending_order'));
@@ -464,7 +499,6 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                     const totalNum = parseFloat(data.t.replace('$', '').replace('.', ''));
                     fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
 
-                    // INYECCIÓN: Procesar stock para Mercado Pago confirmado
                     await finalizarPedido(data.carrito, totalNum);
 
                     data.carrito.forEach(item => {
@@ -521,5 +555,3 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
 </body>
 </html>
-
-
