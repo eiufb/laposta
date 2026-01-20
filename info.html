@@ -83,7 +83,7 @@
         <section class="glass-card p-6 mb-6" data-aos="fade-up">
             <h2 class="text-tri-rojo font-black italic uppercase text-xl mb-3 leading-none italic">Nuestra Identidad</h2>
             <p class="text-sm leading-relaxed font-medium text-tri-texto/80">
-                Somos una Startup de base tecnológica aplicada al sector gastronómico. Operamos bajo el modelo de Dark Kitchen (Cocinas Ocultas), lo que nos permite centrar el 100% de nuestros recursos en la calidad del producto y la eficiencia logística.
+                Somos una Startup de base tecnológica aplicada al sector gastronómico. Operamos bajo el modelo de Dark Kitchen (Cocinas Ocultas), lo que nos permite centrar el 100% de nuestros recursos en la calidad del producto y la eficiencia logística en Villa Carlos Paz.
             </p>
             <div class="mt-4 flex items-center gap-2">
                 <span class="status-dot"></span>
@@ -93,16 +93,22 @@
 
         <section class="bg-tri-texto rounded-[24px] p-6 text-white mb-6 shadow-xl relative overflow-hidden" data-aos="fade-up">
             <div class="relative z-10">
-                <h2 class="text-tri-amarillo font-black italic uppercase text-xl mb-1">Horarios Verano</h2>
-                <p class="text-[10px] uppercase font-bold text-white/50 mb-4 tracking-widest text-center sm:text-left">Villa Carlos Paz - Temporada Alta</p>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-tri-amarillo font-black italic uppercase text-xl mb-1">Horarios</h2>
+                    <div id="status-badge" class="px-3 py-1 rounded-full text-[10px] font-black uppercase italic transition-all duration-500">
+                        Cargando...
+                    </div>
+                </div>
                 
                 <div class="space-y-3">
                     <div class="flex justify-between items-center border-b border-white/10 pb-2">
                         <span class="font-bold text-sm">Lunes a Domingos</span>
-                        <span class="bg-tri-rojo px-3 py-1 rounded-lg text-[11px] font-black italic shadow-lg">09:00 AM - 02:00 AM</span>
+                        <span class="bg-tri-rojo px-3 py-1 rounded-lg text-[11px] font-black italic shadow-lg">12:00 PM - 00:00 AM</span>
                     </div>
                 </div>
-                <p class="text-[10px] mt-4 italic text-white/60 text-center">* Operativa de despacho continuo por plataforma.</p>
+                <p id="status-msg" class="text-[10px] mt-4 italic text-white/60 text-center font-bold uppercase tracking-tight">
+                    * Operativa de despacho continuo por plataforma.
+                </p>
             </div>
             <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-tri-amarillo/10 rounded-full"></div>
         </section>
@@ -110,11 +116,11 @@
         <section class="glass-card p-2 mb-8" data-aos="fade-up">
             <div class="p-4">
                 <h2 class="text-tri-texto font-black italic uppercase text-lg leading-none">Punto de Despacho</h2>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Base Operativa V.C.P</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Base Operativa V.C.P - Córdoba</p>
             </div>
-            <div class="h-48 rounded-[20px] overflow-hidden bg-gray-100 border-2 border-white grayscale">
+            <div class="h-48 rounded-[20px] overflow-hidden bg-gray-100 border-2 border-white grayscale hover:grayscale-0 transition-all duration-700">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13620.448530402124!2d-64.4984!3d-31.4162!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942d6640d6ca8e93%3A0x6aa53880492e70e3!2sVilla%20Carlos%20Paz%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1700000000000!5m2!1ses-419!2sar" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d27244.38466107383!2d-64.51241183378906!3d-31.411139499999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942d6640d6cae49d%3A0x5aa9e1169761ba01!2sVilla%20Carlos%20Paz%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1700000000000!5m2!1ses-419!2sar" 
                     class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </section>
@@ -134,11 +140,38 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Inicializar Animaciones
         AOS.init({
             duration: 800,
             once: true,
             easing: 'ease-out-back'
         });
+
+        // Lógica de Horario Abierto/Cerrado
+        function actualizarEstadoHorario() {
+            const ahora = new Date();
+            const hora = ahora.getHours();
+            const badge = document.getElementById('status-badge');
+            const msg = document.getElementById('status-msg');
+
+            // Abierto de 12:00 (12) a 00:00 (24/0)
+            const estaAbierto = (hora >= 12 && hora < 24);
+
+            if (estaAbierto) {
+                badge.innerText = "● Abierto Ahora";
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-black uppercase italic bg-tri-verde text-white animate-pulse";
+                msg.innerText = "Sistemas activos - Despacho en curso desde Carlos Paz";
+                msg.className = "text-[10px] mt-4 italic text-tri-verde text-center font-black uppercase tracking-tight";
+            } else {
+                badge.innerText = "○ Cerrado";
+                badge.className = "px-3 py-1 rounded-full text-[10px] font-black uppercase italic bg-gray-500 text-white";
+                msg.innerText = "Fuera de servicio - Retornamos a las 12:00 PM";
+                msg.className = "text-[10px] mt-4 italic text-tri-rojo text-center font-black uppercase tracking-tight";
+            }
+        }
+
+        actualizarEstadoHorario();
+        setInterval(actualizarEstadoHorario, 60000); // Check cada minuto
     </script>
 </body>
 </html>
