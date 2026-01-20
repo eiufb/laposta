@@ -59,13 +59,11 @@
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.95) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
         #loader.fade-out { opacity: 0; pointer-events: none; }
         
-        /* ESTILO PARA BOTÓN DESHABILITADO */
         .btn-disabled {
             background-color: #94A3B8 !important;
             cursor: not-allowed !important;
             opacity: 0.6;
             pointer-events: none !important;
-            transform: none !important;
         }
     </style>
 
@@ -213,15 +211,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         let activeCategory = 'Todos';
         let currentStock = [];
 
-        // FUNCIÓN DE CONTROL HORARIO (12 PM A 00 AM)
         function validarOperativa() {
             const ahora = new Date();
             const hora = ahora.getHours();
             const btn = document.getElementById('final-order-btn');
-            
-            // Abierto de 12:00 (12) a 23:59 (23). A las 00:00 ya es cerrado.
             const estaAbierto = (hora >= 12 && hora < 24);
-
             if (btn) {
                 if (!estaAbierto) {
                     btn.innerText = "CERRADO - VOLVEMOS A LAS 12:00 PM";
@@ -248,8 +242,9 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         async function fetchStock() {
             try {
                 const res = await fetch(URL_API);
-                currentStock = await res.json();
-                render();
+                const data = await res.json();
+                if(data) currentStock = data;
+                render(); // Re-renderiza cuando llega el stock real
             } catch (e) { console.error("Error stock:", e); }
         }
 
@@ -267,12 +262,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                         </div>
                     </div>
                 </div>`).join('');
-            
-            new Swiper(".mySwiper", { 
-                loop: true, 
-                autoplay: { delay: 4000, disableOnInteraction: false }, 
-                pagination: { el: ".swiper-pagination", clickable: true } 
-            });
+            new Swiper(".mySwiper", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-pagination", clickable: true } });
         }
 
         function render() {
@@ -288,36 +278,11 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                 const disponible = s ? s.stock : 99;
                 const agotado = disponible <= 0;
                 const qty = cart[p.id] || 0;
+                let actionButton = agotado ? `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300 text-gray-500">Sin Stock</button>` : 
+                                   (qty > 0 ? `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto">-</button><span class="font-black text-xs text-tri-texto">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto">+</button></div>` : 
+                                   `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform">Añadir</button>`);
 
-                let actionButton;
-                if (agotado) {
-                    actionButton = `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300 text-gray-500">Sin Stock</button>`;
-                } else if (qty > 0) {
-                    actionButton = `
-                    <div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden">
-                        <button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors">-</button>
-                        <span class="font-black text-xs text-tri-texto">${qty}</span>
-                        <button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors">+</button>
-                    </div>`;
-                } else {
-                    actionButton = `
-                    <button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform">
-                        Añadir
-                    </button>`;
-                }
-
-                return `
-                <div class="food-card ${agotado ? 'opacity-60' : ''}" data-aos="fade-up">
-                    <div class="relative aspect-square">
-                        <img src="${p.img}" class="h-full w-full object-cover ${agotado ? 'grayscale' : ''}">
-                        ${agotado ? '<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-black text-xs uppercase italic">Agotado</span>' : ''}
-                    </div>
-                    <div class="p-3 flex flex-col flex-grow text-center">
-                        <h3 class="font-black text-[11px] h-8 overflow-hidden uppercase leading-tight">${p.name}</h3>
-                        <p class="text-tri-rojo font-black text-lg mt-1">$${p.price.toLocaleString()}</p>
-                        ${actionButton}
-                    </div>
-                </div>`;
+                return `<div class="food-card ${agotado ? 'opacity-60' : ''}" data-aos="fade-up"><div class="relative aspect-square"><img src="${p.img}" class="h-full w-full object-cover ${agotado ? 'grayscale' : ''}">${agotado ? '<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-black text-xs uppercase italic">Agotado</span>' : ''}</div><div class="p-3 flex flex-col flex-grow text-center"><h3 class="font-black text-[11px] h-8 overflow-hidden uppercase leading-tight">${p.name}</h3><p class="text-tri-rojo font-black text-lg mt-1">$${p.price.toLocaleString()}</p>${actionButton}</div></div>`;
             }).join('');
         }
 
@@ -326,232 +291,101 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             const badge = document.getElementById('cart-count');
             badge.innerText = count;
             badge.classList.toggle('hidden', count === 0);
-            
             let subtotal = 0;
             let cartHTML = '';
-
             Object.entries(cart).forEach(([id, q]) => {
                 const item = products.find(x => x.id == id);
                 subtotal += item.price * q;
-                cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
-                    <div class="min-w-0 pr-2">
-                        <p class="font-black text-xs truncate uppercase">${item.name}</p>
-                        <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg font-black">-</button>
-                        <span class="font-black text-base w-4 text-center">${q}</span>
-                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button>
-                    </div>
-                </div>`;
+                cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><div class="min-w-0 pr-2"><p class="font-black text-xs truncate uppercase">${item.name}</p><p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p></div><div class="flex items-center gap-2"><button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg font-black">-</button><span class="font-black text-base w-4 text-center">${q}</span><button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button></div></div>`;
             });
-
-            if (count > 0) {
-                subtotal += COSTO_ENVIO;
-                cartHTML += `
-                <div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">🛵</span>
-                        <p class="font-black text-xs uppercase">Envío a Domicilio</p>
-                    </div>
-                    <p class="font-black text-tri-texto">$${COSTO_ENVIO.toLocaleString()}</p>
-                </div>`;
-            }
-
+            if (count > 0) { subtotal += COSTO_ENVIO; cartHTML += `<div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo"><div class="flex items-center gap-3"><span class="text-xl">🛵</span><p class="font-black text-xs uppercase">Envío a Domicilio</p></div><p class="font-black text-tri-texto">$${COSTO_ENVIO.toLocaleString()}</p></div>`; }
             document.getElementById('cart-list').innerHTML = cartHTML;
             document.getElementById('cart-total').innerText = `$${subtotal.toLocaleString()}`;
             render();
-            // Validar operativa cada vez que cambia el carrito por si cambió la hora
             validarOperativa();
         }
 
-        window.filterCategory = (cat) => { 
-            activeCategory = cat; 
-            render(); 
-            AOS.refresh(); 
-            fbq('track', 'Search', {search_string: cat});
-        };
-        
+        window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); fbq('track', 'Search', {search_string: cat}); };
         window.addToCart = (e, id) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
             const max = s ? s.stock : 99;
-            if ((cart[id] || 0) < max) { 
-                cart[id] = (cart[id] || 0) + 1; 
-                updateUI(); 
-                fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'ARS'});
-            } else { 
-                alert("Máximo stock disponible alcanzado."); 
-            }
+            if ((cart[id] || 0) < max) { cart[id] = (cart[id] || 0) + 1; updateUI(); fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'ARS'}); }
+            else { alert("Máximo stock disponible alcanzado."); }
         };
-
         window.changeQty = (id, n) => {
             const item = products.find(p => p.id === id);
             const s = currentStock.find(stock => stock.sabor === item.name);
             const max = s ? s.stock : 99;
             if (n > 0 && (cart[id] || 0) >= max) return alert("Máximo disponible");
-            cart[id] = (cart[id] || 0) + n; 
-            if(cart[id] <= 0) delete cart[id]; 
-            updateUI(); 
+            cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); 
         };
-
-        window.openCheckoutModal = () => {
-            document.getElementById('checkout-modal').classList.remove('hidden');
-            validarOperativa(); // Chequear al abrir modal
-            fbq('track', 'InitiateCheckout');
-        }
+        window.openCheckoutModal = () => { document.getElementById('checkout-modal').classList.remove('hidden'); validarOperativa(); fbq('track', 'InitiateCheckout'); }
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
-
         window.setPayment = (type) => {
             selectedPayment = type;
-            const info = document.getElementById('transfer-info');
-            const btnMp = document.getElementById('btn-mp');
-            const btnTr = document.getElementById('btn-transf');
+            const info = document.getElementById('transfer-info'), btnMp = document.getElementById('btn-mp'), btnTr = document.getElementById('btn-transf');
             fbq('track', 'AddPaymentInfo');
-            if(type === 'TRANSF') {
-                info.classList.remove('hidden');
-                btnTr.classList.replace('opacity-60', 'opacity-100');
-                btnTr.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10');
-                btnMp.classList.add('opacity-60');
-                btnMp.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10');
-            } else {
-                info.classList.add('hidden');
-                btnMp.classList.replace('opacity-60', 'opacity-100');
-                btnMp.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10');
-                btnTr.classList.add('opacity-60');
-                btnTr.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10');
-            }
+            if(type === 'TRANSF') { info.classList.remove('hidden'); btnTr.classList.replace('opacity-60', 'opacity-100'); btnTr.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10'); btnMp.classList.add('opacity-60'); btnMp.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10'); }
+            else { info.classList.add('hidden'); btnMp.classList.replace('opacity-60', 'opacity-100'); btnMp.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10'); btnTr.classList.add('opacity-60'); btnTr.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10'); }
         };
-
-        window.copyAlias = () => {
-            navigator.clipboard.writeText(MI_ALIAS);
-            const status = document.getElementById('copy-status');
-            status.classList.remove('hidden');
-            setTimeout(() => status.classList.add('hidden'), 2000);
-        };
+        window.copyAlias = () => { navigator.clipboard.writeText(MI_ALIAS); const status = document.getElementById('copy-status'); status.classList.remove('hidden'); setTimeout(() => status.classList.add('hidden'), 2000); };
 
         async function finalizarPedido(carrito, total) {
-            await fetch(URL_API, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({
-                    action: "PROCESS_SALE",
-                    items: carrito.map(i => `${i.qty}x ${i.name}`).join(", "),
-                    total: total,
-                    cart: carrito 
-                })
-            });
+            try { await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "PROCESS_SALE", items: carrito.map(i => `${i.qty}x ${i.name}`).join(", "), total: total, cart: carrito }) }); } catch(e){}
         }
 
         window.finalAction = async () => {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const addr = document.getElementById('cust-addr').value;
-            const totalStr = document.getElementById('cart-total').innerText;
-            const totalNum = parseFloat(totalStr.replace('$', '').replace('.', ''));
-
-            if(!name || !phone || !addr || Object.keys(cart).length === 0) {
-                return alert("Por favor completa tus datos y añade productos.");
-            }
-            
-            const itemsDetalle = Object.entries(cart).map(([id, q]) => {
-                const item = products.find(x => x.id == id);
-                return { cat: item.category, name: item.name, qty: q, price: item.price };
-            });
-            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n');
-            const pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
-
-            if (selectedPayment === 'MP') {
-                localStorage.setItem('pending_order', JSON.stringify(pedido));
-                fbq('track', 'Lead', {content_name: name});
-                window.location.href = MI_LINK_PAGO_BASE;
-            } else {
+            const name = document.getElementById('cust-name').value, phone = document.getElementById('cust-phone').value, addr = document.getElementById('cust-addr').value, totalStr = document.getElementById('cart-total').innerText, totalNum = parseFloat(totalStr.replace('$', '').replace('.', ''));
+            if(!name || !phone || !addr || Object.keys(cart).length === 0) return alert("Por favor completa tus datos y añade productos.");
+            const itemsDetalle = Object.entries(cart).map(([id, q]) => { const item = products.find(x => x.id == id); return { cat: item.category, name: item.name, qty: q, price: item.price }; });
+            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n'), pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
+            if (selectedPayment === 'MP') { localStorage.setItem('pending_order', JSON.stringify(pedido)); fbq('track', 'Lead', {content_name: name}); window.location.href = MI_LINK_PAGO_BASE; }
+            else { 
                 fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
-                
                 await finalizarPedido(itemsDetalle, totalNum);
-
-                itemsDetalle.forEach(item => {
-                    const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                    fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
-                });
-                
-                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
+                const msg = `*▲ NUEVO PEDIDO (TRANSF)*\n*Cliente:* ${name}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*TOTAL:* ${totalStr}`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                document.getElementById('tracking-screen').classList.remove('hidden');
-                startTimer(25, document.getElementById('countdown'));
-                cart = {}; updateUI(); closeCheckoutModal();
+                document.getElementById('tracking-screen').classList.remove('hidden'); startTimer(25, document.getElementById('countdown')); cart = {}; updateUI(); closeCheckoutModal();
             }
         };
 
-        window.onload = async () => {
+        window.onload = () => {
             renderSlider();
-            await fetchStock();
-            AOS.init(); 
-            // Validar operativa inmediatamente al cargar
+            render(); // Render inicial con datos locales
+            fetchStock(); // Carga el stock en segundo plano
+            AOS.init();
             validarOperativa();
-            // Chequeo constante cada 30 segundos por si el usuario deja la app abierta
             setInterval(validarOperativa, 30000);
-
+            
+            // Lógica de retorno de Mercado Pago
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('status') === 'approved' || urlParams.get('pago') === 'ok') {
+            if (urlParams.get('status') === 'approved') {
                 const data = JSON.parse(localStorage.getItem('pending_order'));
                 if(data) {
-                    const totalNum = parseFloat(data.t.replace('$', '').replace('.', ''));
-                    fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
-
-                    await finalizarPedido(data.carrito, totalNum);
-
-                    data.carrito.forEach(item => {
-                        const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                        fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
-                    });
-                    const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
-                    window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+                    finalizarPedido(data.carrito, parseFloat(data.t.replace('$', '').replace('.', '')));
                     document.getElementById('tracking-screen').classList.remove('hidden');
                     startTimer(25, document.getElementById('countdown'));
                     localStorage.removeItem('pending_order');
                 }
             }
+            
+            // Quitar el loader pase lo que pase
             setTimeout(() => {
                 document.getElementById('loader').classList.add('fade-out');
                 document.body.classList.remove('loading');
-            }, 600);
+            }, 800);
         };
     </script>
 
-<a href="https://wa.me/3541272207?text=Hola%20Fast%20Food%20Posta!%20Quisiera%20hacer%20un%20pedido%20de%20pizzas%20y%20empanadas." 
-   class="whatsapp-btn" 
-   target="_blank">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-    <span>¡Pedí Pizza y Empanadas!</span>
-</a>
-
-<style>
-    .whatsapp-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #25d366; 
-        color: white;
-        padding: 12px 20px;
-        border-radius: 50px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        font-family: Arial, sans-serif;
-        font-weight: bold;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        z-index: 1000;
-        transition: transform 0.3s ease;
-    }
-    .whatsapp-btn img { width: 30px; height: 30px; }
-    .whatsapp-btn:hover { transform: scale(1.1); background-color: #128c7e; }
-    @media (max-width: 480px) {
-        .whatsapp-btn span { display: none; }
-        .whatsapp-btn { padding: 15px; bottom: 15px; right: 15px; }
-    }
-</style>
-
+    <a href="https://wa.me/3541272207?text=Hola%20Fast%20Food%20Posta!" class="whatsapp-btn" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
+        <span>¡Pedí Pizza y Empanadas!</span>
+    </a>
+    <style>
+        .whatsapp-btn { position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; z-index: 1000; transition: transform 0.3s; }
+        .whatsapp-btn img { width: 30px; }
+        @media (max-width: 480px) { .whatsapp-btn span { display: none; } }
+    </style>
 </body>
 </html>
