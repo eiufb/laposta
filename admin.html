@@ -3,234 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SABORES RÁPIDOS | Mobile Admin</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SR Admin">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3443/3443338.png">
-
+    <title>SR Admin | Control Real Fast Food Posta</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background: #0a0a0a; 
-            color: white; 
-            padding: 15px; 
-            margin: 0; 
-            -webkit-tap-highlight-color: transparent;
+        :root { 
+            --tri-rojo: #E63946; --tri-amarillo: #FFB703; --tri-fondo: #F8F9FA; 
+            --tri-texto: #1D3557; --tri-verde: #2A9D8F; --white: #ffffff;
         }
+        body { font-family: 'Outfit', sans-serif; background: var(--tri-fondo); color: var(--tri-texto); margin: 0; padding-bottom: 100px; }
         
-        .card { 
-            background: #1a1a1a; 
-            padding: 15px; 
-            border-radius: 15px; 
-            border-left: 5px solid #E63946; 
-            margin-bottom: 15px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-        }
-        
-        .card-green { border-left-color: #2A9D8F; }
-        .card-blue { border-left-color: #457B9D; }
-        
-        input, select { 
-            width: 100%; 
-            height: 48px; 
-            margin: 5px 0; 
-            border-radius: 10px; 
-            background: #222; 
-            color: white; 
-            border: 1px solid #333; 
-            padding: 0 10px;
-            font-size: 16px; 
-        }
+        .time-nav { background: var(--tri-texto); padding: 10px; display: flex; gap: 5px; position: sticky; top: 0; z-index: 200; }
+        .time-btn { flex: 1; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; padding: 8px; border-radius: 10px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .time-btn.active { background: var(--tri-amarillo); color: var(--tri-texto); border: none; }
 
-        .btn { 
-            width: 100%; 
-            height: 55px; 
-            background: #E63946; 
-            color: white; 
-            font-weight: 900; 
-            border-radius: 12px; 
-            border: none; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-size: 16px;
-            box-shadow: 0 4px 0 #9d1e28;
-            transition: all 0.1s;
-        }
-        .btn:active { transform: translateY(3px); box-shadow: none; }
-
-        .gasto-row { display: grid; grid-template-cols: 1fr 90px 45px; gap: 5px; margin-bottom: 8px; }
+        .header { text-align: center; padding: 20px; background: var(--white); border-bottom: 4px solid var(--tri-amarillo); }
+        .container { padding: 15px; max-width: 600px; margin: auto; }
         
-        .btn-add { background: #2A9D8F; color: white; border: none; border-radius: 8px; padding: 10px; width: 100%; font-weight: bold; margin-bottom: 15px; }
-        .btn-del { background: #E63946; border: none; color: white; border-radius: 8px; font-size: 20px; }
+        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 45px; z-index: 100; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: 900; font-size: 11px; color: #aaa; text-transform: uppercase; }
+        .tab-btn.active { color: var(--tri-rojo); border-bottom: 3px solid var(--tri-rojo); }
 
-        .eq-money { font-size: 34px; font-weight: 900; color: #fff; display: block; text-align: center; }
+        .card { background: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); }
+        .input-group { margin-bottom: 12px; }
+        label { display: block; font-size: 10px; font-weight: 900; margin-bottom: 4px; color: #888; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: var(--tri-fondo); font-family: 'Outfit'; box-sizing: border-box; font-weight: 700; }
         
-        .stock-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 12px 8px; 
-            border-bottom: 1px solid #333; 
-            font-size: 15px;
-            align-items: center;
-        }
+        .btn-main { background: var(--tri-texto); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-bottom: 5px; }
+        
+        .health-status { padding: 12px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 15px; }
+        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .kpi-box { background: white; padding: 12px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
+        .kpi-label { font-size: 9px; color: #888; font-weight: 700; text-transform: uppercase; }
+        .kpi-val { font-size: 18px; font-weight: 900; display: block; }
 
-        .stat-grid { display: grid; grid-template-cols: 1fr 1fr; gap: 10px; }
-        .stat-box { background: #000; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #222; }
-        .stat-label { font-size: 9px; color: #888; display: block; text-transform: uppercase; }
-        .stat-value { font-size: 15px; font-weight: 900; color: #FFB703; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f8f8f8; }
+        .badge { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
+        .section-hide { display: none; }
+        
+        .reco-box { background: var(--tri-texto); color: white; padding: 15px; border-radius: 18px; border-left: 5px solid var(--tri-amarillo); }
+
+        .chart-container { display: flex; align-items: flex-end; gap: 10px; height: 100px; margin: 20px 0; padding: 10px; background: #f0f2f5; border-radius: 15px; }
+        .bar { flex: 1; border-radius: 5px 5px 0 0; position: relative; min-height: 5px; transition: height 0.4s ease; }
+        .bar-label { position: absolute; top: -20px; width: 100%; text-align: center; font-size: 9px; font-weight: 900; }
+
+        #sync-status { font-size: 9px; font-weight: 900; color: var(--tri-verde); margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <h3 style="color: #FFB703; text-align: center; font-weight: 900; margin: 10px 0 20px 0;">SABORES RÁPIDOS APP</h3>
+    <nav class="time-nav">
+        <button class="time-btn" onclick="setTimeFrame('hoy', this)">Hoy</button>
+        <button class="time-btn active" onclick="setTimeFrame('semana', this)">Semana</button>
+        <button class="time-btn" onclick="setTimeFrame('mes', this)">Mes</button>
+    </nav>
 
-    <div class="card card-green">
-        <h4 style="margin:0 0 12px 0; color:#2A9D8F; text-transform: uppercase; font-size: 12px;">💸 Gastos y Equilibrio</h4>
-        <div id="lista-gastos"></div>
-        <button class="btn-add" onclick="agregarGasto()">+ Añadir Gasto</button>
-        <div style="background: #000; padding: 15px; border-radius: 12px; border: 1px solid #333;">
-            <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block; text-align: center;">Venta necesaria para cubrir gastos</span>
-            <span id="venta-equilibrio" class="eq-money">$0</span>
-            <select id="margen-global" onchange="calcularTodo()" style="background: #111; margin-top: 10px;">
-                <option value="0.5">Margen 50%</option>
-                <option value="0.6" selected>Margen 60%</option>
-                <option value="0.7">Margen 70%</option>
-            </select>
-        </div>
+    <div class="header">
+        <h1 style="font-size:18px; margin:0; letter-spacing: -1px;">ADMIN <span style="color:var(--tri-rojo)">POSTA</span> v8.0</h1>
+        <div id="sync-status">● BASE DE DATOS LOCAL ACTIVA</div>
     </div>
 
-    <div class="card card-blue">
-        <h4 style="margin:0 0 12px 0; text-transform: uppercase; font-size: 12px;">📥 Cargar Stock</h4>
-        <select id="prod" onchange="updateSabores()"><option value="Empanadas">Empanadas</option><option value="Pizzas">Pizzas</option></select>
-        <select id="sabor"></select>
-        <div style="display: grid; grid-template-cols: 1fr 1fr; gap: 10px;">
-            <input type="number" id="cant" placeholder="Unid." inputmode="numeric">
-            <input type="number" id="costo" placeholder="Costo $" inputmode="numeric">
-        </div>
-        <button class="btn" onclick="send()">Guardar Ingreso</button>
-        <div class="stat-grid" style="margin-top: 15px;">
-            <div class="stat-box"><span class="stat-label">Invertido</span><span id="inv-actual" class="stat-value">$0</span></div>
-            <div class="stat-box"><span class="stat-label">Ganancia Est.</span><span id="ganancia-stock" class="stat-value">$0</span></div>
-        </div>
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-operacion')">📦 Stock</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-gastos')">💸 Gastos</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-analisis')">📊 Dirección</button>
     </div>
 
-    <div class="card">
-        <h4 style="margin:0 0 10px 0; color:#FFB703; text-transform: uppercase; font-size: 12px;">📦 Estado del Stock</h4>
-        <div id="lista">Sincronizando...</div>
+    <div class="container">
+        
+        <div id="tab-operacion">
+            <div class="card">
+                <label>Gestión de Producto Seleccionado</label>
+                <div class="input-group">
+                    <select id="prod-select" onchange="loadProdData()">
+                        <option value="">Selecciona un producto...</option>
+                    </select>
+                </div>
+                <div class="kpi-grid">
+                    <div>
+                        <label>Costo de Compra ($)</label>
+                        <input type="number" id="prod-cost" placeholder="Ej: 4500">
+                    </div>
+                    <div>
+                        <label>Precio Venta ($)</label>
+                        <input type="number" id="prod-price" readonly style="opacity: 0.6;">
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div>
+                        <label>Stock Real Actual</label>
+                        <input type="number" id="prod-stock-actual" placeholder="Cantidad física">
+                    </div>
+                    <div>
+                        <label>Registrar Venta</label>
+                        <input type="number" id="prod-venta-qty" placeholder="Cant. vendida">
+                    </div>
+                </div>
+                <button class="btn-main" onclick="saveProduct()">Actualizar Inventario</button>
+                <button class="btn-main" style="background:var(--tri-verde)" onclick="registrarVentaReal()">Confirmar Venta</button>
+            </div>
+
+            <div class="card">
+                <label>Estado del Menú e Inventario</label>
+                <div id="inventory-list"></div>
+            </div>
+        </div>
+
+        <div id="tab-gastos" class="section-hide">
+            <div class="card">
+                <label>Cargar Gasto Operativo</label>
+                <input type="text" id="gasto-desc" placeholder="Luz, Alquiler, Sueldos..." class="input-group">
+                <div class="kpi-grid">
+                    <input type="number" id="gasto-monto" placeholder="Monto $">
+                    <select id="gasto-tipo">
+                        <option value="fijo">Gasto Fijo</option>
+                        <option value="variable">Gasto Variable</option>
+                    </select>
+                </div>
+                <button class="btn-main" style="background:var(--tri-rojo)" onclick="addGasto()">Registrar Gasto</button>
+            </div>
+            <div id="gastos-list"></div>
+        </div>
+
+        <div id="tab-analisis" class="section-hide">
+            <div id="health-box" class="health-status"></div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-box"><span class="kpi-label">Ventas Reales</span><span id="res-ingresos" class="kpi-val">$0</span></div>
+                <div class="kpi-box"><span class="kpi-label">Margen Neto</span><span id="res-margen" class="kpi-val">0%</span></div>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <label>Ventas vs Gastos (Visual)</label>
+                <div class="chart-container">
+                    <div id="bar-ventas" class="bar" style="background:var(--tri-verde); width:50%;"><span class="bar-label">VTS</span></div>
+                    <div id="bar-gastos" class="bar" style="background:var(--tri-rojo); width:50%;"><span class="bar-label">GAS</span></div>
+                </div>
+            </div>
+
+            <div class="reco-box" style="margin-bottom: 10px;">
+                <small style="color:var(--tri-amarillo); font-weight: 900;">RANKING ESTRATÉGICO</small>
+                <div id="ranking-container" style="font-size: 11px; margin-top:5px;"></div>
+            </div>
+
+            <div class="reco-box">
+                <small style="color:var(--tri-amarillo); font-weight: 900;">ANÁLISIS DE ESTE PERIODO</small>
+                <p id="ai-recomienda" style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600;"></p>
+            </div>
+            
+            <button class="btn-main" style="margin-top: 20px; background: #ddd; color: #333;" onclick="exportarData()">Exportar Reporte (Consola)</button>
+        </div>
+
     </div>
 
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
-        let datosLocales = [];
-        let misGastos = JSON.parse(localStorage.getItem('misGastos')) || [{nombre: 'Fijos', monto: 150000}];
+        // --- CONFIGURACIÓN SHEETS ---
+        const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec"; 
 
-        const sabores = {
-            'Empanadas': ['Carne', 'Pollo', 'J y Q', 'Osobuco'],
-            'Pizzas': ['Muzza', 'Especial', 'Napolitana', 'Fugazzeta']
+        const MENU_REAL = [
+            { id: 901, name: 'Promo 6 Empanadas', price: 14500, cat: 'Promos' },
+            { id: 902, name: 'Promo 2 Pizzas', price: 21500, cat: 'Promos' },
+            { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, cat: 'Promos' },
+            { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, cat: 'Promos' },
+            { id: 301, name: 'Empanada Carne Salada', price: 2500, cat: 'Empanadas' },
+            { id: 302, name: 'Empanada Pollo', price: 2500, cat: 'Empanadas' },
+            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, cat: 'Empanadas' },
+            { id: 304, name: 'Empanada Osobuco', price: 2500, cat: 'Empanadas' },
+            { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, cat: 'Pizzas' },
+            { id: 602, name: 'Pizza Salame', price: 13500, cat: 'Pizzas' },
+            { id: 603, name: 'Pizza Napolitana', price: 13500, cat: 'Pizzas' },
+            { id: 604, name: 'Pizza Roquefort', price: 14500, cat: 'Pizzas' },
+            { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, cat: 'Pizzas' },
+            { id: 606, name: 'Pizza Especial (J y M)', price: 13500, cat: 'Pizzas' },
+            { id: 607, name: 'Pizza Fugazzeta', price: 13000, cat: 'Pizzas' }
+        ];
+
+        let currentTimeFrame = 'semana';
+        let DB = JSON.parse(localStorage.getItem('SR_ADMIN_DATA')) || {
+            productos: MENU_REAL.map(p => ({ ...p, cost: 0, stock: 0, sales_count: 0 })),
+            gastos: [],
+            ventas_reales: [] 
         };
 
-        function agregarGasto() { misGastos.push({nombre: '', monto: 0}); dibujarGastos(); }
-        function eliminarGasto(index) { misGastos.splice(index, 1); dibujarGastos(); }
-        
-        function actualizarGasto(i, campo, val) {
-            misGastos[i][campo] = campo === 'monto' ? parseFloat(val) || 0 : val;
-            localStorage.setItem('misGastos', JSON.stringify(misGastos));
-            calcularTodo();
-        }
-
-        function dibujarGastos() {
-            document.getElementById('lista-gastos').innerHTML = misGastos.map((g, i) => `
-                <div class="gasto-row">
-                    <input type="text" placeholder="Gasto" value="${g.nombre}" oninput="actualizarGasto(${i}, 'nombre', this.value)">
-                    <input type="number" placeholder="$" value="${g.monto}" oninput="actualizarGasto(${i}, 'monto', this.value)" inputmode="numeric">
-                    <button class="btn-del" onclick="eliminarGasto(${i})">×</button>
-                </div>`).join('');
-            calcularTodo();
-        }
-
-        function updateSabores() {
-            const cat = document.getElementById('prod').value;
-            document.getElementById('sabor').innerHTML = sabores[cat].map(s => `<option value="${s}">${s}</option>`).join('');
-        }
-
-        async function refresh() {
+        // Enviar a Google Sheets
+        async function pushToSheets(payload) {
+            if(!SHEETS_URL) return;
+            document.getElementById('sync-status').innerText = "⏳ ENVIANDO A CLOUD...";
             try {
-                const res = await fetch(URL_API);
-                datosLocales = await res.json();
-                
-                const stockCritico = 12; // Límite para alerta
-
-                document.getElementById('lista').innerHTML = datosLocales.map(i => {
-                    const cant = parseInt(i.stock) || 0;
-                    let colorStatus = "#2A9D8F"; // Verde (OK)
-                    let etiqueta = "";
-
-                    if (cant <= 0) {
-                        colorStatus = "#E63946"; // Rojo (Agotado)
-                        etiqueta = " <small style='color:#E63946'>[AGOTADO]</small>";
-                    } else if (cant <= stockCritico) {
-                        colorStatus = "#F4A261"; // Naranja (Poco)
-                        etiqueta = " <small style='color:#F4A261'>[BAJO]</small>";
-                    }
-
-                    return `
-                        <div class="stock-item" style="border-left: 4px solid ${colorStatus}">
-                            <span style="font-weight:${cant <= stockCritico ? 'bold' : 'normal'}">${i.sabor}${etiqueta}</span>
-                            <span style="color:${colorStatus}; font-weight:900">${cant} un.</span>
-                        </div>`;
-                }).join('');
-                
-                calcularTodo();
-            } catch(e) { 
-                document.getElementById('lista').innerText = "Error de conexión"; 
+                await fetch(SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(payload)
+                });
+                document.getElementById('sync-status').innerText = "● NUBE SINCRONIZADA";
+            } catch(e) {
+                document.getElementById('sync-status').innerText = "✖ ERROR DE NUBE";
             }
         }
 
-        function calcularTodo() {
-            const totalG = misGastos.reduce((acc, g) => acc + g.monto, 0);
-            const mrg = parseFloat(document.getElementById('margen-global').value);
-            document.getElementById('venta-equilibrio').innerText = "$" + Math.round(totalG / mrg).toLocaleString();
+        // --- FUNCIÓN INYECTADA ---
+        async function editarProductoDesdeAdmin(id, nuevoCosto, nuevoStock) {
+            await fetch(SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    action: "EDIT_BASE_DATA",
+                    id: id,
+                    newCost: nuevoCosto,
+                    newStock: nuevoStock
+                })
+            });
+            alert("Base de datos actualizada desde el Admin");
+        }
+
+        function setTimeFrame(frame, el) {
+            currentTimeFrame = frame;
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            render();
+        }
+
+        function switchTab(e, tabId) {
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('section-hide'));
+            document.getElementById(tabId).classList.remove('section-hide');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+            render();
+        }
+
+        function loadProdData() {
+            const id = document.getElementById('prod-select').value;
+            const p = DB.productos.find(x => x.id == id);
+            if(p) {
+                document.getElementById('prod-cost').value = p.cost;
+                document.getElementById('prod-price').value = p.price;
+                document.getElementById('prod-stock-actual').value = p.stock;
+            }
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('prod-select').value;
+            const p = DB.productos.find(x => x.id == id);
+            if(p) {
+                p.cost = parseFloat(document.getElementById('prod-cost').value || 0);
+                p.stock = parseInt(document.getElementById('prod-stock-actual').value || 0);
+                
+                // Sincronización con la función inyectada
+                editarProductoDesdeAdmin(p.id, p.cost, p.stock);
+                
+                saveAndRender();
+                alert("✓ " + p.name + " actualizado.");
+            }
+        }
+
+        function registrarVentaReal() {
+            const id = document.getElementById('prod-select').value;
+            const qty = parseInt(document.getElementById('prod-venta-qty').value || 0);
+            const p = DB.productos.find(x => x.id == id);
             
-            let inv = datosLocales.reduce((acc, curr) => acc + (parseFloat(curr.monto) || 0), 0);
-            document.getElementById('inv-actual').innerText = "$" + Math.round(inv).toLocaleString();
-            document.getElementById('ganancia-stock').innerText = "$" + Math.round((inv/(1-mrg))-inv).toLocaleString();
-        }
-
-        async function send() {
-            const btn = document.querySelector('.btn');
-            const originalText = btn.innerText;
-            btn.innerText = "ENVIANDO...";
-            btn.disabled = true;
-
-            const data = {
-                tipo: 'COMPRA',
-                producto: document.getElementById('prod').value,
-                sabor: document.getElementById('sabor').value,
-                cantidad: parseInt(document.getElementById('cant').value) || 0,
-                monto: parseFloat(document.getElementById('costo').value) || 0
-            };
-
-            try {
-                await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
-                btn.innerText = "¡GUARDADO!";
-                document.getElementById('cant').value = "";
-                document.getElementById('costo').value = "";
-            } catch (e) {
-                btn.innerText = "ERROR";
+            if(p && qty > 0) {
+                if(p.stock < qty) return alert("¡Error! No hay suficiente stock.");
+                p.stock -= qty;
+                p.sales_count += qty;
+                const nuevaVenta = {
+                    prodId: p.id,
+                    nombre: p.name,
+                    qty: qty,
+                    total: p.price * qty,
+                    costo_total: p.cost * qty,
+                    fecha: Date.now()
+                };
+                DB.ventas_reales.push(nuevaVenta);
+                pushToSheets({ type: 'VENTA', ...nuevaVenta, fecha_str: new Date().toLocaleString() });
+                document.getElementById('prod-venta-qty').value = "";
+                saveAndRender();
+                alert("Venta registrada.");
             }
-
-            setTimeout(() => { 
-                btn.innerText = originalText; 
-                btn.disabled = false;
-                refresh(); 
-            }, 1500);
         }
 
-        window.onload = () => { dibujarGastos(); updateSabores(); refresh(); };
+        function addGasto() {
+            const desc = document.getElementById('gasto-desc').value;
+            const monto = parseFloat(document.getElementById('gasto-monto').value);
+            const tipo = document.getElementById('gasto-tipo').value;
+            if(desc && monto) {
+                const nuevoGasto = { desc, monto, tipo, id: Date.now(), fecha: Date.now() };
+                DB.gastos.push(nuevoGasto);
+                pushToSheets({ type: 'GASTO', ...nuevoGasto, fecha_str: new Date().toLocaleString() });
+                document.getElementById('gasto-desc').value = "";
+                document.getElementById('gasto-monto').value = "";
+                saveAndRender();
+            }
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('SR_ADMIN_DATA', JSON.stringify(DB));
+            render();
+        }
+
+        function filterByTime(array) {
+            const now = new Date();
+            return array.filter(item => {
+                if (!item.fecha) return true;
+                const d = new Date(item.fecha);
+                if(currentTimeFrame === 'hoy') return d.toDateString() === now.toDateString();
+                if(currentTimeFrame === 'semana') return (now - d) / (1000 * 60 * 60 * 24) <= 7;
+                if(currentTimeFrame === 'mes') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            });
+        }
+
+        function render() {
+            // Selector
+            const select = document.getElementById('prod-select');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">Selecciona un producto...</option>';
+            select.innerHTML += DB.productos.map(p => `<option value="${p.id}" ${p.id==currentVal?'selected':''}>${p.name}</option>`).join('');
+
+            // Inventario
+            document.getElementById('inventory-list').innerHTML = DB.productos.map(p => `
+                <div class="item-row">
+                    <div>
+                        <b style="font-size:12px">${p.name}</b><br>
+                        <small style="color:#888">Costo: $${p.cost} | Margen: $${p.price - p.cost}</small>
+                    </div>
+                    <span class="badge" style="background:${p.stock < 10 ? '#ffebee' : '#e8f5e9'}; color:${p.stock < 10 ? 'red' : 'green'}">
+                        ${p.stock} un.
+                    </span>
+                </div>
+            `).join('');
+
+            // Cálculos
+            const vtsFiltradas = filterByTime(DB.ventas_reales);
+            const gasFiltrados = filterByTime(DB.gastos);
+
+            const totalVentas = vtsFiltradas.reduce((a, b) => a + b.total, 0);
+            const totalCostoVentas = vtsFiltradas.reduce((a, b) => a + b.costo_total, 0);
+            const totalGastos = gasFiltrados.reduce((a, b) => a + b.monto, 0);
+            
+            const utilidadBruta = totalVentas - totalCostoVentas;
+            const utilidadNeto = utilidadBruta - totalGastos;
+            const margenPerc = totalVentas > 0 ? Math.round((utilidadNeto / totalVentas) * 100) : 0;
+
+            document.getElementById('res-ingresos').innerText = "$" + totalVentas.toLocaleString();
+            document.getElementById('res-margen').innerText = margenPerc + "%";
+
+            // Chart
+            const max = Math.max(totalVentas, totalGastos, 1);
+            document.getElementById('bar-ventas').style.height = (totalVentas / max * 100) + "%";
+            document.getElementById('bar-gastos').style.height = (totalGastos / max * 100) + "%";
+
+            // Ranking estratégico
+            const ranking = [...DB.productos]
+                .map(p => ({ name: p.name, score: p.sales_count * (p.price - p.cost) }))
+                .sort((a,b) => b.score - a.score);
+            
+            document.getElementById('ranking-container').innerHTML = `
+                <div>💎 Joya: ${ranking[0]?.score > 0 ? ranking[0].name : '-'}</div>
+                <div style="opacity:0.7">🪤 Trampa: ${ranking[ranking.length-1]?.score >= 0 ? ranking[ranking.length-1].name : '-'}</div>
+            `;
+
+            // Salud
+            const hb = document.getElementById('health-box');
+            hb.innerText = margenPerc > 30 ? "SITUACIÓN: SANA" : (margenPerc > 0 ? "SITUACIÓN: AJUSTADA" : "SITUACIÓN: PELIGRO");
+            hb.style.background = margenPerc > 30 ? "var(--tri-verde)" : (margenPerc > 0 ? "var(--tri-amarillo)" : "var(--tri-rojo)");
+            hb.style.color = margenPerc > 30 || margenPerc <= 0 ? "white" : "var(--tri-texto)";
+
+            // Recomendación AI
+            const reco = document.getElementById('ai-recomienda');
+            if(margenPerc < 15) reco.innerHTML = "¡Baja el gasto variable urgente o revisa costos de compra!";
+            else if(margenPerc > 35) reco.innerHTML = "Excelente margen. ¿Hora de invertir en publicidad?";
+            else reco.innerHTML = "Operación estable. Mantén el control de stock.";
+
+            // Lista Gastos
+            document.getElementById('gastos-list').innerHTML = gasFiltrados.slice().reverse().map(g => `
+                <div class="card" style="margin-bottom:5px; padding:10px; justify-content:space-between; display:flex;">
+                    <small><b>${g.desc}</b></small>
+                    <small style="color:var(--tri-rojo)">-$${g.monto.toLocaleString()}</small>
+                </div>
+            `).join('');
+        }
+
+        function exportarData() {
+            console.log("--- REPORTE COMPLETO SR ADMIN ---", DB);
+            alert("Reporte enviado a la consola (F12)");
+        }
+
+        window.onload = render;
     </script>
 </body>
 </html>
