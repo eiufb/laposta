@@ -226,6 +226,26 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     <script>
 
+
+        function finalAction() {
+    const nombre = document.getElementById('cust-name').value;
+    const direccion = document.getElementById('cust-addr').value;
+    const telefono = document.getElementById('cust-phone').value;
+    const total = document.getElementById('cart-total').innerText;
+
+    // Si tenemos coordenadas, las sumamos al texto de la dirección
+    let direccionFinal = direccion;
+    if (userCoords !== "") {
+        direccionFinal += `%0A📍 Link Mapa: ${userCoords}`;
+    }
+
+    const mensaje = `Hola! Soy ${nombre}.%0AQuiero hacer un pedido:%0A------------------%0A${direccionFinal}%0A------------------%0A*TOTAL: ${total}*`;
+    
+    // Cambia el número por el de tu local
+    const nroWhatsApp = "5493541XXXXXX"; 
+    window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
+}
+
         let userCoords = ""; // Variable global para guardar la ubicación exacta
 
 function getLocation() {
