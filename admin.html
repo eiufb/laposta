@@ -171,6 +171,48 @@
     </div>
 
     <script>
+// --- CONFIGURACIÓN DE SEGURIDAD Y CLIENTE ---
+const COMERCIO_ID = "fast_food_posta"; // Este ID será dinámico luego
+const CLAVE_MAESTRA = "1234"; // Aquí podrías traer la clave desde el Sheet
+
+// Función de Validación
+function validarAcceso() {
+    const passInput = document.getElementById('admin-pass').value;
+    const errorMsg = document.getElementById('login-error');
+    
+    if(passInput === CLAVE_MAESTRA) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-body').style.display = 'block';
+        initAdmin();
+    } else {
+        errorMsg.style.display = 'block';
+        setTimeout(() => { errorMsg.style.display = 'none'; }, 2000);
+    }
+}
+
+// PROTECCIÓN DE LOCALSTORAGE: Usamos el COMERCIO_ID como prefijo
+let DB_KEY = `SR_DATA_${COMERCIO_ID}`;
+let DB = JSON.parse(localStorage.getItem(DB_KEY)) || {
+    productos: MENU_BASE.map(p => ({ ...p, cost: 0, stock: 0, sales_count: 0 })),
+    gastos: [],
+    ventas_reales: [] 
+};
+
+// Modifica tu función saveAndRender para usar la nueva llave
+function saveAndRender() {
+    localStorage.setItem(DB_KEY, JSON.stringify(DB));
+    render();
+}
+
+function initAdmin() {
+    render();
+    console.log(`Panel inicializado para: ${COMERCIO_ID}`);
+}
+
+// IMPORTANTE: Quita el window.onload = render; y usa solo la validación.
+
+
+        
         const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec"; 
 
         const MENU_BASE = [
