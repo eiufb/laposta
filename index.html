@@ -225,6 +225,36 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+
+        let userCoords = ""; // Variable global para guardar la ubicación exacta
+
+function getLocation() {
+    const btn = event.currentTarget;
+    btn.innerText = "⏳"; // Feedback visual
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                userCoords = `https://www.google.com/maps?q=${lat},${lng}`;
+                
+                // Opción A: Solo poner "Ubicación GPS capturada"
+                document.getElementById('cust-addr').value = "📍 Ubicación capturada vía GPS";
+                
+                btn.innerText = "✅";
+                alert("Ubicación capturada con éxito");
+            },
+            (error) => {
+                btn.innerText = "📍";
+                alert("Error: Por favor activa el GPS de tu celular y permite el acceso en el navegador.");
+            },
+            { enableHighAccuracy: true }
+        );
+    } else {
+        alert("Tu navegador no soporta geolocalización.");
+    }
+}
         const MI_WHATSAPP = "5493541272207";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
