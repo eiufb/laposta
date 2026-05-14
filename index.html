@@ -171,14 +171,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
             
             <!-- Formulario de datos -->
 <div class="space-y-4">
-    <!-- Desglose de Precios (Costo Envío + Total) -->
+    <!-- Desglose de Precios -->
     <div class="bg-gray-50 p-3 rounded-2xl space-y-1">
         <div class="flex justify-between text-sm font-bold text-gray-500 px-2">
             <span>Subtotal</span>
             <span id="cart-subtotal">$0</span>
         </div>
         <div class="flex justify-between text-sm font-bold text-tri-rojo px-2">
-            <span>Envío</span>
+            <span>Envío estimado</span>
             <span id="shipping-cost">$0</span>
         </div>
         <div class="flex justify-between text-2xl font-black pt-2 border-t border-dashed border-gray-300 px-2">
@@ -200,32 +200,73 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         </div>
     </div>
 
+    <!-- SECCIÓN DE MÉTODOS DE PAGO RESTAURADA -->
     <div class="space-y-2">
         <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Método de Pago</p>
         <div class="grid grid-cols-2 gap-2">
-            <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">Mercado Pago</button>
-            <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">Transferencia</button>
+            <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">
+                Mercado Pago
+            </button>
+            <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">
+                Transferencia
+            </button>
         </div>
-        <!-- Info de transferencia -->
+
+        <!-- Info de Transferencia (Se muestra al clickear 'Transferencia') -->
         <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl space-y-2 mt-2">
             <div class="flex justify-between items-center">
-                <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias:</span>
+                <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias para transferir:</span>
                 <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden">¡Copiado!</span>
             </div>
             <div class="flex items-center gap-2">
                 <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center text-sm">
-                <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-[10px] uppercase">Copiar</button>
+                <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-[10px] uppercase">
+                    Copiar
+                </button>
             </div>
+            <p class="text-[8px] text-gray-400 text-center uppercase font-bold mt-1">
+                Envía el comprobante por WhatsApp al finalizar
+            </p>
         </div>
     </div>
 </div>
-            
            
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+let selectedPayment = "MP"; // Por defecto Mercado Pago
 
+function setPayment(method) {
+    selectedPayment = method;
+    const btnMP = document.getElementById('btn-mp');
+    const btnTransf = document.getElementById('btn-transf');
+    const infoTransf = document.getElementById('transfer-info');
+
+    if (method === 'MP') {
+        // Estilo activo para MP
+        btnMP.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
+        // Estilo inactivo para Transf
+        btnTransf.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
+        infoTransf.classList.add('hidden');
+    } else {
+        // Estilo activo para Transf
+        btnTransf.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
+        // Estilo inactivo para MP
+        btnMP.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
+        infoTransf.classList.remove('hidden');
+    }
+}
+
+function copyAlias() {
+    const alias = document.getElementById('alias-value');
+    alias.select();
+    document.execCommand('copy');
+    
+    const status = document.getElementById('copy-status');
+    status.classList.remove('hidden');
+    setTimeout(() => { status.classList.add('hidden'); }, 2000);
+}
 // 1. Variable global para las coordenadas
 let userCoords = ""; 
 
