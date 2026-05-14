@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Digital | Sern Designs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --tri-rojo: #E63946; --tri-amarillo: #FFB703; --tri-fondo: #F8F9FA; --tri-texto: #1D3557; }
+        body { font-family: 'Outfit', sans-serif; background: var(--tri-fondo); margin: 0; color: var(--tri-texto); }
+        .header-public { background: var(--tri-texto); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--tri-amarillo); }
+        .menu-container { padding: 15px; max-width: 600px; margin: auto; }
+        .product-card { background: white; border-radius: 15px; overflow: hidden; display: flex; align-items: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .product-img { width: 100px; height: 100px; object-fit: cover; }
+        .product-info { padding: 15px; flex: 1; }
+        .product-name { font-weight: 900; font-size: 16px; margin: 0; }
+        .product-price { color: var(--tri-rojo); font-weight: 700; font-size: 18px; margin-top: 5px; }
+        .btn-order { background: #25D366; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header-public">
+        <h1 id="shop-name" style="margin:0; text-transform: uppercase;">Cargando...</h1>
+        <p style="font-size: 12px; opacity: 0.8;">Hacé tu pedido por WhatsApp</p>
+    </div>
+
+    <div class="menu-container" id="public-menu-list">
+        <!-- Los productos aparecerán aquí -->
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const COMERCIO_ID = urlParams.get('id') || "fastfoodposta";
+        const DB_KEY = `SR_DATA_${COMERCIO_ID}`;
+
+        // Cargar datos del LocalStorage
+        const DB = JSON.parse(localStorage.getItem(DB_KEY)) || { productos: [] };
+
+        document.getElementById('shop-name').innerText = COMERCIO_ID.replace(/_/g, ' ');
+
+        const list = document.getElementById('public-menu-list');
+
+        if (DB.productos.length === 0) {
+            list.innerHTML = `<p style="text-align:center; padding:50px; color:#888;">Este comercio aún no ha cargado productos.</p>`;
+        } else {
+            list.innerHTML = DB.productos.map(p => `
+                <div class="product-card">
+                    <img src="${p.foto}" class="product-img">
+                    <div class="product-info">
+                        <p class="product-name">${p.name}</p>
+                        <p class="product-price">$${p.price}</p>
+                        <button class="btn-order" onclick="pedirWhatsApp('${p.name}', ${p.price})">Agregar al Pedido</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function pedirWhatsApp(nombre, precio) {
+            const mensaje = encodeURIComponent(`¡Hola! Quiero pedir: ${nombre} ($${precio})`);
+            // Aquí podrías poner el número real del cliente que tengas en la DB
+            window.open(`https://wa.me/5493541000000?text=${mensaje}`, '_blank');
+        }
+    </script>
+</body>
+</html>
