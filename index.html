@@ -49,6 +49,25 @@
     </script>
 
     <style>
+
+
+.modal-content { 
+    border-radius: 24px 24px 0 0; 
+    animation: slideUp 0.3s ease-out; 
+    width: 100%; 
+    max-width: 500px; /* Un poco más angosto mejora la estética */
+    margin: 0 auto;
+    background: white;
+}
+
+/* Evita que el teclado del móvil tape los inputs */
+@media (max-height: 600px) {
+    .modal-content {
+        height: 100vh;
+        border-radius: 0;
+    }
+}
+        
         body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         body.loading { overflow: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -136,17 +155,26 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         </section>
     </main>
 
-    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
-        <div class="modal-content bg-white flex flex-col h-[90vh]">
-            <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
-                <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido</h4>
-                <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
-            </div>
+    <!-- Cambia esta sección en tu código -->
+<div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
+    <!-- Quitamos h-[90vh] y usamos max-h para que respire -->
+    <div class="modal-content bg-white flex flex-col max-h-[95vh] overflow-hidden">
+        <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo flex-shrink-0">
+            <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido</h4>
+            <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
+        </div>
+        
+        <!-- Contenedor con Scroll para todo el contenido interno -->
+        <div class="overflow-y-auto p-4 space-y-6">
+            <!-- Lista de productos -->
+            <div id="cart-list" class="space-y-3 bg-gray-50 rounded-2xl p-2"></div>
             
-            <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow bg-gray-50"></div>
-            
-            <div class="p-6 bg-white border-t space-y-4 shadow-2xl">
-                <div class="flex justify-between text-2xl font-black mb-1"><span>Total</span><span id="cart-total">$0</span></div>
+            <!-- Formulario de datos -->
+            <div class="space-y-4">
+                <div class="flex justify-between text-2xl font-black mb-1 px-2">
+                    <span>Total</span>
+                    <span id="cart-total" class="text-tri-texto">$0</span>
+                </div>
                 
                 <div class="space-y-2">
                     <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
@@ -160,24 +188,27 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
                         <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">Mercado Pago</button>
                         <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">Transferencia</button>
                     </div>
-
+                    <!-- Info de transferencia -->
                     <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl space-y-2 mt-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias para transferir:</span>
-                            <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden tracking-tighter">¡Copiado!</span>
+                            <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias:</span>
+                            <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden">¡Copiado!</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center outline-none text-lg tracking-widest">
-                            <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-xs uppercase italic active:scale-90 transition-transform">Copiar</button>
+                            <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center text-sm">
+                            <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-[10px] uppercase">Copiar</button>
                         </div>
                     </div>
                 </div>
-                
-                <button id="final-order-btn" onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg">Confirmar Pedido</button>
             </div>
+            
+            <!-- Botón Final (Sticky opcional o al final del scroll) -->
+            <button id="final-order-btn" onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg mb-4">
+                Confirmar Pedido
+            </button>
         </div>
     </div>
-
+</div>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
