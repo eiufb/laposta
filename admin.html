@@ -29,7 +29,7 @@
         .tab-btn.active { color: var(--tri-rojo); border-bottom: 3px solid var(--tri-rojo); }
 
         .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .input-group { margin-bottom: 12px; }
+        .input-group { margin-bottom: 12px; text-align: left; }
         label { display: block; font-size: 10px; font-weight: 900; margin-bottom: 6px; color: #888; text-transform: uppercase; }
         input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #eee; background: var(--tri-fondo); font-family: 'Outfit'; box-sizing: border-box; font-weight: 700; font-size: 16px; outline: none; }
         
@@ -43,28 +43,32 @@
         .item-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eee; }
         .item-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
         .section-hide { display: none; }
-
-        /* KPI & CHARTS */
-        .health-status { padding: 15px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 15px; }
-        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .kpi-box { background: white; padding: 12px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
-        .kpi-val { font-size: 20px; font-weight: 900; display: block; }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN -->
+    <!-- LOGIN ACTUALIZADO -->
     <div id="login-screen">
         <div class="card" style="width: 100%; max-width: 350px; text-align: center;">
-            <h2 style="margin-top: 0;">ADMIN <span id="login-id-display" style="color:var(--tri-rojo)">SR</span></h2>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Acceso por Cliente</p>
-            <input type="password" id="admin-pass" placeholder="Clave de comercio" style="text-align: center; margin-bottom: 15px;">
+            <h2 style="margin-top: 0;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Acceso exclusivo para clientes</p>
+            
+            <div class="input-group">
+                <label>Usuario</label>
+                <input type="text" id="admin-user" placeholder="Ej: fastfoodposta" style="text-align: center;">
+            </div>
+
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" id="admin-pass" placeholder="••••" style="text-align: center;">
+            </div>
+
             <button class="btn-main" onclick="validarAcceso()">Entrar al Panel</button>
-            <div id="login-error" style="color: var(--tri-rojo); font-size: 11px; margin-top: 10px; font-weight: 900; display: none;">CLAVE INCORRECTA</div>
+            <div id="login-error" style="color: var(--tri-rojo); font-size: 11px; margin-top: 10px; font-weight: 900; display: none;">USUARIO O CLAVE INCORRECTOS</div>
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN CONTENT (Oculto al inicio) -->
     <div id="main-content" style="display: none;">
         <nav class="time-nav">
             <button class="time-btn" onclick="setTimeFrame('hoy', this)">Hoy</button>
@@ -74,7 +78,7 @@
 
         <div class="header">
             <h1 id="client-title" style="font-size:18px; margin:0; letter-spacing: -1px;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h1>
-            <div id="sync-status" style="font-size: 9px; font-weight: 900; color: var(--tri-verde); margin-top: 5px;">● CATALOGO PERSONALIZADO</div>
+            <div id="sync-status" style="font-size: 9px; font-weight: 900; color: var(--tri-verde); margin-top: 5px;">● PANEL DE CONTROL ACTIVO</div>
         </div>
 
         <div class="nav-tabs">
@@ -84,7 +88,6 @@
         </div>
 
         <div class="container">
-            <!-- PESTAÑA PRODUCTOS (CARGA Y STOCK) -->
             <div id="tab-operacion">
                 <div class="card">
                     <label>Nuevo Producto / Editar</label>
@@ -92,67 +95,68 @@
                         <div id="img-preview" class="img-preview-circle"></div>
                         <div style="flex:1">
                             <input type="file" id="prod-foto" accept="image/*" capture="environment" style="display:none" onchange="previewImagen(this)">
-                            <button class="btn-main" style="background:var(--tri-amarillo); color:var(--tri-texto); font-size:11px; padding:10px" onclick="document.getElementById('prod-foto').click()">📸 Tomar/Subir Foto</button>
+                            <button class="btn-main" style="background:var(--tri-amarillo); color:var(--tri-texto); font-size:11px; padding:10px" onclick="document.getElementById('prod-foto').click()">📸 Foto</button>
                         </div>
                     </div>
-                    <input type="text" id="new-prod-name" placeholder="Nombre (Ej: Pizza 4 Quesos)" class="input-group">
-                    <div class="kpi-grid">
+                    <input type="text" id="new-prod-name" placeholder="Nombre del producto" class="input-group">
+                    <div class="kpi-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
                         <div><label>Venta ($)</label><input type="number" id="new-prod-price"></div>
                         <div><label>Costo ($)</label><input type="number" id="new-prod-cost"></div>
                     </div>
-                    <div class="kpi-grid">
-                        <div><label>Categoría</label>
-                            <select id="new-prod-cat">
-                                <option value="Comida">Comida</option>
-                                <option value="Bebida">Bebida</option>
-                                <option value="Promo">Promo</option>
-                            </select>
-                        </div>
-                        <div><label>Stock</label><input type="number" id="new-prod-stock" value="0"></div>
-                    </div>
-                    <button class="btn-main" onclick="crearOEditarProducto()">Guardar Producto</button>
+                    <button class="btn-main" onclick="crearOEditarProducto()">Guardar</button>
                 </div>
 
                 <div class="card">
-                    <label>Tu Menú Actual</label>
+                    <label>Inventario</label>
                     <div id="inventory-list"></div>
                 </div>
             </div>
 
-            <!-- LAS OTRAS PESTAÑAS (GASTOS/ANALISIS) SIGUEN TU LOGICA -->
-            <div id="tab-gastos" class="section-hide">... (Sección Gastos) ...</div>
-            <div id="tab-analisis" class="section-hide">... (Sección Dirección) ...</div>
+            <div id="tab-gastos" class="section-hide">
+                <div class="card"><p style="text-align:center; font-size:12px; color:#888;">Gestión de egresos próximamente...</p></div>
+            </div>
+            <div id="tab-analisis" class="section-hide">
+                <div class="card"><p style="text-align:center; font-size:12px; color:#888;">Estadísticas de negocio...</p></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN MULTI-USUARIO ---
-        const urlParams = new URLSearchParams(window.location.search);
-        // Por defecto entra como fastfoodposta para tu prueba
-        const COMERCIO_ID = urlParams.get('id') || "fastfoodposta"; 
-
-        // Diccionario de claves para cada cliente
-        const LLAVES_ACCESO = {
+        // Configuración de Cuentas
+        const USUARIOS_REGISTRADOS = {
             "fastfoodposta": "1234",
             "pizzeria_charly": "5566",
-            "burger_king_local": "9999"
+            "sern_designs": "2026"
         };
 
-        const CLAVE_MAESTRA = LLAVES_ACCESO[COMERCIO_ID] || "0000";
-        const DB_KEY = `SR_DATA_${COMERCIO_ID}`;
-        
-        let DB = JSON.parse(localStorage.getItem(DB_KEY)) || {
-            productos: [], // Empieza vacío para que el cliente cargue sus fotos
-            gastos: [],
-            ventas_reales: [] 
-        };
+        let DB_KEY = "";
+        let DB = { productos: [], gastos: [] };
+        let currentImageData = "";
 
-        let currentImageData = ""; // Para guardar la foto temporalmente
+        function validarAcceso() {
+            const user = document.getElementById('admin-user').value.toLowerCase().trim();
+            const pass = document.getElementById('admin-pass').value;
+            const errorMsg = document.getElementById('login-error');
+
+            if (USUARIOS_REGISTRADOS[user] && USUARIOS_REGISTRADOS[user] === pass) {
+                DB_KEY = `SR_DATA_${user}`;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('client-title').innerHTML = `ADMIN <span style="color:var(--tri-rojo)">${user.toUpperCase()}</span>`;
+                
+                // Cargar datos del usuario
+                const stored = localStorage.getItem(DB_KEY);
+                if (stored) DB = JSON.parse(stored);
+                render();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
 
         function previewImagen(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = (e) => {
                     currentImageData = e.target.result;
                     document.getElementById('img-preview').style.backgroundImage = `url(${currentImageData})`;
                 }
@@ -160,71 +164,34 @@
             }
         }
 
-        function validarAcceso() {
-            const pass = document.getElementById('admin-pass').value;
-            if(pass === CLAVE_MAESTRA) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-                document.getElementById('client-title').innerText = COMERCIO_ID.replace(/_/g, ' ').toUpperCase();
-                render();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
-        }
-
         function crearOEditarProducto() {
             const name = document.getElementById('new-prod-name').value;
-            const price = parseFloat(document.getElementById('new-prod-price').value);
-            const cost = parseFloat(document.getElementById('new-prod-cost').value);
-            const stock = parseInt(document.getElementById('new-prod-stock').value);
+            const price = document.getElementById('new-prod-price').value;
+            if(!name || !price) return alert("Completa Nombre y Precio");
 
-            if(!name || !price) return alert("Nombre y Precio obligatorios");
-
-            const existingIndex = DB.productos.findIndex(p => p.name === name);
-            const newProd = {
-                id: Date.now(),
-                name, price, cost, stock,
+            DB.productos.push({
+                name, 
+                price, 
                 foto: currentImageData || "https://via.placeholder.com/50",
-                sales_count: 0
-            };
+                id: Date.now()
+            });
 
-            if(existingIndex > -1) {
-                DB.productos[existingIndex] = {...DB.productos[existingIndex], ...newProd};
-            } else {
-                DB.productos.push(newProd);
-            }
-
-            // Limpiar campos
+            localStorage.setItem(DB_KEY, JSON.stringify(DB));
+            render();
+            
+            // Limpiar
             document.getElementById('new-prod-name').value = "";
             document.getElementById('new-prod-price').value = "";
             document.getElementById('img-preview').style.backgroundImage = "";
             currentImageData = "";
-            
-            saveAndRender();
-        }
-
-        function saveAndRender() {
-            localStorage.setItem(DB_KEY, JSON.stringify(DB));
-            render();
         }
 
         function render() {
             const list = document.getElementById('inventory-list');
-            if(DB.productos.length === 0) {
-                list.innerHTML = "<p style='font-size:12px; color:#888; text-align:center'>No hay productos. ¡Carga el primero arriba!</p>";
-                return;
-            }
-
             list.innerHTML = DB.productos.map(p => `
                 <div class="item-row">
                     <img src="${p.foto}" class="item-img">
-                    <div style="flex:1">
-                        <b>${p.name}</b><br>
-                        <small>$${p.price} | Costo: $${p.cost}</small>
-                    </div>
-                    <span class="badge" style="background:var(--tri-fondo); padding:5px 10px; border-radius:8px; font-weight:900; font-size:10px">
-                        ${p.stock} un.
-                    </span>
+                    <div style="flex:1"><b>${p.name}</b><br><small>$${p.price}</small></div>
                 </div>
             `).join('');
         }
@@ -235,9 +202,6 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
         }
-
-        // Mostrar el ID del comercio en el login para que el usuario sepa dónde está
-        document.getElementById('login-id-display').innerText = COMERCIO_ID.toUpperCase();
     </script>
 </body>
 </html>
