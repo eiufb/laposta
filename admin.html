@@ -3,262 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SR Admin | Control de Negocio</title>
+    <title>SR Admin | Sern Designs</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --tri-rojo: #E63946; --tri-amarillo: #FFB703; --tri-fondo: #F8F9FA; 
             --tri-texto: #1D3557; --tri-verde: #2A9D8F; --white: #ffffff;
         }
-        <body id="admin-body" style="display: none;"> <!-- Oculto por defecto -->
 
-    <!-- PANTALLA DE LOGIN -->
-    <div id="login-screen" style="position: fixed; inset: 0; background: var(--tri-texto); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-        <div class="card" style="width: 100%; max-width: 350px; text-align: center;">
-            <h2 style="margin-top: 0;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h2>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Ingresa la clave de tu comercio</p>
-            <input type="password" id="admin-pass" placeholder="Clave de acceso" style="text-align: center; margin-bottom: 15px;">
-            <button class="btn-main" onclick="validarAcceso()">Entrar al Panel</button>
-            <div id="login-error" style="color: var(--tri-rojo); font-size: 11px; margin-top: 10px; font-weight: 900; display: none;">CLAVE INCORRECTA</div>
-        </div>
-    </div>
+        body { font-family: 'Outfit', sans-serif; background: var(--tri-fondo); margin: 0; color: var(--tri-texto); }
+
+        /* LOGIN SCREEN */
+        #login-screen { position: fixed; inset: 0; background: var(--tri-texto); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* UI COMPONENTS */
         .time-nav { background: var(--tri-texto); padding: 10px; display: flex; gap: 5px; position: sticky; top: 0; z-index: 200; }
-        .time-btn { flex: 1; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; padding: 8px; border-radius: 10px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
+        .time-btn { flex: 1; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 12px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .time-btn.active { background: var(--tri-amarillo); color: var(--tri-texto); border: none; }
 
         .header { text-align: center; padding: 20px; background: var(--white); border-bottom: 4px solid var(--tri-amarillo); }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         
-        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 45px; z-index: 100; }
+        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 58px; z-index: 100; }
         .tab-btn { flex: 1; padding: 15px; border: none; background: none; font-weight: 900; font-size: 11px; color: #aaa; text-transform: uppercase; }
         .tab-btn.active { color: var(--tri-rojo); border-bottom: 3px solid var(--tri-rojo); }
 
-        .card { background: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .input-group { margin-bottom: 12px; }
-        label { display: block; font-size: 10px; font-weight: 900; margin-bottom: 4px; color: #888; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: var(--tri-fondo); font-family: 'Outfit'; box-sizing: border-box; font-weight: 700; outline: none; }
-        input:focus { border-color: var(--tri-amarillo); }
+        label { display: block; font-size: 10px; font-weight: 900; margin-bottom: 6px; color: #888; text-transform: uppercase; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #eee; background: var(--tri-fondo); font-family: 'Outfit'; box-sizing: border-box; font-weight: 700; font-size: 16px; outline: none; }
         
-        .btn-main { background: var(--tri-texto); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-bottom: 8px; transition: transform 0.2s; }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main { background: var(--tri-texto); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-bottom: 8px; font-size: 14px; }
+        .btn-main:active { transform: scale(0.96); }
         
-        .health-status { padding: 12px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 15px; transition: all 0.3s; }
+        .health-status { padding: 15px; border-radius: 15px; text-align: center; font-weight: 900; font-size: 14px; margin-bottom: 15px; }
         .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .kpi-box { background: white; padding: 12px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
-        .kpi-label { font-size: 9px; color: #888; font-weight: 700; text-transform: uppercase; }
-        .kpi-val { font-size: 18px; font-weight: 900; display: block; }
+        .kpi-val { font-size: 20px; font-weight: 900; display: block; }
 
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f8f8f8; }
-        .badge { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 900; text-transform: uppercase; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .badge { font-size: 10px; padding: 5px 10px; border-radius: 8px; font-weight: 900; }
         .section-hide { display: none; }
-        
-        .reco-box { background: var(--tri-texto); color: white; padding: 15px; border-radius: 18px; border-left: 5px solid var(--tri-amarillo); margin-top: 10px; }
 
-        .chart-container { display: flex; align-items: flex-end; gap: 10px; height: 100px; margin: 20px 0; padding: 10px; background: #f0f2f5; border-radius: 15px; }
-        .bar { flex: 1; border-radius: 5px 5px 0 0; position: relative; min-height: 5px; transition: height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .bar-label { position: absolute; top: -20px; width: 100%; text-align: center; font-size: 9px; font-weight: 900; }
-
-        #sync-status { font-size: 9px; font-weight: 900; color: var(--tri-verde); margin-top: 5px; }
+        .chart-container { display: flex; align-items: flex-end; gap: 15px; height: 120px; margin: 20px 0; padding: 15px; background: #f0f2f5; border-radius: 20px; }
+        .bar { flex: 1; border-radius: 8px 8px 0 0; position: relative; min-height: 10px; transition: height 0.8s ease; }
+        .bar-label { position: absolute; bottom: -20px; width: 100%; text-align: center; font-size: 10px; font-weight: 900; color: #888; }
     </style>
 </head>
-<body>
+<body id="admin-body">
 
-    <nav class="time-nav">
-        <button class="time-btn" onclick="setTimeFrame('hoy', this)">Hoy</button>
-        <button class="time-btn active" onclick="setTimeFrame('semana', this)">Semana</button>
-        <button class="time-btn" onclick="setTimeFrame('mes', this)">Mes</button>
-    </nav>
-
-    <div class="header">
-        <h1 style="font-size:18px; margin:0; letter-spacing: -1px;">ADMIN <span style="color:var(--tri-rojo)">SR</span> CONTROL v8.1</h1>
-        <div id="sync-status">● CONEXIÓN ESTABLE</div>
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen">
+        <div class="card" style="width: 100%; max-width: 350px; text-align: center;">
+            <h2 style="margin-top: 0;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Acceso exclusivo para clientes</p>
+            <input type="password" id="admin-pass" placeholder="Clave de comercio" style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-main" onclick="validarAcceso()">Entrar al Panel</button>
+            <div id="login-error" style="color: var(--tri-rojo); font-size: 11px; margin-top: 10px; font-weight: 900; display: none;">CLAVE INCORRECTA</div>
+        </div>
     </div>
 
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab(event, 'tab-operacion')">📦 Stock</button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-gastos')">💸 Gastos</button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-analisis')">📊 Dirección</button>
-    </div>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="main-content" style="display: none;">
+        <nav class="time-nav">
+            <button class="time-btn" onclick="setTimeFrame('hoy', this)">Hoy</button>
+            <button class="time-btn active" onclick="setTimeFrame('semana', this)">Semana</button>
+            <button class="time-btn" onclick="setTimeFrame('mes', this)">Mes</button>
+        </nav>
 
-    <div class="container">
-        
-        <!-- PESTAÑA OPERACIÓN -->
-        <div id="tab-operacion">
-            <div class="card">
-                <label>Gestión de Producto</label>
-                <div class="input-group">
-                    <select id="prod-select" onchange="loadProdData()">
-                        <option value="">Selecciona un producto...</option>
+        <div class="header">
+            <h1 id="client-title" style="font-size:18px; margin:0; letter-spacing: -1px;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h1>
+            <div id="sync-status" style="font-size: 9px; font-weight: 900; color: var(--tri-verde); margin-top: 5px;">● SISTEMA LOCAL ACTIVO</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'tab-operacion')">📦 Stock</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-gastos')">💸 Gastos</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tab-analisis')">📊 Dirección</button>
+        </div>
+
+        <div class="container">
+            <!-- PESTAÑA STOCK -->
+            <div id="tab-operacion">
+                <div class="card">
+                    <label>Producto</label>
+                    <select id="prod-select" onchange="loadProdData()" class="input-group">
+                        <option value="">Selecciona...</option>
                     </select>
+                    <div class="kpi-grid">
+                        <div><label>Costo ($)</label><input type="number" id="prod-cost"></div>
+                        <div><label>Precio ($)</label><input type="number" id="prod-price" readonly style="opacity:0.6"></div>
+                    </div>
+                    <div class="kpi-grid">
+                        <div><label>En Stock</label><input type="number" id="prod-stock-actual"></div>
+                        <div><label>Vender ahora</label><input type="number" id="prod-venta-qty" placeholder="Cant."></div>
+                    </div>
+                    <button class="btn-main" onclick="saveProduct()">Guardar Cambios</button>
+                    <button class="btn-main" style="background:var(--tri-verde)" onclick="registrarVentaReal()">Confirmar Venta</button>
                 </div>
-                <div class="kpi-grid">
-                    <div>
-                        <label>Costo de Compra ($)</label>
-                        <input type="number" id="prod-cost" placeholder="0.00">
-                    </div>
-                    <div>
-                        <label>Precio Venta ($)</label>
-                        <input type="number" id="prod-price" readonly style="background:#e9ecef; color:#6c757d">
-                    </div>
+                <div class="card">
+                    <label>Inventario Rápido</label>
+                    <div id="inventory-list"></div>
                 </div>
-                <div class="kpi-grid">
-                    <div>
-                        <label>Stock Físico</label>
-                        <input type="number" id="prod-stock-actual" placeholder="Cantidad">
-                    </div>
-                    <div>
-                        <label>Registrar Venta</label>
-                        <input type="number" id="prod-venta-qty" placeholder="Cant.">
-                    </div>
-                </div>
-                <button class="btn-main" onclick="saveProduct()">Actualizar Ficha</button>
-                <button class="btn-main" style="background:var(--tri-verde)" onclick="registrarVentaReal()">Confirmar Venta</button>
             </div>
 
-            <div class="card">
-                <label>Listado de Inventario</label>
-                <div id="inventory-list"></div>
+            <!-- PESTAÑA GASTOS -->
+            <div id="tab-gastos" class="section-hide">
+                <div class="card">
+                    <label>Nuevo Egreso</label>
+                    <input type="text" id="gasto-desc" placeholder="¿En qué se gastó?" class="input-group">
+                    <div class="kpi-grid">
+                        <input type="number" id="gasto-monto" placeholder="Monto $">
+                        <select id="gasto-tipo">
+                            <option value="fijo">Fijo</option>
+                            <option value="variable">Variable</option>
+                        </select>
+                    </div>
+                    <button class="btn-main" style="background:var(--tri-rojo)" onclick="addGasto()">Registrar Gasto</button>
+                </div>
+                <div id="gastos-list"></div>
+            </div>
+
+            <!-- PESTAÑA ANÁLISIS -->
+            <div id="tab-analisis" class="section-hide">
+                <div id="health-box" class="health-status">ANALIZANDO...</div>
+                <div class="kpi-grid">
+                    <div class="kpi-box"><span style="font-size:9px; color:#888;">VENTAS</span><span id="res-ingresos" class="kpi-val">$0</span></div>
+                    <div class="kpi-box"><span style="font-size:9px; color:#888;">MARGEN</span><span id="res-margen" class="kpi-val">0%</span></div>
+                </div>
+                <div class="card">
+                    <label>Balance Ventas vs Gastos</label>
+                    <div class="chart-container">
+                        <div id="bar-ventas" class="bar" style="background:var(--tri-verde);"><span class="bar-label">VTS</span></div>
+                        <div id="bar-gastos" class="bar" style="background:var(--tri-rojo);"><span class="bar-label">GAS</span></div>
+                    </div>
+                </div>
+                <div class="card" style="background:var(--tri-texto); color:white; border:none;">
+                    <label style="color:var(--tri-amarillo)">Estrategia AI</label>
+                    <p id="ai-recomienda" style="margin:5px 0; font-size:14px;"></p>
+                </div>
             </div>
         </div>
-
-        <!-- PESTAÑA GASTOS -->
-        <div id="tab-gastos" class="section-hide">
-            <div class="card">
-                <label>Cargar Gasto Operativo</label>
-                <input type="text" id="gasto-desc" placeholder="Descripción (Luz, Alquiler...)" class="input-group">
-                <div class="kpi-grid">
-                    <input type="number" id="gasto-monto" placeholder="Monto $">
-                    <select id="gasto-tipo">
-                        <option value="fijo">Gasto Fijo</option>
-                        <option value="variable">Gasto Variable</option>
-                    </select>
-                </div>
-                <button class="btn-main" style="background:var(--tri-rojo)" onclick="addGasto()">Registrar Egreso</button>
-            </div>
-            <div id="gastos-list"></div>
-        </div>
-
-        <!-- PESTAÑA ANÁLISIS -->
-        <div id="tab-analisis" class="section-hide">
-            <div id="health-box" class="health-status">CARGANDO ESTADO...</div>
-            
-            <div class="kpi-grid">
-                <div class="kpi-box"><span class="kpi-label">Ventas Totales</span><span id="res-ingresos" class="kpi-val">$0</span></div>
-                <div class="kpi-box"><span class="kpi-label">Margen Neto</span><span id="res-margen" class="kpi-val">0%</span></div>
-            </div>
-
-            <div class="card" style="text-align: center;">
-                <label>Balance Visual (Ventas vs Gastos)</label>
-                <div class="chart-container">
-                    <div id="bar-ventas" class="bar" style="background:var(--tri-verde); width:50%;"><span class="bar-label">VTS</span></div>
-                    <div id="bar-gastos" class="bar" style="background:var(--tri-rojo); width:50%;"><span class="bar-label">GAS</span></div>
-                </div>
-            </div>
-
-            <div class="reco-box">
-                <small style="color:var(--tri-amarillo); font-weight: 900;">PRODUCTOS CLAVE</small>
-                <div id="ranking-container" style="font-size: 11px; margin-top:5px;"></div>
-            </div>
-
-            <div class="reco-box">
-                <small style="color:var(--tri-amarillo); font-weight: 900;">RECOMENDACIÓN ESTRATÉGICA</small>
-                <p id="ai-recomienda" style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600;"></p>
-            </div>
-            
-            <button class="btn-main" style="margin-top: 20px; background: #eee; color: #333;" onclick="exportarData()">Consola de Depuración (F12)</button>
-        </div>
-
     </div>
 
     <script>
-// --- CONFIGURACIÓN DE SEGURIDAD Y CLIENTE ---
-const COMERCIO_ID = "fast_food_posta"; // Este ID será dinámico luego
-const CLAVE_MAESTRA = "1234"; // Aquí podrías traer la clave desde el Sheet
+        // --- CONFIGURACIÓN DE CLIENTE Y SEGURIDAD ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const COMERCIO_ID = urlParams.get('id') || "fast_food_posta"; 
 
-// Función de Validación
-function validarAcceso() {
-    const passInput = document.getElementById('admin-pass').value;
-    const errorMsg = document.getElementById('login-error');
-    
-    if(passInput === CLAVE_MAESTRA) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('admin-body').style.display = 'block';
-        initAdmin();
-    } else {
-        errorMsg.style.display = 'block';
-        setTimeout(() => { errorMsg.style.display = 'none'; }, 2000);
-    }
-}
+        const LLAVES_ACCESO = {
+            "fast_food_posta": "1234",
+            "pizzeria_charly": "5566",
+            "sern_demo": "0000"
+        };
 
-// PROTECCIÓN DE LOCALSTORAGE: Usamos el COMERCIO_ID como prefijo
-let DB_KEY = `SR_DATA_${COMERCIO_ID}`;
-let DB = JSON.parse(localStorage.getItem(DB_KEY)) || {
-    productos: MENU_BASE.map(p => ({ ...p, cost: 0, stock: 0, sales_count: 0 })),
-    gastos: [],
-    ventas_reales: [] 
-};
-
-// Modifica tu función saveAndRender para usar la nueva llave
-function saveAndRender() {
-    localStorage.setItem(DB_KEY, JSON.stringify(DB));
-    render();
-}
-
-function initAdmin() {
-    render();
-    console.log(`Panel inicializado para: ${COMERCIO_ID}`);
-}
-
-// IMPORTANTE: Quita el window.onload = render; y usa solo la validación.
-
-
-        
-        const SHEETS_URL = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec"; 
+        const CLAVE_MAESTRA = LLAVES_ACCESO[COMERCIO_ID] || "9999";
+        const DB_KEY = `SR_DATA_${COMERCIO_ID}`;
 
         const MENU_BASE = [
-            { id: 901, name: 'Promo 6 Empanadas', price: 14500, cat: 'Promos' },
-            { id: 902, name: 'Promo 2 Pizzas', price: 21500, cat: 'Promos' },
-            { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, cat: 'Promos' },
-            { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, cat: 'Promos' },
-            { id: 301, name: 'Empanada Carne Salada', price: 2500, cat: 'Empanadas' },
-            { id: 302, name: 'Empanada Pollo', price: 2500, cat: 'Empanadas' },
-            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, cat: 'Empanadas' },
-            { id: 304, name: 'Empanada Osobuco', price: 2500, cat: 'Empanadas' },
-            { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, cat: 'Pizzas' },
-            { id: 602, name: 'Pizza Salame', price: 13500, cat: 'Pizzas' },
-            { id: 603, name: 'Pizza Napolitana', price: 13500, cat: 'Pizzas' },
-            { id: 604, name: 'Pizza Roquefort', price: 14500, cat: 'Pizzas' },
-            { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, cat: 'Pizzas' },
-            { id: 606, name: 'Pizza Especial (J y M)', price: 13500, cat: 'Pizzas' },
-            { id: 607, name: 'Pizza Fugazzeta', price: 13000, cat: 'Pizzas' }
+            { id: 901, name: 'Promo 6 Empanadas', price: 14500 },
+            { id: 902, name: 'Promo 2 Pizzas', price: 21500 },
+            { id: 301, name: 'Empanada Carne', price: 2500 },
+            { id: 601, name: 'Pizza Mozzarella', price: 12500 }
         ];
 
-        let currentTimeFrame = 'semana';
-        let DB = JSON.parse(localStorage.getItem('SR_ADMIN_DATA')) || {
+        let DB = JSON.parse(localStorage.getItem(DB_KEY)) || {
             productos: MENU_BASE.map(p => ({ ...p, cost: 0, stock: 0, sales_count: 0 })),
             gastos: [],
             ventas_reales: [] 
         };
 
-        // Sincronización Cloud
-        async function syncCloud(payload) {
-            const status = document.getElementById('sync-status');
-            status.innerText = "⏳ SINCRONIZANDO...";
-            try {
-                await fetch(SHEETS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload)
-                });
-                status.innerText = "● NUBE ACTUALIZADA";
-                status.style.color = "var(--tri-verde)";
-            } catch(e) {
-                status.innerText = "✖ ERROR DE RED";
-                status.style.color = "var(--tri-rojo)";
+        let currentTimeFrame = 'semana';
+
+        function validarAcceso() {
+            const pass = document.getElementById('admin-pass').value;
+            if(pass === CLAVE_MAESTRA) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                const nombreLimpio = COMERCIO_ID.replace(/_/g, ' ').toUpperCase();
+                document.getElementById('client-title').innerHTML = `ADMIN <span style="color:var(--tri-rojo)">${nombreLimpio}</span>`;
+                render();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
             }
         }
 
-        // Acciones Operativas
+        function saveAndRender() {
+            localStorage.setItem(DB_KEY, JSON.stringify(DB));
+            render();
+        }
+
+        // --- LÓGICA DE NEGOCIO ---
         function loadProdData() {
             const id = document.getElementById('prod-select').value;
             const p = DB.productos.find(x => x.id == id);
@@ -275,10 +210,8 @@ function initAdmin() {
             if(p) {
                 p.cost = parseFloat(document.getElementById('prod-cost').value || 0);
                 p.stock = parseInt(document.getElementById('prod-stock-actual').value || 0);
-                
-                syncCloud({ action: "EDIT_BASE_DATA", id: p.id, newCost: p.cost, newStock: p.stock });
                 saveAndRender();
-                alert(`✓ ${p.name} actualizado.`);
+                alert("Actualizado correctamente.");
             }
         }
 
@@ -286,15 +219,11 @@ function initAdmin() {
             const id = document.getElementById('prod-select').value;
             const qty = parseInt(document.getElementById('prod-venta-qty').value || 0);
             const p = DB.productos.find(x => x.id == id);
-            
             if(p && qty > 0) {
-                if(p.stock < qty) return alert("Stock insuficiente.");
+                if(p.stock < qty) return alert("¡Sin stock suficiente!");
                 p.stock -= qty;
-                p.sales_count = (p.sales_count || 0) + qty;
-                const venta = { prodId: p.id, nombre: p.name, qty, total: p.price * qty, costo_total: p.cost * qty, fecha: Date.now() };
-                DB.ventas_reales.push(venta);
-                
-                syncCloud({ type: 'VENTA', ...venta, fecha_str: new Date().toLocaleString() });
+                p.sales_count += qty;
+                DB.ventas_reales.push({ prodId: p.id, total: p.price * qty, costTotal: p.cost * qty, fecha: Date.now() });
                 document.getElementById('prod-venta-qty').value = "";
                 saveAndRender();
             }
@@ -303,24 +232,12 @@ function initAdmin() {
         function addGasto() {
             const desc = document.getElementById('gasto-desc').value;
             const monto = parseFloat(document.getElementById('gasto-monto').value);
-            const tipo = document.getElementById('gasto-tipo').value;
             if(desc && monto) {
-                const gasto = { desc, monto, tipo, id: Date.now(), fecha: Date.now() };
-                DB.gastos.push(gasto);
-                syncCloud({ type: 'GASTO', ...gasto, fecha_str: new Date().toLocaleString() });
+                DB.gastos.push({ desc, monto, fecha: Date.now() });
                 document.getElementById('gasto-desc').value = "";
                 document.getElementById('gasto-monto').value = "";
                 saveAndRender();
             }
-        }
-
-        // UI Helpers
-        function switchTab(e, tabId) {
-            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('section-hide'));
-            document.getElementById(tabId).classList.remove('section-hide');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            render();
         }
 
         function setTimeFrame(frame, el) {
@@ -330,77 +247,63 @@ function initAdmin() {
             render();
         }
 
-        function filterByTime(array) {
-            const now = new Date();
-            return array.filter(item => {
-                const d = new Date(item.fecha);
-                if(currentTimeFrame === 'hoy') return d.toDateString() === now.toDateString();
-                if(currentTimeFrame === 'semana') return (now - d) / (1000 * 60 * 60 * 24) <= 7;
-                if(currentTimeFrame === 'mes') return d.getMonth() === now.getMonth();
-                return true;
-            });
-        }
-
-        function saveAndRender() {
-            localStorage.setItem('SR_ADMIN_DATA', JSON.stringify(DB));
+        function switchTab(e, tabId) {
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('section-hide'));
+            document.getElementById(tabId).classList.remove('section-hide');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.currentTarget.classList.add('active');
             render();
         }
 
         function render() {
-            // Render Select
             const select = document.getElementById('prod-select');
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">Selecciona un producto...</option>' + 
-                DB.productos.map(p => `<option value="${p.id}" ${p.id==currentVal?'selected':''}>${p.name}</option>`).join('');
+            const current = select.value;
+            select.innerHTML = '<option value="">Selecciona...</option>' + 
+                DB.productos.map(p => `<option value="${p.id}" ${p.id==current?'selected':''}>${p.name}</option>`).join('');
 
-            // Inventario
             document.getElementById('inventory-list').innerHTML = DB.productos.map(p => `
                 <div class="item-row">
-                    <div><b>${p.name}</b><br><small style="color:#888">$${p.price} | Margen: $${p.price - p.cost}</small></div>
-                    <span class="badge" style="background:${p.stock < 5 ? '#ffebee' : '#e8f5e9'}; color:${p.stock < 5 ? 'red' : 'green'}">${p.stock} un.</span>
+                    <div><b>${p.name}</b><br><small>$${p.price}</small></div>
+                    <span class="badge" style="background:${p.stock<5?'#FFE5E5':'#E5F9F1'}; color:${p.stock<5?'#E63946':'#2A9D8F'}">${p.stock} un.</span>
                 </div>`).join('');
 
-            // Analítica
-            const vts = filterByTime(DB.ventas_reales);
-            const gas = filterByTime(DB.gastos);
+            const now = new Date();
+            const filter = (arr) => arr.filter(i => {
+                const d = new Date(i.fecha);
+                if(currentTimeFrame === 'hoy') return d.toDateString() === now.toDateString();
+                if(currentTimeFrame === 'semana') return (now - d) / 86400000 <= 7;
+                return d.getMonth() === now.getMonth();
+            });
+
+            const vts = filter(DB.ventas_reales);
+            const gas = filter(DB.gastos);
             const tVentas = vts.reduce((a, b) => a + b.total, 0);
-            const tCostoVts = vts.reduce((a, b) => a + b.costo_total, 0);
+            const tCostos = vts.reduce((a, b) => a + b.costTotal, 0);
             const tGastos = gas.reduce((a, b) => a + b.monto, 0);
-            const neto = (tVentas - tCostoVts) - tGastos;
+            const neto = (tVentas - tCostos) - tGastos;
             const margen = tVentas > 0 ? Math.round((neto / tVentas) * 100) : 0;
 
             document.getElementById('res-ingresos').innerText = "$" + tVentas.toLocaleString();
             document.getElementById('res-margen').innerText = margen + "%";
 
-            // Salud Visual
             const hb = document.getElementById('health-box');
-            hb.innerText = margen > 30 ? "NEGOCIO SALUDABLE" : (margen > 0 ? "REVISAR COSTOS" : "PÉRDIDA OPERATIVA");
-            hb.style.background = margen > 30 ? "var(--tri-verde)" : (margen > 0 ? "var(--tri-amarillo)" : "var(--tri-rojo)");
+            hb.innerText = margen > 25 ? "NEGOCIO SALUDABLE" : "REVISAR RENTABILIDAD";
+            hb.style.background = margen > 25 ? "var(--tri-verde)" : "var(--tri-amarillo)";
             hb.style.color = "white";
 
-            // Chart
             const max = Math.max(tVentas, tGastos, 1);
             document.getElementById('bar-ventas').style.height = (tVentas / max * 100) + "%";
             document.getElementById('bar-gastos').style.height = (tGastos / max * 100) + "%";
 
-            // Ranking
-            const ranking = [...DB.productos].sort((a,b) => (b.sales_count*(b.price-b.cost)) - (a.sales_count*(a.price-a.cost)));
-            document.getElementById('ranking-container').innerHTML = `
-                <div>💎 Joya: ${ranking[0].sales_count > 0 ? ranking[0].name : 'Sin ventas'}</div>
-                <div style="opacity:0.6">🪤 Trampa: ${ranking[ranking.length-1].name}</div>`;
+            document.getElementById('ai-recomienda').innerText = margen < 15 ? 
+                "Tu margen está bajo. Considera revisar los gastos fijos o ajustar precios." : 
+                "¡Excelente! Mantén el nivel de stock para no perder ventas.";
 
-            // Gastos List
-            document.getElementById('gastos-list').innerHTML = gas.slice().reverse().map(g => `
-                <div class="card" style="margin-bottom:5px; padding:10px; display:flex; justify-content:space-between">
-                    <small><b>${g.desc}</b></small><small style="color:red">-$${g.monto}</small>
+            document.getElementById('gastos-list').innerHTML = gas.slice(-3).reverse().map(g => `
+                <div class="card" style="padding:10px; margin-bottom:5px; font-size:12px; display:flex; justify-content:space-between">
+                    <span>${g.desc}</span><span style="color:red">-$${g.monto}</span>
                 </div>`).join('');
-
-            const reco = document.getElementById('ai-recomienda');
-            reco.innerText = margen < 15 ? "Alerta: Sube precios o corta gastos fijos." : "Buen ritmo: Mantén el control de stock.";
         }
-
-        function exportarData() { console.log(DB); alert("Data enviada a consola."); }
-        window.onload = render;
     </script>
 </body>
 </html>
