@@ -3,27 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>FAST FOOD POSTA | Pizzas y Empanadas | App Oficial</title>
-    <meta name="description" content="Pedí online en Fast Food Posta. Las mejores Pizzas, Empanadas de Osobuco y sabores únicos con entrega rápida. ¡Tu pedido caliente en minutos!">
-    <link rel="canonical" href="https://fastfoodposta.com/" />
-
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1203043811209393');
-    fbq('track', 'PageView');
-    fbq('track', 'ViewContent');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1203043811209393&ev=PageView&noscript=1"
-    /></noscript>
+    
+    <!-- Scripts Externos -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
@@ -39,9 +21,6 @@
                         'tri-fondo': '#F8F9FA',
                         'tri-texto': '#1D3557',
                         'tri-verde': '#2A9D8F'
-                    },
-                    animation: {
-                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -49,79 +28,29 @@
     </script>
 
     <style>
-
-
-.modal-content { 
-    border-radius: 24px 24px 0 0; 
-    animation: slideUp 0.3s ease-out; 
-    width: 100%; 
-    max-width: 500px; /* Un poco más angosto mejora la estética */
-    margin: 0 auto;
-    background: white;
-}
-
-/* Evita que el teclado del móvil tape los inputs */
-@media (max-height: 600px) {
-    .modal-content {
-        height: 100vh;
-        border-radius: 0;
-    }
-}
-        
-        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
-        body.loading { overflow: hidden; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(29, 53, 87, 0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
-        .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.3s ease-out; width: 100%; max-width: 600px; margin: 0 auto; }
+        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; overflow-x: hidden; }
+        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; }
+        .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.3s ease-out; width: 100%; max-width: 500px; margin: 0 auto; background: white; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .swiper { width: 100%; height: 280px; border-radius: 24px; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.95) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
-        #loader.fade-out { opacity: 0; pointer-events: none; }
-        
-        .btn-disabled {
-            background-color: #94A3B8 !important;
-            cursor: not-allowed !important;
-            opacity: 0.6;
-            pointer-events: none !important;
-        }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.9) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
-
-<script>
-!function (w, d, t) {
-  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
-var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
-;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-  ttq.load('D5HA22JC77U2LQ3IN72G');
-  ttq.page();
-}(window, document, 'ttq');
-</script>
 </head>
-<body class="bg-tri-fondo loading">
 
+<body class="bg-tri-fondo">
+
+    <!-- Loader -->
     <div id="loader" class="fixed inset-0 z-[500] bg-tri-fondo flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="relative">
-            <div class="w-20 h-20 border-4 border-gray-200 border-t-tri-rojo rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center"><span class="text-2xl animate-pulse">▲</span></div>
-        </div>
-        <h2 class="mt-4 font-black italic text-tri-texto tracking-tighter uppercase">Cocinando <span class="text-tri-rojo">Fast Food</span> Posta...</h2>
+        <div class="w-16 h-16 border-4 border-gray-200 border-t-tri-rojo rounded-full animate-spin"></div>
+        <h2 class="mt-4 font-black uppercase italic text-tri-texto">Cargando Posta...</h2>
     </div>
 
-    <div id="tracking-screen" class="hidden fixed inset-0 z-[300] bg-white flex flex-col p-6 text-center">
-        <div class="mt-12">
-            <div class="inline-block p-4 bg-tri-amarillo/20 rounded-full mb-4">
-                <svg class="w-12 h-12 text-tri-amarillo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <h2 class="text-3xl font-black uppercase italic text-tri-rojo">¡Pedido en Marcha!</h2>
-            <div id="countdown" class="text-6xl font-black text-tri-texto my-4">25:00</div>
-            <p id="tracking-msg" class="font-bold text-gray-500 px-4">Estamos preparando tu pedido con la mejor onda.</p>
-        </div>
-        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Pedir más</button>
-    </div>
-
+    <!-- Header -->
     <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-black italic tracking-tighter"><span class="text-tri-rojo">▲</span> FAST FOOD <span class="text-tri-amarillo">POSTA</span></h1>
-            <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl">
+            <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl shadow-lg active:scale-90 transition-transform">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
             </button>
@@ -129,460 +58,211 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     </header>
 
     <main class="max-w-5xl mx-auto px-4 pt-24 pb-24">
-        <section class="mt-2" data-aos="zoom-in">
+        <!-- Slider Promos -->
+        <section data-aos="zoom-in">
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper" id="promo-slider-wrapper"></div>
                 <div class="swiper-pagination"></div>
             </div>
         </section>
 
+        <!-- Categorías y Productos -->
         <section class="mt-8">
             <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[68px] bg-tri-fondo/95 z-40"></div>
             <div id="product-grid" class="grid grid-cols-2 gap-3 mt-4"></div>
         </section>
-
-        <section class="mt-12 mb-8 px-4 border-t border-gray-200 pt-8 text-center" data-aos="fade-up">
-            <a href="info.html" onclick="fbq('track', 'Contact');" class="inline-flex items-center justify-center gap-3 bg-tri-texto text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest active:scale-95 transition-all shadow-xl border-b-4 border-tri-amarillo">
-                <svg class="w-6 h-6 text-tri-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                ¡Lanzá tu Startup!
-            </a>
-            <p class="text-[10px] text-gray-400 mt-8 font-bold uppercase tracking-widest italic">
-                © 2026 Fast Food Posta <br> 
-                <span class="text-tri-rojo">Sabor único en cada mordida</span>
-            </p>
-        </section>
     </main>
 
-    <!-- Cambia esta sección en tu código -->
-<div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
-    <!-- Quitamos h-[90vh] y usamos max-h para que respire -->
-    <div class="modal-content bg-white flex flex-col max-h-[95vh] overflow-hidden">
-        <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo flex-shrink-0">
-            <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido</h4>
-            <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
-        </div>
-        
-        <!-- Contenedor con Scroll para todo el contenido interno -->
-        <div class="overflow-y-auto p-4 space-y-6">
-            <!-- Lista de productos -->
-            <div id="cart-list" class="space-y-3 bg-gray-50 rounded-2xl p-2"></div>
-            
-            <!-- Formulario de datos -->
-<div class="space-y-4">
-    <!-- Desglose de Precios -->
-    <div class="bg-gray-50 p-3 rounded-2xl space-y-1">
-        <div class="flex justify-between text-sm font-bold text-gray-500 px-2">
-            <span>Subtotal</span>
-            <span id="cart-subtotal">$0</span>
-        </div>
-        <div class="flex justify-between text-sm font-bold text-tri-rojo px-2">
-            <span>Envío estimado</span>
-            <span id="shipping-cost">$0</span>
-        </div>
-        <div class="flex justify-between text-2xl font-black pt-2 border-t border-dashed border-gray-300 px-2">
-            <span>Total</span>
-            <span id="cart-total" class="text-tri-texto">$0</span>
-        </div>
-    </div>
-    
-    <div class="space-y-2">
-        <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
-        <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
-        
-        <!-- DIRECCIÓN CON BOTÓN DE UBICACIÓN -->
-        <div class="relative">
-            <input type="text" id="cust-addr" placeholder="Dirección de entrega" class="w-full p-4 pr-12 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
-            <button onclick="getLocation()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white shadow-sm p-2 rounded-lg text-lg hover:scale-110 active:scale-90 transition-all">
-                📍
-            </button>
-        </div>
-    </div>
-
-    <!-- SECCIÓN DE MÉTODOS DE PAGO RESTAURADA -->
-    <div class="space-y-2">
-        <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Método de Pago</p>
-        <div class="grid grid-cols-2 gap-2">
-            <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">
-                Mercado Pago
-            </button>
-            <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">
-                Transferencia
-            </button>
-        </div>
-
-        <!-- Info de Transferencia (Se muestra al clickear 'Transferencia') -->
-        <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl space-y-2 mt-2">
-            <div class="flex justify-between items-center">
-                <span class="text-[9px] uppercase font-black text-tri-amarillo italic">Alias para transferir:</span>
-                <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden">¡Copiado!</span>
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/80 backdrop-blur-sm flex items-end justify-center">
+        <div class="modal-content flex flex-col max-h-[95vh]">
+            <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
+                <h4 class="font-black italic text-tri-rojo uppercase">Tu Pedido</h4>
+                <button onclick="closeCheckoutModal()" class="text-xl p-2 bg-gray-100 rounded-full w-10 h-10">✕</button>
             </div>
-            <div class="flex items-center gap-2">
-                <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center text-sm">
-                <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-[10px] uppercase">
-                    Copiar
+            
+            <div class="overflow-y-auto p-4 space-y-4">
+                <div id="cart-list" class="space-y-2"></div>
+                
+                <!-- Totales -->
+                <div class="bg-gray-50 p-4 rounded-2xl space-y-2">
+                    <div class="flex justify-between font-bold text-gray-500"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
+                    <div class="flex justify-between font-bold text-tri-rojo"><span>Envío</span><span id="shipping-cost">$0</span></div>
+                    <div class="flex justify-between text-2xl font-black border-t border-dashed pt-2"><span>Total</span><span id="cart-total">$0</span></div>
+                </div>
+
+                <!-- Formulario -->
+                <div class="space-y-3">
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo">
+                    <div class="relative">
+                        <input type="text" id="cust-addr" placeholder="Dirección de entrega" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
+                        <button onclick="getLocation()" class="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white rounded-lg shadow-sm">📍</button>
+                    </div>
+                    
+                    <p class="text-[10px] font-black uppercase text-gray-400">Método de Pago</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 font-black text-[10px] uppercase transition-all">Mercado Pago</button>
+                        <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 font-black text-[10px] uppercase transition-all">Transferencia</button>
+                    </div>
+
+                    <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl text-center">
+                        <p class="text-[10px] font-black uppercase text-tri-amarillo">Alias: <span id="alias-val">fastfoodposta</span></p>
+                        <button onclick="copyAlias()" class="mt-2 text-[9px] bg-white/20 px-4 py-1 rounded-full uppercase">Copiar Alias</button>
+                    </div>
+                </div>
+
+                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition-transform">
+                    Confirmar Pedido vía WhatsApp
                 </button>
             </div>
-            <p class="text-[8px] text-gray-400 text-center uppercase font-bold mt-1">
-                Envía el comprobante por WhatsApp al finalizar
-            </p>
         </div>
     </div>
-</div>
-           
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+        // === CONFIGURACIÓN ===
+        const MI_WHATSAPP = "5493541214553";
+        const MI_ALIAS = "fastfoodposta";
+        const COSTO_ENVIO = 3000;
+        const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
 
-// Forzar el cierre del loader apenas cargue la estructura básica
-document.addEventListener('DOMContentLoaded', () => {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.style.display = 'none';
-        console.log("Pantalla liberada correctamente.");
-    }
-});
+        let cart = {};
+        let activeCategory = 'Todos';
+        let currentStock = [];
+        let selectedPayment = "MP";
+        let userCoords = "";
 
-        
-// === 1. LÓGICA PARA QUITAR EL LOADER (Solución a image_cc535a.png) ===
-window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.style.display = 'none';
-    }
-});
+        const products = [
+            { id: 901, name: 'Promo 6 Empanadas', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
+            { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
+            { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
+            { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' }
+        ];
 
-// === 2. VARIABLES GLOBALES ===
-let selectedPayment = "MP"; 
-let userCoords = ""; 
-
-// === 3. FUNCIONES DE PAGO ===
-function finalAction() {
-    const nombre = document.getElementById('cust-name').value;
-    const direccion = document.getElementById('cust-addr').value;
-    const total = document.getElementById('cart-total').innerText;
-    
-    // Validación de datos básicos
-    if (!nombre || !direccion) {
-        alert("Por favor, completa tu nombre y dirección para continuar.");
-        return;
-    }
-
-    // Obtener productos (asegúrate de tener esta función en tu script principal)
-    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar detalle en el local";
-
-    // Preparar el mensaje de WhatsApp
-    let direccionFinal = direccion;
-    if (userCoords !== "") {
-        direccionFinal += `%0A📍 Ubicación GPS: ${userCoords}`;
-    }
-
-    const mensaje = `*PEDIDO NUEVO - FASTFOOD POSTA*%0A` +
-                    `----------------------------%0A` +
-                    `*Cliente:* ${nombre}%0A` +
-                    `*Dirección:* ${direccionFinal}%0A` +
-                    `*Método de Pago:* ${selectedPayment}%0A` +
-                    `----------------------------%0A` +
-                    `*Productos:*%0A${productos}%0A` +
-                    `----------------------------%0A` +
-                    `*TOTAL:* ${total}`;
-
-    const nroWhatsApp = "5493541214553"; // Tu número real
-
-    // === LÓGICA DE FLUJO POR MÉTODO DE PAGO ===
-
-    if (selectedPayment === 'MP') {
-        // 1. Link de Mercado Pago (Reemplaza con tu link real)
-        const linkMP = "link.mercadopago.com.ar/fastfootposta";
-        
-        // Abrimos el pago en una pestaña nueva
-        window.open(linkMP, '_blank');
-        
-        // 2. Avisamos al usuario que envíe el comprobante al volver
-        alert("Te redirigimos a Mercado Pago. Al finalizar, envianos el comprobante por WhatsApp para confirmar tu pedido.");
-        
-        // 3. Abrimos el WhatsApp con los detalles del pedido
-        setTimeout(() => {
-            window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
-        }, 2000);
-
-    } else {
-        // FLUJO TRANSFERENCIA
-        // 1. Mostrar mensaje de tiempo de entrega (Personalizalo según tu local)
-        alert("¡Pedido recibido! Tiempo estimado de entrega: 30-45 min. Ahora te redirigimos al WhatsApp para que nos envíes el comprobante de transferencia.");
-        
-        // 2. Enviar directo al WhatsApp con los detalles y el alias (que ya está en el mensaje)
-        window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
-    }
-}
-// === 4. GEOLOCALIZACIÓN ===
-function getLocation() {
-    const btn = event.currentTarget;
-    btn.innerText = "⏳"; 
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                userCoords = `https://www.google.com/maps?q=${lat},${lng}`;
-                
-                const addrInput = document.getElementById('cust-addr');
-                if(addrInput) addrInput.value = "📍 Ubicación capturada vía GPS";
-                
-                btn.innerText = "✅";
-                setTimeout(() => { btn.innerText = "📍"; }, 3000);
-            },
-            (error) => {
-                btn.innerText = "📍";
-                alert("Error: Activá el GPS y permití el acceso en el navegador.");
-            },
-            { enableHighAccuracy: true }
-        );
-    } else {
-        alert("Tu navegador no soporta geolocalización.");
-    }
-}
-
-// === 5. ENVÍO WHATSAPP ===
-function finalAction() {
-    const nombre = document.getElementById('cust-name').value;
-    const direccion = document.getElementById('cust-addr').value;
-    const total = document.getElementById('cart-total').innerText;
-    
-    // Evitamos que el script se rompa si no existe la función del carrito
-    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar pedido en local";
-
-    if (!nombre || !direccion) {
-        alert("Completá tu nombre y dirección para el delivery.");
-        return;
-    }
-
-    let direccionFinal = direccion;
-    if (userCoords !== "") {
-        direccionFinal += `%0A📍 Link Mapa: ${userCoords}`;
-    }
-
-    const mensaje = `*PEDIDO NUEVO - FASTFOOD POSTA*%0A` +
-                    `----------------------------%0A` +
-                    `*Cliente:* ${nombre}%0A` +
-                    `*Dirección:* ${direccionFinal}%0A` +
-                    `*Pago:* ${selectedPayment}%0A` +
-                    `----------------------------%0A` +
-                    `*Productos:*%0A${productos}%0A` +
-                    `----------------------------%0A` +
-                    `*TOTAL:* ${total}`;
-    
-    const nroWhatsApp = "5493541214553"; // Poné tu número real acá
-    window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
-}
-
-// === 1. VARIABLES GLOBALES Y CONFIGURACIÓN ===
-const MI_WHATSAPP = "5493541214553";
-const MI_ALIAS = "fastfoodposta";
-const COSTO_ENVIO = 3000;
-const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
-
-let cart = {};
-let activeCategory = 'Todos';
-let currentStock = [];
-let selectedPayment = "MP"; 
-let userCoords = ""; 
-
-const products = [
-    { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
-    { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
-    { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
-    { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
-    { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
-    { id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
-    { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
-    { id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
-    { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
-    { id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
-    { id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
-    { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
-    { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
-    { id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
-    { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
-];
-
-// === 2. INICIO Y CONTROL DEL LOADER ===
-function hideLoader() {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            document.body.classList.remove('loading');
-        }, 500);
-    }
-}
-
-window.addEventListener('load', () => {
-    // Inicialización de componentes
-    if (typeof AOS !== 'undefined') AOS.init();
-    renderSlider();
-    render();
-    fetchStock();
-    hideLoader();
-    // Seguro de vida: si algo falla, el loader se va a los 3 segundos
-    setTimeout(hideLoader, 3000);
-});
-
-// === 3. FUNCIONES DEL NÚCLEO ===
-async function fetchStock() {
-    try {
-        const res = await fetch(URL_API);
-        const data = await res.json();
-        if(data) currentStock = data;
-        render();
-    } catch (e) { console.warn("Stock local activado por error de API."); }
-}
-
-function renderSlider() {
-    const promos = products.filter(p => p.category === 'Promos');
-    const wrapper = document.getElementById('promo-slider-wrapper');
-    if(!wrapper) return;
-
-    wrapper.innerHTML = promos.map(p => `
-        <div class="swiper-slide relative">
-            <img src="${p.img}" class="w-full h-full object-cover">
-            <div class="slide-overlay">
-                <div class="bg-tri-rojo text-white text-[10px] font-black px-2 py-1 rounded-md mb-2 w-fit uppercase italic animate-pulse">Oferta de Hoy</div>
-                <h4 class="text-white font-black text-2xl uppercase italic leading-none">${p.name}</h4>
-                <div class="flex justify-between items-center mt-3">
-                    <span class="bg-tri-amarillo text-tri-texto px-3 py-1 rounded-full font-black text-lg">$${p.price.toLocaleString()}</span>
-                    <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs">¡Pedir!</button>
-                </div>
-            </div>
-        </div>`).join('');
-    
-    new Swiper(".mySwiper", { 
-        loop: true, 
-        autoplay: { delay: 4000 }, 
-        pagination: { el: ".swiper-pagination", clickable: true } 
-    });
-}
-
-function render() {
-    const grid = document.getElementById('product-grid');
-    const tabs = document.getElementById('category-tabs');
-    if(!grid || !tabs) return;
-
-    const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
-    tabs.innerHTML = cats.map(c => `
-        <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
-            ${c}
-        </button>`).join('');
-
-    const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
-    grid.innerHTML = filtered.map(p => {
-        const s = currentStock.find(stock => stock.sabor === p.name);
-        const disponible = s ? s.stock : 99;
-        const agotado = disponible <= 0;
-        const qty = cart[p.id] || 0;
-
-        let actionButton = agotado ? 
-            `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300">Agotado</button>` : 
-            (qty > 0 ? 
-                `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black">-</button><span class="font-black text-xs">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black">+</button></div>` : 
-                `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo">Añadir</button>`);
-
-        return `<div class="food-card ${agotado ? 'opacity-60' : ''}"><div class="relative aspect-square"><img src="${p.img}" class="h-full w-full object-cover"></div><div class="p-3 text-center"><h3 class="font-black text-[11px] uppercase">${p.name}</h3><p class="text-tri-rojo font-black">$${p.price.toLocaleString()}</p>${actionButton}</div></div>`;
-    }).join('');
-}
-
-// === 4. ACCIONES DEL CARRITO ===
-window.filterCategory = (cat) => { activeCategory = cat; render(); };
-window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
-window.changeQty = (id, n) => { cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
-
-function updateUI() {
-    const count = Object.values(cart).reduce((a, b) => a + b, 0);
-    const badge = document.getElementById('cart-count');
-    if(badge) {
-        badge.innerText = count;
-        badge.classList.toggle('hidden', count === 0);
-    }
-
-    let subtotal = 0;
-    let cartHTML = '';
-    Object.entries(cart).forEach(([id, q]) => {
-        const item = products.find(x => x.id == id);
-        subtotal += item.price * q;
-        cartHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl mb-2 shadow-sm">
-            <span class="text-[10px] font-black uppercase">${item.name}</span>
-            <span class="font-black text-tri-rojo">$${(item.price * q).toLocaleString()}</span>
-        </div>`;
-    });
-
-    document.getElementById('cart-list').innerHTML = cartHTML;
-    document.getElementById('cart-subtotal').innerText = `$${subtotal.toLocaleString()}`;
-    document.getElementById('shipping-cost').innerText = count > 0 ? `$${COSTO_ENVIO.toLocaleString()}` : "$0";
-    document.getElementById('cart-total').innerText = `$${(subtotal + (count > 0 ? COSTO_ENVIO : 0)).toLocaleString()}`;
-    render();
-}
-
-// === 5. FINALIZAR Y UTILIDADES ===
-function obtenerResumenCarrito() {
-    return Object.entries(cart).map(([id, qty]) => {
-        const p = products.find(x => x.id == id);
-        return `• ${qty}x ${p.name}`;
-    }).join('%0A');
-}
-
-window.finalAction = () => {
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
-    const addr = document.getElementById('cust-addr').value;
-    const total = document.getElementById('cart-total').innerText;
-
-    if(!name || !addr) {
-        alert("Por favor completá tu nombre y dirección.");
-        return;
-    }
-
-    const productos = obtenerResumenCarrito();
-    let direccionFinal = addr;
-    if (userCoords !== "") direccionFinal += `%0A📍 GPS: ${userCoords}`;
-
-    const mensaje = `*PEDIDO NUEVO*%0A*Cliente:* ${name}%0A*Dirección:* ${direccionFinal}%0A*Pago:* ${selectedPayment}%0A----------------%0A${productos}%0A----------------%0A*TOTAL:* ${total}`;
-
-    if (selectedPayment === 'MP') {
-        window.open("https://link.mercadopago.com.ar/fastfoodposta", '_blank');
-        setTimeout(() => { window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank'); }, 2500);
-    } else {
-        window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
-    }
-};
-
-window.setPayment = (type) => {
-    selectedPayment = type;
-    document.getElementById('transfer-info').classList.toggle('hidden', type !== 'TRANSF');
-    document.getElementById('btn-mp').style.opacity = type === 'MP' ? '1' : '0.5';
-    document.getElementById('btn-transf').style.opacity = type === 'TRANSF' ? '1' : '0.5';
-};
-
-window.getLocation = () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            userCoords = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
-            document.getElementById('cust-addr').value = "📍 Ubicación capturada";
+        // === INICIO ===
+        window.addEventListener('load', () => {
+            if (typeof AOS !== 'undefined') AOS.init();
+            renderSlider();
+            render();
+            fetchStock();
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1000);
         });
-    }
-};
 
-window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
-window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
-window.copyAlias = () => { 
-    navigator.clipboard.writeText(MI_ALIAS); 
-    const status = document.getElementById('copy-status');
-    status.classList.remove('hidden');
-    setTimeout(() => status.classList.add('hidden'), 2000);
-};
-</script>
-    </body>
+        // === FUNCIONES NÚCLEO ===
+        async function fetchStock() {
+            try {
+                const res = await fetch(URL_API);
+                currentStock = await res.json();
+                render();
+            } catch (e) { console.warn("Usando stock local."); }
+        }
+
+        function renderSlider() {
+            const wrapper = document.getElementById('promo-slider-wrapper');
+            const promos = products.filter(p => p.category === 'Promos');
+            wrapper.innerHTML = promos.map(p => `
+                <div class="swiper-slide relative">
+                    <img src="${p.img}" class="w-full h-full object-cover">
+                    <div class="slide-overlay">
+                        <h4 class="text-white font-black text-2xl uppercase italic">${p.name}</h4>
+                        <button onclick="addToCart(event, ${p.id})" class="mt-2 bg-tri-amarillo px-6 py-2 rounded-xl font-black uppercase text-xs w-fit">¡Pedir!</button>
+                    </div>
+                </div>`).join('');
+            new Swiper(".mySwiper", { loop: true, autoplay: { delay: 3000 }, pagination: { el: ".swiper-pagination" } });
+        }
+
+        function render() {
+            const grid = document.getElementById('product-grid');
+            const tabs = document.getElementById('category-tabs');
+            const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
+            
+            tabs.innerHTML = cats.map(c => `<button onclick="filterCategory('${c}')" class="px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">${c}</button>`).join('');
+
+            const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
+            grid.innerHTML = filtered.map(p => {
+                const qty = cart[p.id] || 0;
+                const btn = qty > 0 ? 
+                    `<div class="flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden"><button onclick="changeQty(${p.id},-1)" class="p-2 font-black">-</button><span class="font-black">${qty}</span><button onclick="changeQty(${p.id},1)" class="p-2 font-black">+</button></div>` :
+                    `<button onclick="addToCart(event, ${p.id})" class="w-full py-2 bg-tri-amarillo rounded-xl font-black text-[10px] uppercase">Añadir</button>`;
+                return `<div class="food-card p-2 text-center"><img src="${p.img}" class="h-32 w-full object-cover rounded-xl mb-2"><h3 class="font-black text-[10px] uppercase truncate">${p.name}</h3><p class="text-tri-rojo font-black text-sm mb-2">$${p.price.toLocaleString()}</p>${btn}</div>`;
+            }).join('');
+        }
+
+        // === CARRITO ===
+        window.filterCategory = (cat) => { activeCategory = cat; render(); };
+        window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
+        window.changeQty = (id, n) => { cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
+
+        function updateUI() {
+            const count = Object.values(cart).reduce((a, b) => a + b, 0);
+            const badge = document.getElementById('cart-count');
+            badge.innerText = count;
+            badge.classList.toggle('hidden', count === 0);
+
+            let subtotal = 0;
+            let cartHTML = '';
+            Object.entries(cart).forEach(([id, q]) => {
+                const item = products.find(x => x.id == id);
+                subtotal += item.price * q;
+                cartHTML += `<div class="flex justify-between bg-gray-50 p-3 rounded-xl"><span class="text-xs font-black uppercase">${q}x ${item.name}</span><span class="font-black">$${(item.price*q).toLocaleString()}</span></div>`;
+            });
+
+            document.getElementById('cart-list').innerHTML = cartHTML;
+            document.getElementById('cart-subtotal').innerText = `$${subtotal.toLocaleString()}`;
+            document.getElementById('shipping-cost').innerText = count > 0 ? `$${COSTO_ENVIO.toLocaleString()}` : "$0";
+            document.getElementById('cart-total').innerText = `$${(subtotal + (count > 0 ? COSTO_ENVIO : 0)).toLocaleString()}`;
+            render();
+        }
+
+        // === ACCIONES FINALES ===
+        window.setPayment = (type) => {
+            selectedPayment = type;
+            document.getElementById('transfer-info').classList.toggle('hidden', type !== 'TRANSF');
+            document.getElementById('btn-mp').classList.toggle('opacity-100', type === 'MP');
+            document.getElementById('btn-mp').classList.toggle('opacity-50', type !== 'MP');
+            document.getElementById('btn-transf').classList.toggle('opacity-100', type === 'TRANSF');
+            document.getElementById('btn-transf').classList.toggle('opacity-50', type !== 'TRANSF');
+        };
+
+        window.getLocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    userCoords = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                    document.getElementById('cust-addr').value = "📍 Ubicación capturada";
+                });
+            }
+        };
+
+        window.finalAction = () => {
+            const name = document.getElementById('cust-name').value;
+            const addr = document.getElementById('cust-addr').value;
+            if(!name || !addr) return alert("Faltan datos");
+
+            const items = Object.entries(cart).map(([id, q]) => {
+                const p = products.find(x => x.id == id);
+                return `• ${q}x ${p.name}`;
+            }).join('%0A');
+
+            const msg = `*PEDIDO NUEVO*%0A*Cliente:* ${name}%0A*Dirección:* ${addr}${userCoords ? '%0A📍 GPS: '+userCoords : ''}%0A*Pago:* ${selectedPayment}%0A*Detalle:*%0A${items}%0A*TOTAL:* ${document.getElementById('cart-total').innerText}`;
+
+            if(selectedPayment === 'MP') {
+                window.open("https://link.mercadopago.com.ar/fastfoodposta", "_blank");
+                setTimeout(() => window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`, "_blank"), 2000);
+            } else {
+                window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`, "_blank");
+            }
+        };
+
+        window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+        window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
+        window.copyAlias = () => { navigator.clipboard.writeText(MI_ALIAS); alert("Alias copiado"); };
+    </script>
+</body>
 </html>
