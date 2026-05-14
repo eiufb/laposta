@@ -10,8 +10,18 @@
             --tri-rojo: #E63946; --tri-amarillo: #FFB703; --tri-fondo: #F8F9FA; 
             --tri-texto: #1D3557; --tri-verde: #2A9D8F; --white: #ffffff;
         }
-        body { font-family: 'Outfit', sans-serif; background: var(--tri-fondo); color: var(--tri-texto); margin: 0; padding-bottom: 100px; }
-        
+        <body id="admin-body" style="display: none;"> <!-- Oculto por defecto -->
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen" style="position: fixed; inset: 0; background: var(--tri-texto); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div class="card" style="width: 100%; max-width: 350px; text-align: center;">
+            <h2 style="margin-top: 0;">ADMIN <span style="color:var(--tri-rojo)">SR</span></h2>
+            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Ingresa la clave de tu comercio</p>
+            <input type="password" id="admin-pass" placeholder="Clave de acceso" style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-main" onclick="validarAcceso()">Entrar al Panel</button>
+            <div id="login-error" style="color: var(--tri-rojo); font-size: 11px; margin-top: 10px; font-weight: 900; display: none;">CLAVE INCORRECTA</div>
+        </div>
+    </div>
         .time-nav { background: var(--tri-texto); padding: 10px; display: flex; gap: 5px; position: sticky; top: 0; z-index: 200; }
         .time-btn { flex: 1; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; padding: 8px; border-radius: 10px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer; }
         .time-btn.active { background: var(--tri-amarillo); color: var(--tri-texto); border: none; }
