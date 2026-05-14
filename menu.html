@@ -61,6 +61,38 @@
             // Aquí podrías poner el número real del cliente que tengas en la DB
             window.open(`https://wa.me/5493541000000?text=${mensaje}`, '_blank');
         }
+
+// === CONFIGURACIÓN DINÁMICA ===
+const urlParams = new URLSearchParams(window.location.search);
+const COMERCIO_ID = urlParams.get('id') || "fastfoodposta"; // Detecta al cliente
+const DB_KEY = `SR_DATA_${COMERCIO_ID}`; // Busca su "cajón" de datos
+
+// Cargamos los datos que el dueño del local guardó en el panel
+const localData = JSON.parse(localStorage.getItem(DB_KEY)) || { 
+    productos: [], 
+    whatsapp: "5493541214553", // Default si no hay datos
+    alias: "fastfoodposta" 
+};
+
+// Reemplazamos tus constantes fijas por las del cliente actual
+const MI_WHATSAPP = localData.whatsapp;
+const MI_ALIAS = localData.alias;
+const products = localData.productos.length > 0 ? localData.productos : [
+    { id: 901, name: 'Cargando menú...', price: 0, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' }
+];
+
+// Actualizamos el nombre en el Header automáticamente
+document.addEventListener('DOMContentLoaded', () => {
+    const titulo = document.querySelector('header h1');
+    const nombreLimpio = COMERCIO_ID.replace(/_/g, ' ').toUpperCase();
+    titulo.innerHTML = `<span class="text-tri-rojo">▲</span> ${nombreLimpio}`;
+    
+    // Actualizar también el Alias en el modal
+    document.getElementById('alias-val').innerText = MI_ALIAS;
+});
+
+
+        
     </script>
 </body>
 </html>
