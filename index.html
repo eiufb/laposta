@@ -381,203 +381,194 @@ function finalAction() {
 
 
         
-        const MI_WHATSAPP = "5493541214553";
-        const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
-        const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
-        const MI_ALIAS = "fastfoodposta";
-        const COSTO_ENVIO = 3000;
-        let selectedPayment = 'MP';
+       // === 1. VARIABLES GLOBALES Y CONFIGURACIÓN ===
+const MI_WHATSAPP = "5493541214553";
+const MI_ALIAS = "fastfoodposta";
+const COSTO_ENVIO = 3000;
+const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
 
-        const products = [
-            { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
-            { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
-            { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
-            { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
-            { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
-            { id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
-            { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
-            { id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
-            { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
-            { id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
-            { id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
-            { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
-            { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
-            { id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
-            { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
-        ];
+let cart = {};
+let activeCategory = 'Todos';
+let currentStock = [];
+let selectedPayment = "MP"; 
+let userCoords = ""; 
 
-        let cart = {};
-        let activeCategory = 'Todos';
-        let currentStock = [];
+const products = [
+    { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
+    { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
+    { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
+    { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
+    { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
+    { id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
+    { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
+    { id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
+    { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
+    { id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
+    { id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
+    { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
+    { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
+    { id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
+    { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
+];
 
-        function validarOperativa() {
-            const ahora = new Date();
-            const hora = ahora.getHours();
-            const btn = document.getElementById('final-order-btn');
-            const estaAbierto = (hora >= 12 && hora < 24);
-            if (btn) {
-                if (!estaAbierto) {
-                    btn.innerText = "CERRADO - VOLVEMOS A LAS 12:00 PM";
-                    btn.classList.add('btn-disabled');
-                } else {
-                    btn.innerText = "CONFIRMAR PEDIDO";
-                    btn.classList.remove('btn-disabled');
-                }
-            }
-        }
+// === 2. GESTIÓN DEL LOADER (SOLUCIÓN AL BLOQUEO) ===
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+        document.body.classList.remove('loading');
+    }
+}
 
-        function startTimer(durationInMinutes, display) {
-            let timer = durationInMinutes * 60, minutes, seconds;
-            const interval = setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-                display.textContent = minutes + ":" + seconds;
-                if (--timer < 0) { clearInterval(interval); display.textContent = "00:00"; }
-            }, 1000);
-        }
+window.addEventListener('load', () => {
+    hideLoader();
+    renderSlider();
+    render();
+    fetchStock();
+    // Liberar después de 3 segundos por si algo falla
+    setTimeout(hideLoader, 3000); 
+});
 
-        async function fetchStock() {
-            try {
-                const res = await fetch(URL_API);
-                const data = await res.json();
-                if(data) currentStock = data;
-                render(); // Re-renderiza cuando llega el stock real
-            } catch (e) { console.error("Error stock:", e); }
-        }
+// === 3. FUNCIONES DE LÓGICA DE NEGOCIO ===
 
-        function renderSlider() {
-            const promos = products.filter(p => p.category === 'Promos');
-            document.getElementById('promo-slider-wrapper').innerHTML = promos.map(p => `
-                <div class="swiper-slide relative">
-                    <img src="${p.img}" class="w-full h-full object-cover">
-                    <div class="slide-overlay">
-                        <div class="bg-tri-rojo text-white text-[10px] font-black px-2 py-1 rounded-md mb-2 w-fit uppercase italic animate-pulse">Oferta de Hoy</div>
-                        <h4 class="text-white font-black text-2xl uppercase italic drop-shadow-md leading-none">${p.name}</h4>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="bg-tri-amarillo text-tri-texto px-3 py-1 rounded-full font-black text-lg shadow-lg">$${p.price.toLocaleString()}</span>
-                            <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs shadow-md active:scale-95 transition-all">¡Pedir Ahora!</button>
-                        </div>
-                    </div>
-                </div>`).join('');
-            new Swiper(".mySwiper", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-pagination", clickable: true } });
-        }
+function obtenerResumenCarrito() {
+    return Object.entries(cart).map(([id, qty]) => {
+        const p = products.find(x => x.id == id);
+        return `• ${qty}x ${p.name}`;
+    }).join('%0A');
+}
 
-        function render() {
-            const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
-            document.getElementById('category-tabs').innerHTML = cats.map(c => `
-                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
-                    ${c}
-                </button>`).join('');
+async function fetchStock() {
+    try {
+        const res = await fetch(URL_API);
+        const data = await res.json();
+        if(data) currentStock = data;
+        render();
+    } catch (e) { console.warn("Usando stock por defecto."); }
+}
 
-            const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
-            document.getElementById('product-grid').innerHTML = filtered.map(p => {
-                const s = currentStock.find(stock => stock.sabor === p.name);
-                const disponible = s ? s.stock : 99;
-                const agotado = disponible <= 0;
-                const qty = cart[p.id] || 0;
-                let actionButton = agotado ? `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300 text-gray-500">Sin Stock</button>` : 
-                                   (qty > 0 ? `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto">-</button><span class="font-black text-xs text-tri-texto">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto">+</button></div>` : 
-                                   `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform">Añadir</button>`);
+function renderSlider() {
+    const promos = products.filter(p => p.category === 'Promos');
+    const wrapper = document.getElementById('promo-slider-wrapper');
+    if(!wrapper) return;
+    wrapper.innerHTML = promos.map(p => `
+        <div class="swiper-slide relative">
+            <img src="${p.img}" class="w-full h-full object-cover">
+            <div class="slide-overlay">
+                <div class="bg-tri-rojo text-white text-[10px] font-black px-2 py-1 rounded-md mb-2 w-fit uppercase italic animate-pulse">Oferta de Hoy</div>
+                <h4 class="text-white font-black text-2xl uppercase italic leading-none">${p.name}</h4>
+                <div class="flex justify-between items-center mt-3">
+                    <span class="bg-tri-amarillo text-tri-texto px-3 py-1 rounded-full font-black text-lg">$${p.price.toLocaleString()}</span>
+                    <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs">¡Pedir!</button>
+                </div>
+            </div>
+        </div>`).join('');
+    new Swiper(".mySwiper", { loop: true, autoplay: { delay: 4000 }, pagination: { el: ".swiper-pagination", clickable: true } });
+}
 
-                return `<div class="food-card ${agotado ? 'opacity-60' : ''}" data-aos="fade-up"><div class="relative aspect-square"><img src="${p.img}" class="h-full w-full object-cover ${agotado ? 'grayscale' : ''}">${agotado ? '<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-black text-xs uppercase italic">Agotado</span>' : ''}</div><div class="p-3 flex flex-col flex-grow text-center"><h3 class="font-black text-[11px] h-8 overflow-hidden uppercase leading-tight">${p.name}</h3><p class="text-tri-rojo font-black text-lg mt-1">$${p.price.toLocaleString()}</p>${actionButton}</div></div>`;
-            }).join('');
-        }
+function render() {
+    const grid = document.getElementById('product-grid');
+    if(!grid) return;
+    
+    // Render Tabs
+    const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
+    document.getElementById('category-tabs').innerHTML = cats.map(c => `
+        <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
+            ${c}
+        </button>`).join('');
 
-        function updateUI() {
-            const count = Object.values(cart).reduce((a, b) => a + b, 0);
-            const badge = document.getElementById('cart-count');
-            badge.innerText = count;
-            badge.classList.toggle('hidden', count === 0);
-            let subtotal = 0;
-            let cartHTML = '';
-            Object.entries(cart).forEach(([id, q]) => {
-                const item = products.find(x => x.id == id);
-                subtotal += item.price * q;
-                cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><div class="min-w-0 pr-2"><p class="font-black text-xs truncate uppercase">${item.name}</p><p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p></div><div class="flex items-center gap-2"><button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg font-black">-</button><span class="font-black text-base w-4 text-center">${q}</span><button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button></div></div>`;
-            });
-            if (count > 0) { subtotal += COSTO_ENVIO; cartHTML += `<div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo"><div class="flex items-center gap-3"><span class="text-xl">🛵</span><p class="font-black text-xs uppercase">Envío a Domicilio</p></div><p class="font-black text-tri-texto">$${COSTO_ENVIO.toLocaleString()}</p></div>`; }
-            document.getElementById('cart-list').innerHTML = cartHTML;
-            document.getElementById('cart-total').innerText = `$${subtotal.toLocaleString()}`;
-            render();
-            validarOperativa();
-        }
+    const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
+    grid.innerHTML = filtered.map(p => {
+        const s = currentStock.find(stock => stock.sabor === p.name);
+        const disponible = s ? s.stock : 99;
+        const agotado = disponible <= 0;
+        const qty = cart[p.id] || 0;
 
-        window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); fbq('track', 'Search', {search_string: cat}); };
-        window.addToCart = (e, id) => {
-            const item = products.find(p => p.id === id);
-            const s = currentStock.find(stock => stock.sabor === item.name);
-            const max = s ? s.stock : 99;
-            if ((cart[id] || 0) < max) { cart[id] = (cart[id] || 0) + 1; updateUI(); fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'ARS'}); }
-            else { alert("Máximo stock disponible alcanzado."); }
-        };
-        window.changeQty = (id, n) => {
-            const item = products.find(p => p.id === id);
-            const s = currentStock.find(stock => stock.sabor === item.name);
-            const max = s ? s.stock : 99;
-            if (n > 0 && (cart[id] || 0) >= max) return alert("Máximo disponible");
-            cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); 
-        };
-        window.openCheckoutModal = () => { document.getElementById('checkout-modal').classList.remove('hidden'); validarOperativa(); fbq('track', 'InitiateCheckout'); }
-        window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
-        window.setPayment = (type) => {
-            selectedPayment = type;
-            const info = document.getElementById('transfer-info'), btnMp = document.getElementById('btn-mp'), btnTr = document.getElementById('btn-transf');
-            fbq('track', 'AddPaymentInfo');
-            if(type === 'TRANSF') { info.classList.remove('hidden'); btnTr.classList.replace('opacity-60', 'opacity-100'); btnTr.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10'); btnMp.classList.add('opacity-60'); btnMp.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10'); }
-            else { info.classList.add('hidden'); btnMp.classList.replace('opacity-60', 'opacity-100'); btnMp.classList.add('border-tri-amarillo', 'bg-tri-amarillo/10'); btnTr.classList.add('opacity-60'); btnTr.classList.remove('border-tri-amarillo', 'bg-tri-amarillo/10'); }
-        };
-        window.copyAlias = () => { navigator.clipboard.writeText(MI_ALIAS); const status = document.getElementById('copy-status'); status.classList.remove('hidden'); setTimeout(() => status.classList.add('hidden'), 2000); };
+        let actionButton = agotado ? `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300">Agotado</button>` : 
+            (qty > 0 ? `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black">-</button><span class="font-black">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black">+</button></div>` : 
+            `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo">Añadir</button>`);
 
-        async function finalizarPedido(carrito, total) {
-            try { await fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "PROCESS_SALE", items: carrito.map(i => `${i.qty}x ${i.name}`).join(", "), total: total, cart: carrito }) }); } catch(e){}
-        }
+        return `<div class="food-card ${agotado ? 'opacity-60' : ''}"><div class="relative aspect-square"><img src="${p.img}" class="h-full w-full object-cover"></div><div class="p-3 text-center"><h3 class="font-black text-[11px] uppercase">${p.name}</h3><p class="text-tri-rojo font-black">$${p.price.toLocaleString()}</p>${actionButton}</div></div>`;
+    }).join('');
+}
 
-        window.finalAction = async () => {
-            const name = document.getElementById('cust-name').value, phone = document.getElementById('cust-phone').value, addr = document.getElementById('cust-addr').value, totalStr = document.getElementById('cart-total').innerText, totalNum = parseFloat(totalStr.replace('$', '').replace('.', ''));
-            if(!name || !phone || !addr || Object.keys(cart).length === 0) return alert("Por favor completa tus datos y añade productos.");
-            const itemsDetalle = Object.entries(cart).map(([id, q]) => { const item = products.find(x => x.id == id); return { cat: item.category, name: item.name, qty: q, price: item.price }; });
-            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n'), pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
-            if (selectedPayment === 'MP') { localStorage.setItem('pending_order', JSON.stringify(pedido)); fbq('track', 'Lead', {content_name: name}); window.location.href = MI_LINK_PAGO_BASE; }
-            else { 
-                fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
-                await finalizarPedido(itemsDetalle, totalNum);
-                const msg = `*▲ NUEVO PEDIDO (TRANSF)*\n*Cliente:* ${name}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*TOTAL:* ${totalStr}`;
-                window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                document.getElementById('tracking-screen').classList.remove('hidden'); startTimer(25, document.getElementById('countdown')); cart = {}; updateUI(); closeCheckoutModal();
-            }
-        };
+// === 4. ACCIONES DEL CARRITO ===
+window.filterCategory = (cat) => { activeCategory = cat; render(); };
+window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
+window.changeQty = (id, n) => { cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
 
-        window.onload = () => {
-            renderSlider();
-            render(); // Render inicial con datos locales
-            fetchStock(); // Carga el stock en segundo plano
-            AOS.init();
-            validarOperativa();
-            setInterval(validarOperativa, 30000);
-            
-            // Lógica de retorno de Mercado Pago
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('status') === 'approved') {
-                const data = JSON.parse(localStorage.getItem('pending_order'));
-                if(data) {
-                    finalizarPedido(data.carrito, parseFloat(data.t.replace('$', '').replace('.', '')));
-                    document.getElementById('tracking-screen').classList.remove('hidden');
-                    startTimer(25, document.getElementById('countdown'));
-                    localStorage.removeItem('pending_order');
-                }
-            }
-            
-            // Quitar el loader pase lo que pase
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('fade-out');
-                document.body.classList.remove('loading');
-            }, 800);
-        };
-    </script>
+function updateUI() {
+    const count = Object.values(cart).reduce((a, b) => a + b, 0);
+    const badge = document.getElementById('cart-count');
+    badge.innerText = count;
+    badge.classList.toggle('hidden', count === 0);
 
-    <a href="https://wa.me/3541272207?text=Hola%20Fast%20Food%20Posta!" class="whatsapp-btn" target="_blank">
+    let subtotal = 0;
+    let cartHTML = '';
+    Object.entries(cart).forEach(([id, q]) => {
+        const item = products.find(x => x.id == id);
+        subtotal += item.price * q;
+        cartHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl mb-2 shadow-sm">
+            <span class="text-[10px] font-black uppercase">${item.name}</span>
+            <span class="font-black text-tri-rojo">$${(item.price * q).toLocaleString()}</span>
+        </div>`;
+    });
+
+    document.getElementById('cart-list').innerHTML = cartHTML;
+    document.getElementById('cart-subtotal').innerText = `$${subtotal.toLocaleString()}`;
+    document.getElementById('shipping-cost').innerText = count > 0 ? `$${COSTO_ENVIO.toLocaleString()}` : "$0";
+    document.getElementById('cart-total').innerText = `$${(subtotal + (count > 0 ? COSTO_ENVIO : 0)).toLocaleString()}`;
+    render();
+}
+
+// === 5. FINALIZAR COMPRA (ESTA ES LA ÚNICA QUE VALE) ===
+window.finalAction = () => {
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+    const addr = document.getElementById('cust-addr').value;
+    const total = document.getElementById('cart-total').innerText;
+
+    if(!name || !phone || !addr) {
+        alert("Por favor completá todos los datos.");
+        return;
+    }
+
+    const productos = obtenerResumenCarrito();
+    let direccionFinal = addr;
+    if (userCoords !== "") { direccionFinal += `%0A📍 Ubicación: ${userCoords}`; }
+
+    const mensaje = `*PEDIDO NUEVO*%0A*Cliente:* ${name}%0A*Tel:* ${phone}%0A*Dirección:* ${direccionFinal}%0A*Pago:* ${selectedPayment}%0A----------------%0A${productos}%0A----------------%0A*TOTAL:* ${total}`;
+
+    if (selectedPayment === 'MP') {
+        window.open("https://link.mercadopago.com.ar/fastfoodposta", '_blank');
+        setTimeout(() => { window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank'); }, 2500);
+    } else {
+        window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
+    }
+};
+
+window.setPayment = (type) => {
+    selectedPayment = type;
+    document.getElementById('transfer-info').classList.toggle('hidden', type !== 'TRANSF');
+    document.getElementById('btn-mp').style.opacity = type === 'MP' ? '1' : '0.5';
+    document.getElementById('btn-transf').style.opacity = type === 'TRANSF' ? '1' : '0.5';
+};
+
+window.getLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            userCoords = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+            document.getElementById('cust-addr').value = "Ubicación GPS capturada ✅";
+        });
+    }
+};
+
+window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
+window.copyAlias = () => { navigator.clipboard.writeText(MI_ALIAS); alert("Alias copiado"); };
+</script>
+    <a href="https://wa.me/3541214553?text=Hola%20Fast%20Food%20Posta!" class="whatsapp-btn" target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
         <span>¡Pedí Pizza y Empanadas!</span>
     </a>
