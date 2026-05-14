@@ -225,49 +225,34 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
+<script>
+// 1. Variable global para las coordenadas
+let userCoords = ""; 
 
-
-        function finalAction() {
-    const nombre = document.getElementById('cust-name').value;
-    const direccion = document.getElementById('cust-addr').value;
-    const telefono = document.getElementById('cust-phone').value;
-    const total = document.getElementById('cart-total').innerText;
-
-    // Si tenemos coordenadas, las sumamos al texto de la dirección
-    let direccionFinal = direccion;
-    if (userCoords !== "") {
-        direccionFinal += `%0A📍 Link Mapa: ${userCoords}`;
-    }
-
-    const mensaje = `Hola! Soy ${nombre}.%0AQuiero hacer un pedido:%0A------------------%0A${direccionFinal}%0A------------------%0A*TOTAL: ${total}*`;
-    
-    // Cambia el número por el de tu local
-    const nroWhatsApp = "5493541XXXXXX"; 
-    window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
-}
-
-        let userCoords = ""; // Variable global para guardar la ubicación exacta
-
+// 2. Función para obtener la ubicación GPS
 function getLocation() {
+    // Usamos el evento para identificar el botón presionado
     const btn = event.currentTarget;
-    btn.innerText = "⏳"; // Feedback visual
+    const originalText = btn.innerText;
+    btn.innerText = "⏳"; 
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
+                // Guardamos el link de Google Maps
                 userCoords = `https://www.google.com/maps?q=${lat},${lng}`;
                 
-                // Opción A: Solo poner "Ubicación GPS capturada"
+                // Llenamos el input de dirección automáticamente
                 document.getElementById('cust-addr').value = "📍 Ubicación capturada vía GPS";
                 
                 btn.innerText = "✅";
-                alert("Ubicación capturada con éxito");
+                setTimeout(() => { btn.innerText = "📍"; }, 3000); // Vuelve al icono original
             },
             (error) => {
                 btn.innerText = "📍";
-                alert("Error: Por favor activa el GPS de tu celular y permite el acceso en el navegador.");
+                alert("Error: Por favor activa el GPS y permite el acceso en el navegador.");
             },
             { enableHighAccuracy: true }
         );
@@ -275,6 +260,49 @@ function getLocation() {
         alert("Tu navegador no soporta geolocalización.");
     }
 }
+
+// 3. Función para enviar el pedido por WhatsApp
+function finalAction() {
+    const nombre = document.getElementById('cust-name').value;
+    const direccion = document.getElementById('cust-addr').value;
+    const telefono = document.getElementById('cust-phone').value;
+    const total = document.getElementById('cart-total').innerText;
+    
+    // IMPORTANTE: Aquí deberías obtener el texto de los productos 
+    // Si tienes una función que genera el resumen del carrito, úsala aquí.
+    // Asumiremos una variable o función 'obtenerResumenCarrito()'
+    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar productos en el sistema";
+
+    if (!nombre || !direccion) {
+        alert("Por favor, completa tu nombre y dirección.");
+        return;
+    }
+
+    // Si hay coordenadas GPS, las agregamos al mensaje
+    let direccionFinal = direccion;
+    if (userCoords !== "") {
+        direccionFinal += `%0A📍 Link Mapa: ${userCoords}`;
+    }
+
+    // Construcción del mensaje con formato WhatsApp
+    const mensaje = `*PEDIDO NUEVO - FASTFOOD POSTA*%0A` +
+                    `----------------------------%0A` +
+                    `*Cliente:* ${nombre}%0A` +
+                    `*Dirección:* ${direccionFinal}%0A` +
+                    `----------------------------%0A` +
+                    `*Productos:*%0A${productos}%0A` +
+                    `----------------------------%0A` +
+                    `*TOTAL:* ${total}`;
+    
+    // Tu número de WhatsApp de Carlos Paz (Recuerda ponerlo sin el +)
+    const nroWhatsApp = "5493541XXXXXX"; 
+    
+    // Abrir WhatsApp
+    window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
+}
+</script>
+
+        
         const MI_WHATSAPP = "5493541272207";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
