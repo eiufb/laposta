@@ -236,6 +236,16 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 
     <script>
 
+// Forzar el cierre del loader apenas cargue la estructura básica
+document.addEventListener('DOMContentLoaded', () => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = 'none';
+        console.log("Pantalla liberada correctamente.");
+    }
+});
+
+        
 // === 1. LÓGICA PARA QUITAR EL LOADER (Solución a image_cc535a.png) ===
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
