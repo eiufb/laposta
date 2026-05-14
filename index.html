@@ -235,8 +235,20 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-let selectedPayment = "MP"; // Por defecto Mercado Pago
+<script>
+// === 1. LÓGICA PARA QUITAR EL LOADER (Solución a image_cc535a.png) ===
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+});
 
+// === 2. VARIABLES GLOBALES ===
+let selectedPayment = "MP"; 
+let userCoords = ""; 
+
+// === 3. FUNCIONES DE PAGO ===
 function setPayment(method) {
     selectedPayment = method;
     const btnMP = document.getElementById('btn-mp');
@@ -244,37 +256,32 @@ function setPayment(method) {
     const infoTransf = document.getElementById('transfer-info');
 
     if (method === 'MP') {
-        // Estilo activo para MP
         btnMP.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
-        // Estilo inactivo para Transf
         btnTransf.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
-        infoTransf.classList.add('hidden');
+        if(infoTransf) infoTransf.classList.add('hidden');
     } else {
-        // Estilo activo para Transf
         btnTransf.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
-        // Estilo inactivo para MP
         btnMP.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
-        infoTransf.classList.remove('hidden');
+        if(infoTransf) infoTransf.classList.remove('hidden');
     }
 }
 
 function copyAlias() {
     const alias = document.getElementById('alias-value');
-    alias.select();
-    document.execCommand('copy');
-    
-    const status = document.getElementById('copy-status');
-    status.classList.remove('hidden');
-    setTimeout(() => { status.classList.add('hidden'); }, 2000);
+    if (alias) {
+        alias.select();
+        document.execCommand('copy');
+        const status = document.getElementById('copy-status');
+        if (status) {
+            status.classList.remove('hidden');
+            setTimeout(() => { status.classList.add('hidden'); }, 2000);
+        }
+    }
 }
-// 1. Variable global para las coordenadas
-let userCoords = ""; 
 
-// 2. Función para obtener la ubicación GPS
+// === 4. GEOLOCALIZACIÓN ===
 function getLocation() {
-    // Usamos el evento para identificar el botón presionado
     const btn = event.currentTarget;
-    const originalText = btn.innerText;
     btn.innerText = "⏳"; 
 
     if (navigator.geolocation) {
@@ -282,18 +289,17 @@ function getLocation() {
             (position) => {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
-                // Guardamos el link de Google Maps
                 userCoords = `https://www.google.com/maps?q=${lat},${lng}`;
                 
-                // Llenamos el input de dirección automáticamente
-                document.getElementById('cust-addr').value = "📍 Ubicación capturada vía GPS";
+                const addrInput = document.getElementById('cust-addr');
+                if(addrInput) addrInput.value = "📍 Ubicación capturada vía GPS";
                 
                 btn.innerText = "✅";
-                setTimeout(() => { btn.innerText = "📍"; }, 3000); // Vuelve al icono original
+                setTimeout(() => { btn.innerText = "📍"; }, 3000);
             },
             (error) => {
                 btn.innerText = "📍";
-                alert("Error: Por favor activa el GPS y permite el acceso en el navegador.");
+                alert("Error: Activá el GPS y permití el acceso en el navegador.");
             },
             { enableHighAccuracy: true }
         );
@@ -302,48 +308,42 @@ function getLocation() {
     }
 }
 
-// 3. Función para enviar el pedido por WhatsApp
+// === 5. ENVÍO WHATSAPP ===
 function finalAction() {
     const nombre = document.getElementById('cust-name').value;
     const direccion = document.getElementById('cust-addr').value;
-    const telefono = document.getElementById('cust-phone').value;
     const total = document.getElementById('cart-total').innerText;
     
-    // IMPORTANTE: Aquí deberías obtener el texto de los productos 
-    // Si tienes una función que genera el resumen del carrito, úsala aquí.
-    // Asumiremos una variable o función 'obtenerResumenCarrito()'
-    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar productos en el sistema";
+    // Evitamos que el script se rompa si no existe la función del carrito
+    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar pedido en local";
 
     if (!nombre || !direccion) {
-        alert("Por favor, completa tu nombre y dirección.");
+        alert("Completá tu nombre y dirección para el delivery.");
         return;
     }
 
-    // Si hay coordenadas GPS, las agregamos al mensaje
     let direccionFinal = direccion;
     if (userCoords !== "") {
         direccionFinal += `%0A📍 Link Mapa: ${userCoords}`;
     }
 
-    // Construcción del mensaje con formato WhatsApp
     const mensaje = `*PEDIDO NUEVO - FASTFOOD POSTA*%0A` +
                     `----------------------------%0A` +
                     `*Cliente:* ${nombre}%0A` +
                     `*Dirección:* ${direccionFinal}%0A` +
+                    `*Pago:* ${selectedPayment}%0A` +
                     `----------------------------%0A` +
                     `*Productos:*%0A${productos}%0A` +
                     `----------------------------%0A` +
                     `*TOTAL:* ${total}`;
     
-    // Tu número de WhatsApp de Carlos Paz (Recuerda ponerlo sin el +)
-    const nroWhatsApp = "5493541XXXXXX"; 
-    
-    // Abrir WhatsApp
+    const nroWhatsApp = "5493541214553"; // Poné tu número real acá
     window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
 }
 
+
         
-        const MI_WHATSAPP = "5493541272207";
+        const MI_WHATSAPP = "5493541214553";
         const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
         const URL_API = "https://script.google.com/macros/s/AKfycbzbKNq_xHI-kICB4xHzxWE_4NO4a2fCqNALW_s7pgs-Pb44VW5tFePYs5uW8J2y5yWq/exec";
         const MI_ALIAS = "fastfoodposta";
