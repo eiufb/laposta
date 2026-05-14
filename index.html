@@ -379,9 +379,7 @@ function finalAction() {
     window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
 }
 
-
-        
-       // === 1. VARIABLES GLOBALES Y CONFIGURACIÓN ===
+// === 1. VARIABLES GLOBALES Y CONFIGURACIÓN ===
 const MI_WHATSAPP = "5493541214553";
 const MI_ALIAS = "fastfoodposta";
 const COSTO_ENVIO = 3000;
@@ -411,47 +409,44 @@ const products = [
     { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
 ];
 
-// === 2. GESTIÓN DEL LOADER (SOLUCIÓN AL BLOQUEO) ===
+// === 2. INICIO Y CONTROL DEL LOADER ===
 function hideLoader() {
     const loader = document.getElementById('loader');
     if (loader) {
         loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 500);
-        document.body.classList.remove('loading');
+        setTimeout(() => {
+            loader.style.display = 'none';
+            document.body.classList.remove('loading');
+        }, 500);
     }
 }
 
 window.addEventListener('load', () => {
-    hideLoader();
+    // Inicialización de componentes
+    if (typeof AOS !== 'undefined') AOS.init();
     renderSlider();
     render();
     fetchStock();
-    // Liberar después de 3 segundos por si algo falla
-    setTimeout(hideLoader, 3000); 
+    hideLoader();
+    // Seguro de vida: si algo falla, el loader se va a los 3 segundos
+    setTimeout(hideLoader, 3000);
 });
 
-// === 3. FUNCIONES DE LÓGICA DE NEGOCIO ===
-
-function obtenerResumenCarrito() {
-    return Object.entries(cart).map(([id, qty]) => {
-        const p = products.find(x => x.id == id);
-        return `• ${qty}x ${p.name}`;
-    }).join('%0A');
-}
-
+// === 3. FUNCIONES DEL NÚCLEO ===
 async function fetchStock() {
     try {
         const res = await fetch(URL_API);
         const data = await res.json();
         if(data) currentStock = data;
         render();
-    } catch (e) { console.warn("Usando stock por defecto."); }
+    } catch (e) { console.warn("Stock local activado por error de API."); }
 }
 
 function renderSlider() {
     const promos = products.filter(p => p.category === 'Promos');
     const wrapper = document.getElementById('promo-slider-wrapper');
     if(!wrapper) return;
+
     wrapper.innerHTML = promos.map(p => `
         <div class="swiper-slide relative">
             <img src="${p.img}" class="w-full h-full object-cover">
@@ -464,16 +459,21 @@ function renderSlider() {
                 </div>
             </div>
         </div>`).join('');
-    new Swiper(".mySwiper", { loop: true, autoplay: { delay: 4000 }, pagination: { el: ".swiper-pagination", clickable: true } });
+    
+    new Swiper(".mySwiper", { 
+        loop: true, 
+        autoplay: { delay: 4000 }, 
+        pagination: { el: ".swiper-pagination", clickable: true } 
+    });
 }
 
 function render() {
     const grid = document.getElementById('product-grid');
-    if(!grid) return;
-    
-    // Render Tabs
+    const tabs = document.getElementById('category-tabs');
+    if(!grid || !tabs) return;
+
     const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
-    document.getElementById('category-tabs').innerHTML = cats.map(c => `
+    tabs.innerHTML = cats.map(c => `
         <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
             ${c}
         </button>`).join('');
@@ -485,9 +485,11 @@ function render() {
         const agotado = disponible <= 0;
         const qty = cart[p.id] || 0;
 
-        let actionButton = agotado ? `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300">Agotado</button>` : 
-            (qty > 0 ? `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black">-</button><span class="font-black">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black">+</button></div>` : 
-            `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo">Añadir</button>`);
+        let actionButton = agotado ? 
+            `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300">Agotado</button>` : 
+            (qty > 0 ? 
+                `<div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl"><button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black">-</button><span class="font-black text-xs">${qty}</span><button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black">+</button></div>` : 
+                `<button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo">Añadir</button>`);
 
         return `<div class="food-card ${agotado ? 'opacity-60' : ''}"><div class="relative aspect-square"><img src="${p.img}" class="h-full w-full object-cover"></div><div class="p-3 text-center"><h3 class="font-black text-[11px] uppercase">${p.name}</h3><p class="text-tri-rojo font-black">$${p.price.toLocaleString()}</p>${actionButton}</div></div>`;
     }).join('');
@@ -501,8 +503,10 @@ window.changeQty = (id, n) => { cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0
 function updateUI() {
     const count = Object.values(cart).reduce((a, b) => a + b, 0);
     const badge = document.getElementById('cart-count');
-    badge.innerText = count;
-    badge.classList.toggle('hidden', count === 0);
+    if(badge) {
+        badge.innerText = count;
+        badge.classList.toggle('hidden', count === 0);
+    }
 
     let subtotal = 0;
     let cartHTML = '';
@@ -522,23 +526,30 @@ function updateUI() {
     render();
 }
 
-// === 5. FINALIZAR COMPRA (ESTA ES LA ÚNICA QUE VALE) ===
+// === 5. FINALIZAR Y UTILIDADES ===
+function obtenerResumenCarrito() {
+    return Object.entries(cart).map(([id, qty]) => {
+        const p = products.find(x => x.id == id);
+        return `• ${qty}x ${p.name}`;
+    }).join('%0A');
+}
+
 window.finalAction = () => {
     const name = document.getElementById('cust-name').value;
     const phone = document.getElementById('cust-phone').value;
     const addr = document.getElementById('cust-addr').value;
     const total = document.getElementById('cart-total').innerText;
 
-    if(!name || !phone || !addr) {
-        alert("Por favor completá todos los datos.");
+    if(!name || !addr) {
+        alert("Por favor completá tu nombre y dirección.");
         return;
     }
 
     const productos = obtenerResumenCarrito();
     let direccionFinal = addr;
-    if (userCoords !== "") { direccionFinal += `%0A📍 Ubicación: ${userCoords}`; }
+    if (userCoords !== "") direccionFinal += `%0A📍 GPS: ${userCoords}`;
 
-    const mensaje = `*PEDIDO NUEVO*%0A*Cliente:* ${name}%0A*Tel:* ${phone}%0A*Dirección:* ${direccionFinal}%0A*Pago:* ${selectedPayment}%0A----------------%0A${productos}%0A----------------%0A*TOTAL:* ${total}`;
+    const mensaje = `*PEDIDO NUEVO*%0A*Cliente:* ${name}%0A*Dirección:* ${direccionFinal}%0A*Pago:* ${selectedPayment}%0A----------------%0A${productos}%0A----------------%0A*TOTAL:* ${total}`;
 
     if (selectedPayment === 'MP') {
         window.open("https://link.mercadopago.com.ar/fastfoodposta", '_blank');
@@ -559,23 +570,19 @@ window.getLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((pos) => {
             userCoords = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
-            document.getElementById('cust-addr').value = "Ubicación GPS capturada ✅";
+            document.getElementById('cust-addr').value = "📍 Ubicación capturada";
         });
     }
 };
 
 window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
 window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
-window.copyAlias = () => { navigator.clipboard.writeText(MI_ALIAS); alert("Alias copiado"); };
+window.copyAlias = () => { 
+    navigator.clipboard.writeText(MI_ALIAS); 
+    const status = document.getElementById('copy-status');
+    status.classList.remove('hidden');
+    setTimeout(() => status.classList.add('hidden'), 2000);
+};
 </script>
-    <a href="https://wa.me/3541214553?text=Hola%20Fast%20Food%20Posta!" class="whatsapp-btn" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA">
-        <span>¡Pedí Pizza y Empanadas!</span>
-    </a>
-    <style>
-        .whatsapp-btn { position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; z-index: 1000; transition: transform 0.3s; }
-        .whatsapp-btn img { width: 30px; }
-        @media (max-width: 480px) { .whatsapp-btn span { display: none; } }
-    </style>
-</body>
+    </body>
 </html>
