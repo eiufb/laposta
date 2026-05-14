@@ -249,36 +249,64 @@ let selectedPayment = "MP";
 let userCoords = ""; 
 
 // === 3. FUNCIONES DE PAGO ===
-function setPayment(method) {
-    selectedPayment = method;
-    const btnMP = document.getElementById('btn-mp');
-    const btnTransf = document.getElementById('btn-transf');
-    const infoTransf = document.getElementById('transfer-info');
+function finalAction() {
+    const nombre = document.getElementById('cust-name').value;
+    const direccion = document.getElementById('cust-addr').value;
+    const total = document.getElementById('cart-total').innerText;
+    
+    // Validación de datos básicos
+    if (!nombre || !direccion) {
+        alert("Por favor, completa tu nombre y dirección para continuar.");
+        return;
+    }
 
-    if (method === 'MP') {
-        btnMP.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
-        btnTransf.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
-        if(infoTransf) infoTransf.classList.add('hidden');
+    // Obtener productos (asegúrate de tener esta función en tu script principal)
+    const productos = typeof obtenerResumenCarrito === 'function' ? obtenerResumenCarrito() : "Consultar detalle en el local";
+
+    // Preparar el mensaje de WhatsApp
+    let direccionFinal = direccion;
+    if (userCoords !== "") {
+        direccionFinal += `%0A📍 Ubicación GPS: ${userCoords}`;
+    }
+
+    const mensaje = `*PEDIDO NUEVO - FASTFOOD POSTA*%0A` +
+                    `----------------------------%0A` +
+                    `*Cliente:* ${nombre}%0A` +
+                    `*Dirección:* ${direccionFinal}%0A` +
+                    `*Método de Pago:* ${selectedPayment}%0A` +
+                    `----------------------------%0A` +
+                    `*Productos:*%0A${productos}%0A` +
+                    `----------------------------%0A` +
+                    `*TOTAL:* ${total}`;
+
+    const nroWhatsApp = "5493541XXXXXX"; // Tu número real
+
+    // === LÓGICA DE FLUJO POR MÉTODO DE PAGO ===
+
+    if (selectedPayment === 'MP') {
+        // 1. Link de Mercado Pago (Reemplaza con tu link real)
+        const linkMP = "https://link.mercadopago.com.ar/tu_link_aqui";
+        
+        // Abrimos el pago en una pestaña nueva
+        window.open(linkMP, '_blank');
+        
+        // 2. Avisamos al usuario que envíe el comprobante al volver
+        alert("Te redirigimos a Mercado Pago. Al finalizar, envianos el comprobante por WhatsApp para confirmar tu pedido.");
+        
+        // 3. Abrimos el WhatsApp con los detalles del pedido
+        setTimeout(() => {
+            window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
+        }, 2000);
+
     } else {
-        btnTransf.className = "p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase";
-        btnMP.className = "p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500";
-        if(infoTransf) infoTransf.classList.remove('hidden');
+        // FLUJO TRANSFERENCIA
+        // 1. Mostrar mensaje de tiempo de entrega (Personalizalo según tu local)
+        alert("¡Pedido recibido! Tiempo estimado de entrega: 30-45 min. Ahora te redirigimos al WhatsApp para que nos envíes el comprobante de transferencia.");
+        
+        // 2. Enviar directo al WhatsApp con los detalles y el alias (que ya está en el mensaje)
+        window.open(`https://wa.me/${nroWhatsApp}?text=${mensaje}`, '_blank');
     }
 }
-
-function copyAlias() {
-    const alias = document.getElementById('alias-value');
-    if (alias) {
-        alias.select();
-        document.execCommand('copy');
-        const status = document.getElementById('copy-status');
-        if (status) {
-            status.classList.remove('hidden');
-            setTimeout(() => { status.classList.add('hidden'); }, 2000);
-        }
-    }
-}
-
 // === 4. GEOLOCALIZACIÓN ===
 function getLocation() {
     const btn = event.currentTarget;
