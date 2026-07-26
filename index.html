@@ -7,6 +7,8 @@
     <title>FAST FOOD POSTA | Pizzas y Empanadas | App Oficial</title>
     <meta name="description" content="Pedí online en Fast Food Posta. Las mejores Pizzas, Empanadas de Osobuco y sabores únicos con entrega rápida. ¡Tu pedido caliente en minutos!">
     <link rel="canonical" href="https://fastfoodposta.com/" />
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#E63946">
 
     <script>
     !function(f,b,e,v,n,t,s)
@@ -79,13 +81,13 @@
             <div id="countdown" class="text-6xl font-black text-tri-texto my-4">25:00</div>
             <p id="tracking-msg" class="font-bold text-gray-500 px-4">Estamos preparando tu pedido con la mejor onda.</p>
         </div>
-        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest">Pedir más</button>
+        <button onclick="location.reload()" class="w-full mt-auto mb-6 py-4 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest min-h-[44px]">Pedir más</button>
     </div>
 
     <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-black italic tracking-tighter"><span class="text-tri-rojo">▲</span> FAST FOOD <span class="text-tri-amarillo">POSTA</span></h1>
-            <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl">
+            <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl min-w-[44px] min-h-[44px] flex items-center justify-center">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
             </button>
@@ -106,7 +108,7 @@
         </section>
 
         <section class="mt-12 mb-8 px-4 border-t border-gray-200 pt-8 text-center" data-aos="fade-up">
-            <a href="info.html" onclick="fbq('track', 'Contact');" class="inline-flex items-center justify-center gap-3 bg-tri-texto text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest active:scale-95 transition-all shadow-xl border-b-4 border-tri-amarillo">
+            <a href="info.html" onclick="fbq('track', 'Contact');" class="inline-flex items-center justify-center gap-3 bg-tri-texto text-white px-8 py-4 rounded-2xl font-black uppercase text-sm tracking-widest active:scale-95 transition-all shadow-xl border-b-4 border-tri-amarillo min-h-[44px]">
                 <svg class="w-6 h-6 text-tri-amarillo" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -123,25 +125,34 @@
         <div class="modal-content bg-white flex flex-col h-[90vh]">
             <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo">
                 <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido</h4>
-                <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">✕</button>
+                <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-11 h-11 flex items-center justify-center min-w-[44px] min-h-[44px]">✕</button>
             </div>
             
             <div id="cart-list" class="p-4 space-y-3 overflow-y-auto flex-grow bg-gray-50"></div>
             
             <div class="p-6 bg-white border-t space-y-4 shadow-2xl">
+                <!-- Sistema de Cupones -->
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-2">
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon-input" placeholder="Cupón de descuento (Ej: POSTA10)" class="w-full p-3 rounded-lg bg-white font-bold outline-none border-2 border-gray-200 focus:border-tri-amarillo text-[16px]">
+                        <button onclick="applyCoupon()" class="bg-tri-texto text-white px-4 rounded-lg font-black text-xs uppercase min-h-[44px] min-w-[44px]">Aplicar</button>
+                    </div>
+                    <div id="coupon-feedback" class="text-xs font-bold hidden"></div>
+                </div>
+
                 <div class="flex justify-between text-2xl font-black mb-1"><span>Total</span><span id="cart-total">$0</span></div>
                 
                 <div class="space-y-2">
-                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
-                    <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
-                    <input type="text" id="cust-addr" placeholder="Dirección de entrega" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-sm">
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                    <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                    <input type="text" id="cust-addr" placeholder="Dirección de entrega" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
                 </div>
 
                 <div class="space-y-2">
                     <p class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Método de Pago</p>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase">Mercado Pago</button>
-                        <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500">Transferencia</button>
+                        <button onclick="setPayment('MP')" id="btn-mp" class="p-3 rounded-2xl border-2 border-tri-amarillo bg-tri-amarillo/10 transition-all font-black text-[10px] uppercase min-h-[44px]">Mercado Pago</button>
+                        <button onclick="setPayment('TRANSF')" id="btn-transf" class="p-3 rounded-2xl border-2 border-gray-100 bg-gray-50 opacity-60 transition-all font-black text-[10px] uppercase text-gray-500 min-h-[44px]">Transferencia</button>
                     </div>
 
                     <div id="transfer-info" class="hidden bg-tri-texto text-white p-4 rounded-2xl space-y-2 mt-2">
@@ -150,13 +161,13 @@
                             <span id="copy-status" class="text-[9px] uppercase font-black text-tri-verde hidden tracking-tighter">¡Copiado!</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center outline-none text-lg tracking-widest">
-                            <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-xs uppercase italic active:scale-90 transition-transform">Copiar</button>
+                            <input id="alias-value" readonly value="fastfoodposta" class="bg-white/10 border-0 text-white font-black italic w-full rounded-lg p-2 text-center outline-none text-[16px] tracking-widest">
+                            <button onclick="copyAlias()" class="bg-tri-amarillo text-tri-texto p-2 px-4 rounded-lg font-black text-xs uppercase italic active:scale-90 transition-transform min-h-[44px]">Copiar</button>
                         </div>
                     </div>
                 </div>
                 
-                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg">Confirmar Pedido</button>
+                <button onclick="finalAction()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg min-h-[44px]">Confirmar Pedido</button>
             </div>
         </div>
     </div>
@@ -171,25 +182,26 @@
         const MI_ALIAS = "fastfoodposta";
         const COSTO_ENVIO = 3000;
         let selectedPayment = 'MP';
-//https://imgur.com/a/Xj8yRrF archivo donde estan las fotos 
-        const products = [
-         { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
-{ id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
-{ id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
-{ id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
+        let appliedDiscount = 0;
+        let couponCodeApplied = '';
 
-{ id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
-{ id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
-{ id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
-{ id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
-{ id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
-{ id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
-{ id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
-{ id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
-{ id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
-{ id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
-{ id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
-];
+        const products = [
+           { id: 901, name: 'Promo 6 Empanadas (Media Doc.)', price: 14500, category: 'Promos', img: 'https://i.imgur.com/YaYecNo.jpeg' },
+           { id: 902, name: 'Promo 2 Pizzas', price: 21500, category: 'Promos', img: 'https://i.imgur.com/RJZAtWF.jpg' },
+           { id: 903, name: 'Combo: 1 Pizza + 6 Empanadas', price: 23000, category: 'Promos', img: 'https://i.imgur.com/0CueISk.jpg' },
+           { id: 904, name: 'Promo 2 Docenas Empanadas', price: 48000, category: 'Promos', img: 'https://i.imgur.com/S35PzDf.jpg' },
+           { id: 301, name: 'Empanada Carne Salada', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/zoLvHw9.jpg' },
+           { id: 302, name: 'Empanada Pollo', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/l6WtW5X.jpg' },
+           { id: 303, name: 'Empanada Jamón y Queso', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/nz8EsSA.jpg' },
+           { id: 304, name: 'Empanada Osobuco', price: 2500, category: 'Empanadas', img: 'https://i.imgur.com/FtknPUw.jpg' },
+           { id: 601, name: 'Pizza Mozza con Huevo', price: 12500, category: 'Pizzas', img: 'https://i.imgur.com/HTZ1aBD.jpg' },
+           { id: 602, name: 'Pizza Salame', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/zUe8qmS.jpg' },
+           { id: 603, name: 'Pizza Napolitana', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/KfxG1c8.jpg' },
+           { id: 604, name: 'Pizza Roquefort', price: 14500, category: 'Pizzas', img: 'https://i.imgur.com/Rn7tq0E.jpg' },
+           { id: 605, name: 'Pizza Doble Mozzarella', price: 12000, category: 'Pizzas', img: 'https://i.imgur.com/E6jHbM2.jpg' },
+           { id: 606, name: 'Pizza Especial (J y M)', price: 13500, category: 'Pizzas', img: 'https://i.imgur.com/fKtFr3Y.jpg' },
+           { id: 607, name: 'Pizza Fugazzeta', price: 13000, category: 'Pizzas', img: 'https://i.imgur.com/AGGvX3s.jpg' },
+        ];
 
         let cart = {};
         let activeCategory = 'Todos';
@@ -210,9 +222,14 @@
         async function fetchStock() {
             try {
                 const res = await fetch(URL_API);
+                if (!res.ok) throw new Error('Error de red al obtener stock');
                 currentStock = await res.json();
                 render();
-            } catch (e) { console.error("Error stock:", e); }
+            } catch (e) { 
+                console.warn("Stock operando en modo local/fallback:", e);
+                currentStock = [];
+                render(); 
+            }
         }
 
         function renderSlider() {
@@ -225,7 +242,7 @@
                         <h4 class="text-white font-black text-2xl uppercase italic drop-shadow-md leading-none">${p.name}</h4>
                         <div class="flex justify-between items-center mt-3">
                             <span class="bg-tri-amarillo text-tri-texto px-3 py-1 rounded-full font-black text-lg shadow-lg">$${p.price.toLocaleString()}</span>
-                            <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs shadow-md active:scale-95 transition-all">¡Pedir Ahora!</button>
+                            <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs shadow-md active:scale-95 transition-all min-h-[44px]">¡Pedir Ahora!</button>
                         </div>
                     </div>
                 </div>`).join('');
@@ -240,11 +257,20 @@
         function render() {
             const cats = ['Todos', 'Promos', 'Empanadas', 'Pizzas'];
             document.getElementById('category-tabs').innerHTML = cats.map(c => `
-                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
+                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 min-h-[44px] ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
                     ${c}
                 </button>`).join('');
 
             const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
+            
+            if (filtered.length === 0) {
+                document.getElementById('product-grid').innerHTML = `
+                    <div class="col-span-2 text-center py-12">
+                        <p class="text-gray-400 font-bold uppercase text-xs">No hay productos disponibles.</p>
+                    </div>`;
+                return;
+            }
+
             document.getElementById('product-grid').innerHTML = filtered.map(p => {
                 const s = currentStock.find(stock => stock.sabor === p.name);
                 const disponible = s ? s.stock : 99;
@@ -253,17 +279,17 @@
 
                 let actionButton;
                 if (agotado) {
-                    actionButton = `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300 text-gray-500">Sin Stock</button>`;
+                    actionButton = `<button class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-gray-300 text-gray-500 min-h-[44px]">Sin Stock</button>`;
                 } else if (qty > 0) {
                     actionButton = `
-                    <div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden">
-                        <button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors">-</button>
+                    <div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden min-h-[44px]">
+                        <button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors min-h-[44px]">-</button>
                         <span class="font-black text-xs text-tri-texto">${qty}</span>
-                        <button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors">+</button>
+                        <button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors min-h-[44px]">+</button>
                     </div>`;
                 } else {
                     actionButton = `
-                    <button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform">
+                    <button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform min-h-[44px]">
                         Añadir
                     </button>`;
                 }
@@ -283,6 +309,30 @@
             }).join('');
         }
 
+        function applyCoupon() {
+            const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+            const feedback = document.getElementById('coupon-feedback');
+            feedback.classList.remove('hidden');
+
+            if (code === 'POSTA10') {
+                appliedDiscount = 0.10;
+                couponCodeApplied = 'POSTA10';
+                feedback.className = 'text-xs font-bold text-tri-verde';
+                feedback.innerText = '¡Cupón aplicado! 10% de descuento.';
+            } else if (code === 'POSTA20') {
+                appliedDiscount = 0.20;
+                couponCodeApplied = 'POSTA20';
+                feedback.className = 'text-xs font-bold text-tri-verde';
+                feedback.innerText = '¡Cupón aplicado! 20% de descuento.';
+            } else {
+                appliedDiscount = 0;
+                couponCodeApplied = '';
+                feedback.className = 'text-xs font-bold text-tri-rojo';
+                feedback.innerText = 'Cupón inválido.';
+            }
+            updateUI();
+        }
+
         function updateUI() {
             const count = Object.values(cart).reduce((a, b) => a + b, 0);
             const badge = document.getElementById('cart-count');
@@ -292,24 +342,39 @@
             let subtotal = 0;
             let cartHTML = '';
 
-            Object.entries(cart).forEach(([id, q]) => {
-                const item = products.find(x => x.id == id);
-                subtotal += item.price * q;
-                cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
-                    <div class="min-w-0 pr-2">
-                        <p class="font-black text-xs truncate uppercase">${item.name}</p>
-                        <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="changeQty(${id}, -1)" class="w-8 h-8 bg-gray-100 rounded-lg font-black">-</button>
-                        <span class="font-black text-base w-4 text-center">${q}</span>
-                        <button onclick="changeQty(${id}, 1)" class="w-8 h-8 bg-tri-rojo text-white rounded-lg font-black">+</button>
-                    </div>
+            if (count === 0) {
+                cartHTML = `
+                <div class="flex flex-col items-center justify-center h-full py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <p class="text-gray-400 font-bold uppercase text-xs">Tu carrito está vacío</p>
                 </div>`;
-            });
+            } else {
+                Object.entries(cart).forEach(([id, q]) => {
+                    const item = products.find(x => x.id == id);
+                    subtotal += item.price * q;
+                    cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
+                        <div class="min-w-0 pr-2">
+                            <p class="font-black text-xs truncate uppercase">${item.name}</p>
+                            <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${id}, -1)" class="w-9 h-9 bg-gray-100 rounded-lg font-black min-h-[44px] min-w-[44px] flex items-center justify-center">-</button>
+                            <span class="font-black text-base w-4 text-center">${q}</span>
+                            <button onclick="changeQty(${id}, 1)" class="w-9 h-9 bg-tri-rojo text-white rounded-lg font-black min-h-[44px] min-w-[44px] flex items-center justify-center">+</button>
+                        </div>
+                    </div>`;
+                });
 
-            // Agregar item de Delivery si el carrito no está vacío
-            if (count > 0) {
+                if (appliedDiscount > 0) {
+                    const discountAmount = subtotal * appliedDiscount;
+                    subtotal -= discountAmount;
+                    cartHTML += `
+                    <div class="flex items-center justify-between bg-tri-verde/10 p-3 rounded-xl border border-tri-verde text-tri-verde font-black text-xs">
+                        <span>Descuento (${couponCodeApplied})</span>
+                        <span>-$${discountAmount.toLocaleString()}</span>
+                    </div>`;
+                }
+
                 subtotal += COSTO_ENVIO;
                 cartHTML += `
                 <div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo">
@@ -419,11 +484,11 @@
                 
                 itemsDetalle.forEach(item => {
                     const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                    fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
+                    fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(err => console.error(err));
                 });
                 
-                // Agregar línea de Delivery al mensaje de WhatsApp
-                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
+                const couponMsg = couponCodeApplied ? `\n*Cupón:* ${couponCodeApplied}` : '';
+                const msg = `*▲ NUEVO PEDIDO (TRANSFERENCIA)*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}${couponMsg}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${totalStr}\n\n⚠️ *ADJUNTO COMPROBANTE:*`;
                 
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                 document.getElementById('tracking-screen').classList.remove('hidden');
@@ -431,6 +496,12 @@
                 cart = {}; updateUI(); closeCheckoutModal();
             }
         };
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+            });
+        }
 
         window.onload = async () => {
             renderSlider();
@@ -445,7 +516,7 @@
 
                     data.carrito.forEach(item => {
                         const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                        fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) });
+                        fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(err => console.error(err));
                     });
                     const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n*Envío:* $${COSTO_ENVIO.toLocaleString()}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
                     window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
