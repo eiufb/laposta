@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>DEMO | FAST FOOD POSTA | Versión de Prueba</title>
+    <meta name="description" content="Demo interactiva de Fast Food Posta. Prueba todas las funciones sin realizar pedidos reales.">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tri-rojo': '#E63946',
+                        'tri-amarillo': '#FFB703',
+                        'tri-fondo': '#F8F9FA',
+                        'tri-texto': '#1D3557',
+                        'tri-verde': '#2A9D8F'
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #F8F9FA; color: #1D3557; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        body.loading { overflow: hidden; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .food-card { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(29, 53, 87, 0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s; border: 1px solid rgba(0,0,0,0.05); }
+        .modal-content { border-radius: 24px 24px 0 0; animation: slideUp 0.3s ease-out; width: 100%; max-width: 600px; margin: 0 auto; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .swiper { width: 100%; height: 280px; border-radius: 24px; }
+        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.95) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+        #loader.fade-out { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body class="bg-tri-fondo loading">
+
+    <div id="loader" class="fixed inset-0 z-[500] bg-tri-fondo flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative">
+            <div class="w-20 h-20 border-4 border-gray-200 border-t-tri-rojo rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center"><span class="text-2xl animate-pulse">▲</span></div>
+        </div>
+        <h2 class="mt-4 font-black italic text-tri-texto tracking-tighter uppercase">Cargando <span class="text-tri-rojo">DEMO</span> Fast Food Posta...</h2>
+    </div>
+
+    <!-- Pantalla de Seguimiento (Demo) -->
+    <div id="tracking-screen" class="hidden fixed inset-0 z-[300] bg-white flex flex-col p-4 text-center overflow-y-auto">
+        <div class="mt-4">
+            <div class="inline-block p-3 bg-tri-amarillo/20 rounded-full mb-2">
+                <svg class="w-8 h-8 text-tri-amarillo animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h2 class="text-2xl font-black uppercase italic text-tri-rojo">¡Pedido en Camino (Demo)!</h2>
+            <p id="tracking-msg" class="font-bold text-gray-500 text-xs mt-1">Simulando cocina (Preparación aprox. 20 min)...</p>
+        </div>
+
+        <!-- CONTENEDOR DEL MAPA GPS -->
+        <div id="map-container" class="w-full h-72 rounded-2xl shadow-inner border-2 border-tri-amarillo my-3 relative z-10">
+            <div id="live-map" class="w-full h-full rounded-2xl"></div>
+        </div>
+
+        <button onclick="location.reload()" class="w-full py-3 bg-tri-texto text-white rounded-2xl font-black uppercase tracking-widest text-xs min-h-[44px] shadow-lg">Reiniciar Demo</button>
+    </div>
+
+    <header class="fixed top-0 left-0 w-full z-[100] bg-white/90 backdrop-blur-md px-4 py-3 shadow-md border-b-4 border-tri-amarillo">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-black italic tracking-tighter"><span class="text-tri-rojo">▲</span> DEMO <span class="text-tri-amarillo">POSTA</span></h1>
+            <div class="flex items-center gap-2">
+                <span class="bg-tri-rojo text-white px-2.5 py-1 rounded-lg font-black text-[10px] uppercase tracking-wider">Modo Prueba</span>
+                <button onclick="openCheckoutModal()" class="relative bg-tri-rojo text-white p-2.5 rounded-xl min-w-[44px] min-h-[44px] flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-tri-amarillo text-tri-texto text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-white hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 pt-24 pb-24">
+        <!-- Aviso Informativo Superior -->
+        <div class="bg-tri-amarillo/20 p-4 rounded-2xl mb-6 border border-tri-amarillo border-dashed text-center" data-aos="fade-down">
+            <p class="font-bold text-tri-texto text-xs uppercase">Estás probando una versión interactiva. Puedes armar tu carrito, simular datos de envío y ver el mapa de seguimiento en vivo.</p>
+        </div>
+
+        <section class="mt-2" data-aos="zoom-in">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="promo-slider-wrapper"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
+        <section class="mt-8">
+            <div id="category-tabs" class="flex space-x-2 overflow-x-auto no-scrollbar py-2 sticky top-[68px] bg-tri-fondo/95 z-40"></div>
+            <div id="product-grid" class="grid grid-cols-2 gap-3 mt-4"></div>
+        </section>
+    </main>
+
+    <div id="checkout-modal" class="hidden fixed inset-0 z-[200] bg-tri-texto/85 backdrop-blur-sm flex items-end justify-center">
+        <div class="modal-content bg-white flex flex-col w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-3xl shadow-2xl">
+            <div class="p-5 flex justify-between items-center border-b-2 border-tri-amarillo sticky top-0 bg-white z-10">
+                <h4 class="font-black italic text-tri-rojo uppercase">Finalizar Pedido (Demo)</h4>
+                <button onclick="closeCheckoutModal()" class="text-2xl p-2 bg-gray-100 rounded-full w-11 h-11 flex items-center justify-center min-w-[44px] min-h-[44px]">✕</button>
+            </div>
+            
+            <div id="cart-list" class="p-4 space-y-3 bg-gray-50"></div>
+            
+            <div class="p-6 bg-white border-t space-y-4">
+                <div class="flex justify-between text-2xl font-black mb-1"><span>Total</span><span id="cart-total">$0</span></div>
+                
+                <div class="space-y-2">
+                    <input type="text" id="cust-name" placeholder="Tu Nombre" value="Cliente de Prueba" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                    <input type="tel" id="cust-phone" placeholder="WhatsApp" value="3001234567" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="cust-addr" placeholder="Dirección de entrega" value="Calle Ficticia # 123" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                        <button type="button" onclick="getLocation()" class="px-4 bg-tri-amarillo/20 border-2 border-tri-amarillo text-tri-texto rounded-xl font-black min-h-[44px] min-w-[44px] flex items-center justify-center transition-transform active:scale-95 shadow-sm" title="Usar mi ubicación actual">
+                            📍
+                        </button>
+                    </div>
+                </div>            
+
+                <button onclick="payWithEpayco()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg min-h-[44px]">Simular Pedido / Pagar</button>
+           </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        const COSTO_ENVIO = 3000;
+        let costoEnvioActual = 3000;
+
+        const products = [
+            { id: 701, name: 'Hamburguesa Res (Combo)', price: 30000, category: 'Promos', img: 'https://imgur.com/WGug9tL.jpg', badge: '🔥 Favorito', rating: '4.9', reviews: 38 },
+            { id: 702, name: 'Hamburguesa Pollo (Combo)', price: 26000, category: 'Promos', img: 'https://imgur.com/4wbhk0N.jpg', badge: 'Hecho al Carbón', rating: '4.8', reviews: 24 },
+            { id: 706, name: 'Hamburguesa Res (Sola)', price: 22000, category: 'Burgers', img: 'https://imgur.com/WGug9tL.jpg', badge: '100% Angus', rating: '4.9', reviews: 30 },
+            { id: 709, name: 'Choripapa', price: 15000, category: 'Burgers', img: 'https://imgur.com/bO1Ve4C.jpg', badge: '🔥 Favorito', rating: '5.0', reviews: 51 },
+            { id: 712, name: 'Picada 2-3 Personas', price: 65000, category: 'Compartir', img: 'https://imgur.com/yvyq44x.jpg', badge: '🔥 El favorito', rating: '5.0', reviews: 64 },
+            { id: 718, name: 'Cerveza Lata', price: 6000, category: 'Bebidas', img: 'https://imgur.com/YZTMxmd.jpg', badge: '', rating: '4.9', reviews: 25 }
+        ];
+
+        let cart = {};
+        let activeCategory = 'Todos';
+
+        function startTimer(durationInMinutes, display) {
+            let timer = durationInMinutes * 60, minutes, seconds;
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                if(display) display.textContent = minutes + ":" + seconds;
+                if (--timer < 0) { clearInterval(interval); if(display) display.textContent = "00:00"; }
+            }, 1000);
+        }
+
+        function renderSlider() {
+            const promos = products.filter(p => p.category === 'Promos');
+            document.getElementById('promo-slider-wrapper').innerHTML = promos.map(p => `
+                <div class="swiper-slide relative">
+                    <img src="${p.img}" class="w-full h-full object-cover">
+                    <div class="slide-overlay">
+                        <div class="bg-tri-rojo text-white text-[10px] font-black px-2 py-1 rounded-md mb-2 w-fit uppercase italic animate-pulse">Oferta de Hoy</div>
+                        <h4 class="text-white font-black text-2xl uppercase italic drop-shadow-md leading-none">${p.name}</h4>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="bg-tri-amarillo text-tri-texto px-3 py-1 rounded-full font-black text-lg shadow-lg">$${p.price.toLocaleString()}</span>
+                            <button onclick="addToCart(event, ${p.id})" class="bg-tri-verde text-white px-6 py-2 rounded-xl font-black uppercase text-xs shadow-md active:scale-95 transition-all min-h-[44px]">¡Pedir Ahora!</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+            
+            new Swiper(".mySwiper", { 
+                loop: true, 
+                autoplay: { delay: 4000, disableOnInteraction: false }, 
+                pagination: { el: ".swiper-pagination", clickable: true } 
+            });
+        }
+
+        function render() {
+            const cats = ['Todos', 'Promos', 'Burgers', 'Compartir', 'Bebidas'];
+            document.getElementById('category-tabs').innerHTML = cats.map(c => `
+                <button onclick="filterCategory('${c}')" class="whitespace-nowrap px-6 py-2 rounded-full font-black text-xs uppercase border-2 min-h-[44px] ${activeCategory === c ? 'bg-tri-amarillo border-tri-amarillo text-tri-texto' : 'bg-white border-gray-100 text-gray-400'}">
+                    ${c}
+                </button>`).join('');
+
+            const filtered = activeCategory === 'Todos' ? products : products.filter(p => p.category === activeCategory);
+            
+            document.getElementById('product-grid').innerHTML = filtered.map(p => {
+                const qty = cart[p.id] || 0;
+                let actionButton;
+                
+                if (qty > 0) {
+                    actionButton = `
+                    <div class="mt-2 flex items-center justify-between bg-tri-amarillo rounded-xl overflow-hidden min-h-[44px]">
+                        <button onclick="changeQty(${p.id}, -1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors min-h-[44px]">-</button>
+                        <span class="font-black text-xs text-tri-texto">${qty}</span>
+                        <button onclick="changeQty(${p.id}, 1)" class="w-10 py-3 font-black text-tri-texto active:bg-tri-amarillo/50 transition-colors min-h-[44px]">+</button>
+                    </div>`;
+                } else {
+                    actionButton = `
+                    <button onclick="addToCart(event, ${p.id})" class="mt-2 py-3 w-full rounded-xl text-[10px] font-black uppercase bg-tri-amarillo text-tri-texto active:scale-95 transition-transform min-h-[44px]">
+                        Añadir
+                    </button>`;
+                }
+
+                return `
+                <div class="food-card" data-aos="fade-up">
+                    <div class="relative aspect-square">
+                        <img src="${p.img}" class="h-full w-full object-cover">
+                        ${p.badge ? `<span class="absolute top-2 left-2 bg-tri-rojo text-white text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-wide shadow-md">${p.badge}</span>` : ''}
+                    </div>
+                    <div class="p-3 flex flex-col flex-grow text-center">
+                        <div class="flex items-center justify-center gap-1 text-[10px] font-bold text-amber-500 mb-0.5">
+                            <span>⭐ ${p.rating}</span>
+                            <span class="text-gray-400">(${p.reviews})</span>
+                        </div>
+                        <h3 class="font-black text-[11px] h-8 overflow-hidden uppercase leading-tight">${p.name}</h3>
+                        <p class="text-tri-rojo font-black text-lg mt-1">$${p.price.toLocaleString()}</p>
+                        ${actionButton}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function updateUI() {
+            const count = Object.values(cart).reduce((a, b) => a + b, 0);
+            const badge = document.getElementById('cart-count');
+            badge.innerText = count;
+            badge.classList.toggle('hidden', count === 0);
+            
+            let subtotal = 0;
+            let cartHTML = '';
+
+            if (count === 0) {
+                cartHTML = `
+                <div class="flex flex-col items-center justify-center h-full py-12 text-center">
+                    <svg class="w-16 h-16 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <p class="text-gray-400 font-bold uppercase text-xs">Tu carrito está vacío</p>
+                </div>`;
+            } else {
+                Object.entries(cart).forEach(([id, q]) => {
+                    const item = products.find(x => x.id == id);
+                    subtotal += item.price * q;
+                    cartHTML += `<div class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
+                        <div class="min-w-0 pr-2">
+                            <p class="font-black text-xs truncate uppercase">${item.name}</p>
+                            <p class="text-tri-rojo font-black">$${item.price.toLocaleString()}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${id}, -1)" class="w-9 h-9 bg-gray-100 rounded-lg font-black min-h-[44px] min-w-[44px] flex items-center justify-center">-</button>
+                            <span class="font-black text-base w-4 text-center">${q}</span>
+                            <button onclick="changeQty(${id}, 1)" class="w-9 h-9 bg-tri-rojo text-white rounded-lg font-black min-h-[44px] min-w-[44px] flex items-center justify-center">+</button>
+                        </div>
+                    </div>`;
+                });
+
+                subtotal += costoEnvioActual;
+
+                cartHTML += `
+                <div class="flex items-center justify-between bg-tri-amarillo/10 p-4 rounded-xl border-2 border-dashed border-tri-amarillo">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">🛵</span>
+                        <p class="font-black text-xs uppercase">Envío a Domicilio</p>
+                    </div>
+                    <p class="font-black text-tri-texto">$${costoEnvioActual.toLocaleString()}</p>
+                </div>`;
+            }
+
+            document.getElementById('cart-list').innerHTML = cartHTML;
+            document.getElementById('cart-total').innerText = `$${subtotal.toLocaleString()}`;
+            render();
+        }
+
+        window.filterCategory = (cat) => { activeCategory = cat; render(); AOS.refresh(); };
+        window.addToCart = (e, id) => { cart[id] = (cart[id] || 0) + 1; updateUI(); };
+        window.changeQty = (id, n) => { cart[id] = (cart[id] || 0) + n; if(cart[id] <= 0) delete cart[id]; updateUI(); };
+
+        window.openCheckoutModal = () => document.getElementById('checkout-modal').classList.remove('hidden');
+        window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
+
+        window.payWithEpayco = () => {
+            if(Object.keys(cart).length === 0) return alert("Añade al menos un producto para probar la demo.");
+            closeCheckoutModal();
+            document.getElementById('tracking-screen').classList.remove('hidden');
+            startTimer(20, document.getElementById('tracking-msg'));
+            iniciarMapaSeguimiento(CLIENT_LAT_DEMO, CLIENT_LNG_DEMO);
+            cart = {};
+            updateUI();
+        };
+
+        window.onload = () => {
+            renderSlider();
+            render();
+            AOS.init();
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('fade-out');
+                document.body.classList.remove('loading');
+            }, 500);
+        };
+
+        let mapInstance = null;
+        let markerRepartidor = null;
+        const LOCAL_LAT = 3.376144;
+        const LOCAL_LNG = -76.527548;
+        const CLIENT_LAT_DEMO = 3.385000;
+        const CLIENT_LNG_DEMO = -76.520000;
+
+        function getLocation() {
+            document.getElementById('cust-addr').value = "Ubicación GPS simulada con éxito";
+        }
+
+        function iniciarMapaSeguimiento(destLat, destLon) {
+            if (mapInstance) mapInstance.remove();
+            const initialLat = (LOCAL_LAT + destLat) / 2;
+            const initialLng = (LOCAL_LNG + destLon) / 2;
+
+            mapInstance = L.map('live-map').setView([initialLat, initialLng], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
+
+            const localIcon = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#E63946;color:white;padding:5px;border-radius:50%;text-align:center;'>🏠</div>", iconSize: [30, 30], iconAnchor: [15, 15] });
+            const clienteIcon = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#2A9D8F;color:white;padding:5px;border-radius:50%;text-align:center;'>📍</div>", iconSize: [30, 30], iconAnchor: [15, 15] });
+            const motoIcon = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#FFB703;color:#1D3557;padding:5px;border-radius:50%;text-align:center;'>🛵</div>", iconSize: [35, 35], iconAnchor: [17, 17] });
+
+            L.marker([LOCAL_LAT, LOCAL_LNG], { icon: localIcon }).addTo(mapInstance).bindPopup("<b>Local (Simulado)</b>").openPopup();
+            L.marker([destLat, destLon], { icon: clienteIcon }).addTo(mapInstance).bindPopup("<b>Tu Dirección</b>");
+            
+            markerRepartidor = L.marker([LOCAL_LAT, LOCAL_LNG], { icon: motoIcon }).addTo(mapInstance).bindPopup("<b>Repartidor en camino</b>");
+
+            setTimeout(() => {
+                document.getElementById('tracking-msg').innerText = "¡Pedido listo! El repartidor va en camino.";
+                simularRecorridoRepartidor(LOCAL_LAT, LOCAL_LNG, destLat, destLon);
+            }, 3000); // 3 segundos para arrancar la simulación en el demo
+        }
+
+        function simularRecorridoRepartidor(origLat, origLon, destLat, destLon) {
+            let pasos = 60, pasoActual = 0;
+            const intervaloMovimiento = setInterval(() => {
+                pasoActual++;
+                let latActual = origLat + (destLat - origLat) * (pasoActual / pasos);
+                let lonActual = origLon + (destLon - origLon) * (pasoActual / pasos);
+                if (markerRepartidor) {
+                    markerRepartidor.setLatLng([latActual, lonActual]);
+                    mapInstance.panTo([latActual, lonActual]);
+                }
+                if (pasoActual >= pasos) {
+                    clearInterval(intervaloMovimiento);
+                    document.getElementById('tracking-msg').innerText = "¡Simulación finalizada! Pedido entregado con éxito.";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
