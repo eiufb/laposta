@@ -171,7 +171,7 @@
         // Configuración de la pasarela ePayco (REEMPLAZA AQUÍ TU LLAVE PÚBLICA REAL)
         const epaycoHandler = ePayco.checkout.configure({
             key: '255c710e12b4c7549f55da3830d64116', 
-            test: true // Cambiar a false cuando salgas a producción
+            test: false // Cambiar a false cuando salgas a producción o true para pruebas
         });
 
         window.payWithEpayco = () => {
