@@ -65,6 +65,9 @@
         .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 53, 87, 0.95) 5%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
         #loader.fade-out { opacity: 0; pointer-events: none; }
     </style>
+
+<!-- SCRIPT DE EPAYCO -->
+<script src="https://checkout.epayco.co/checkout.js"></script>
 </head>
 <body class="bg-tri-fondo loading">
 
@@ -144,7 +147,7 @@
                 
                 <div class="space-y-2">
                     <input type="text" id="cust-name" placeholder="Tu Nombre" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
-                    <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3541234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
+                    <input type="tel" id="cust-phone" placeholder="WhatsApp (Ej: 3001234567)" class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
                     
                     <div class="flex gap-2">
                         <input type="text" id="cust-addr" placeholder="Ej: Calle 5 # 64-25, Barrio..." class="w-full p-4 rounded-xl bg-gray-100 font-bold outline-none border-2 border-transparent focus:border-tri-amarillo text-[16px] min-h-[44px]">
@@ -155,7 +158,7 @@
                 </div>            
 
                 <input type="hidden" id="whatsapp-number" value="573001234567">
-                <button onclick="payWithEpayco()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg min-h-[44px]">Pagar</button>
+                <button onclick="payWithEpayco()" class="w-full py-5 bg-tri-verde text-white rounded-2xl font-black text-xl uppercase italic tracking-wider active:scale-95 transition-transform shadow-lg min-h-[44px]">Pagar con ePayco</button>
            </div>
         </div>
     </div>
@@ -164,14 +167,58 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-        const MI_WHATSAPP = "5493541272207";
-        const MI_LINK_PAGO_BASE = "https://link.mercadopago.com.ar/funcion";
+        const MI_WHATSAPP = "573001234567"; // <-- Ajusta tu número de WhatsApp comercial si lo requieres
         const URL_API = "https://script.google.com/macros/s/AKfycbz6lHsOtMH0g-iwTHG2pfu54wkvupChzUhrTe0LS2XYMuMRumekrQ-D9-ePvdBzQG0L/exec";
-        const MI_ALIAS = "fastfoodposta";
-        const COSTO_ENVIO = 3000;
-        let selectedPayment = 'MP';
+        let selectedPayment = 'EPAYCO';
         let appliedDiscount = 0;
         let couponCodeApplied = '';
+
+        // Configuración de la pasarela ePayco (REEMPLAZA AQUÍ TU LLAVE PÚBLICA REAL)
+        const epaycoHandler = ePayco.checkout.configure({
+            key: 'AQUÍ_TU_PUBLIC_KEY_REAL_DE_EPAYCO', 
+            test: true // Cambiar a false cuando salgas a producción
+        });
+
+        window.payWithEpayco = () => {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const addr = document.getElementById('cust-addr').value;
+            const totalStr = document.getElementById('cart-total').innerText;
+            
+            const totalNum = parseFloat(totalStr.replace('$', '').replace(/\./g, ''));
+
+            if(!name || !phone || !addr || Object.keys(cart).length === 0) {
+                return alert("Por favor completa tus datos y añade productos al carrito.");
+            }
+            
+            const itemsDetalle = Object.entries(cart).map(([id, q]) => {
+                const item = products.find(x => x.id == id);
+                return { cat: item.category, name: item.name, qty: q, price: item.price };
+            });
+            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join(', ');
+            
+            const pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
+            localStorage.setItem('pending_order', JSON.stringify(pedido));
+
+            const data = {
+                name: "Pedido Fast Food Posta",
+                description: itemsTexto,
+                invoice: "FFP-" + Math.floor(Math.random() * 1000000),
+                currency: "cop",
+                amount: totalNum.toString(),
+                tax: "0",
+                tax_base: "0",
+                country: "co",
+                lang: "es",
+                name_billing: name,
+                address_billing: addr,
+                phone_billing: phone,
+                url_response: window.location.href.split('?')[0] + "?pago=ok",
+                url_confirmation: ""
+            };
+
+            epaycoHandler.open(data);
+        };
 
         const products = [
             // --- Promos (Combos) ---
@@ -387,7 +434,7 @@
             if ((cart[id] || 0) < max) { 
                 cart[id] = (cart[id] || 0) + 1; 
                 updateUI(); 
-                fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'ARS'});
+                fbq('track', 'AddToCart', {content_name: item.name, value: item.price, currency: 'cop'});
             } else { 
                 alert("Máximo stock disponible alcanzado."); 
             }
@@ -409,51 +456,6 @@
         }
         window.closeCheckoutModal = () => document.getElementById('checkout-modal').classList.add('hidden');
 
-        window.payWithEpayco = () => {
-            finalAction();
-        };
-
-        window.finalAction = () => {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const addr = document.getElementById('cust-addr').value;
-            const totalStr = document.getElementById('cart-total').innerText;
-            const totalNum = parseFloat(totalStr.replace('$', '').replace('.', ''));
-
-            if(!name || !phone || !addr || Object.keys(cart).length === 0) {
-                return alert("Por favor completa tus datos y añade productos.");
-            }
-            
-            const itemsDetalle = Object.entries(cart).map(([id, q]) => {
-                const item = products.find(x => x.id == id);
-                return { cat: item.category, name: item.name, qty: q, price: item.price };
-            });
-            const itemsTexto = itemsDetalle.map(i => `${i.qty}x ${i.name}`).join('\n');
-            const pedido = { n: name, p: phone, a: addr, t: totalStr, carrito: itemsDetalle, itemsTexto: itemsTexto };
-
-            if (selectedPayment === 'MP') {
-                localStorage.setItem('pending_order', JSON.stringify(pedido));
-                fbq('track', 'Lead', {content_name: name});
-                window.location.href = MI_LINK_PAGO_BASE;
-            } else {
-                fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
-                
-                itemsDetalle.forEach(item => {
-                    const mov = { tipo: 'TRANSFERENCIA', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
-                    fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(err => console.error(err));
-                });
-                
-                const couponMsg = couponCodeApplied ? `\n*Cupón:* ${couponCodeApplied}` : '';
-                const msg = `*▲ NUEVO PEDIDO*\n*Cliente:* ${name}\n*Tel:* ${phone}\n*Dirección:* ${addr}${couponMsg}\n\n*Detalle:*\n${itemsTexto}\n*Envío:* $${costoEnvioActual.toLocaleString()}\n\n*TOTAL:* ${totalStr}`;
-                
-                window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
-                document.getElementById('tracking-screen').classList.remove('hidden');
-                startTimer(20, document.getElementById('tracking-msg')); // Temporizador 20 min
-                cart = {}; updateUI(); closeCheckoutModal();
-                iniciarMapaSeguimiento(clienteLat, clienteLon);
-            }
-        };
-
         window.onload = async () => {
             renderSlider();
             await fetchStock();
@@ -463,13 +465,13 @@
                 const data = JSON.parse(localStorage.getItem('pending_order'));
                 if(data) {
                     const totalNum = parseFloat(data.t.replace('$', '').replace('.', ''));
-                    fbq('track', 'Purchase', {value: totalNum, currency: 'ARS'});
+                    fbq('track', 'Purchase', {value: totalNum, currency: 'cop'});
 
                     data.carrito.forEach(item => {
-                        const mov = { tipo: 'VENTA_MP', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
+                        const mov = { tipo: 'VENTA_EPAYCO', producto: item.cat, sabor: item.name, cantidad: item.qty, monto: item.price * item.qty };
                         fetch(URL_API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(mov) }).catch(err => console.error(err));
                     });
-                    const msg = `*▲ NUEVO PEDIDO (PAGO MP)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n*Envío:* $${costoEnvioActual.toLocaleString()}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
+                    const msg = `*▲ NUEVO PEDIDO (PAGO EPAYCO)*\n*Cliente:* ${data.n}\n*Tel:* ${data.p}\n*Dirección:* ${data.a}\n\n*Detalle:*\n${data.itemsTexto}\n*Envío:* $${costoEnvioActual.toLocaleString()}\n\n*TOTAL:* ${data.t}\n*PAGO CONFIRMADO*`;
                     window.open(`https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
                     document.getElementById('tracking-screen').classList.remove('hidden');
                     startTimer(20, document.getElementById('tracking-msg'));
